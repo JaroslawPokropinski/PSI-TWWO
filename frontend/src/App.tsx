@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Title from 'antd/lib/typography/Title';
 import { Form, Input, Button, Checkbox } from 'antd';
 
 import logo from './resources/logo.png';
 import './App.css';
+import axios from './configuration/axios';
 
 function App(): JSX.Element {
+  const onFinish = useCallback((results) => {
+    axios
+      .post('/login', {
+        username: results.username,
+        password: results.password,
+      })
+      .then(() => {
+        alert('Login succesfull.');
+      })
+      .catch(() => {
+        alert('Login failed!');
+      });
+  }, []);
+
   return (
     <div className="App">
       <div className="Login">
@@ -18,6 +33,7 @@ function App(): JSX.Element {
           className="login-form"
           name="basic"
           initialValues={{ remember: true }}
+          onFinish={onFinish}
         >
           <Form.Item
             className="login-form-item"
