@@ -10,7 +10,7 @@ public class CredentialsDTO {
 
     @NotNull
     @NotBlank
-    private String usernameOrEmail;
+    private String username;
 
     @NotNull
     @NotBlank

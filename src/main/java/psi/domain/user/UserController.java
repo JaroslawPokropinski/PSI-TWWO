@@ -36,7 +36,7 @@ public class UserController {
 
     @PostMapping("/signin")
     public TokenDTO authenticateUser(@Valid @RequestBody CredentialsDTO credentials) {
-        String token = userService.signInUser(credentials.getUsernameOrEmail(), credentials.getPassword());
+        String token = userService.signInUser(credentials.getUsername(), credentials.getPassword());
         return new TokenDTO(token);
     }
 
