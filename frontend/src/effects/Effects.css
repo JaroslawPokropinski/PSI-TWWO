@@ -1,0 +1,27 @@
+.Effects {
+  height: 100%;
+  max-width: 1090px;
+  margin: 0 auto;
+}
+
+.ant-btn.effects-add {
+ float: left;
+ z-index: 1;
+}
+.ant-pagination {
+  float: right;
+}
+
+.ant-list-pagination {
+  height: 40px;
+}
+
+.ant-list-item.ant-list-item-no-flex.effects-item {
+  padding: 16px;
+  padding-left: 8px;
+  cursor: pointer;
+}
+
+.effects-item:hover {
+  background-color: papayawhip;
+}

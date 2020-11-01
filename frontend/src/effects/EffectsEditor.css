@@ -1,0 +1,9 @@
+.effects-editor {
+  max-width: 1090px;
+  margin: 0 auto;
+}
+.ant-btn.effects-remove-button {
+  background-color: red;
+  font-weight: bold;
+  color: white;
+}

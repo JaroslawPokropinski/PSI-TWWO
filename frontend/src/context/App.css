@@ -1,0 +1,16 @@
+.App {
+  width: 100vw;
+  height: 100vh;
+  padding: 8px;
+}
+
+.Login {
+  max-width: 1090px;
+  margin: 0 auto;
+}
+
+
+
+.ant-form-item-required {
+  min-width: 100px;
+}
