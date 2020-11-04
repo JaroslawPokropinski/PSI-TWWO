@@ -1,10 +1,10 @@
-.Effects {
+.programs {
   height: 100%;
   max-width: 1090px;
   margin: 0 auto;
 }
 
-.ant-btn.effects-add {
+.ant-btn.programs-add {
  float: left;
  z-index: 1;
 }
@@ -16,21 +16,21 @@
   height: 40px;
 }
 
-.ant-list-item.ant-list-item-no-flex.effects-item {
+.ant-list-item.ant-list-item-no-flex.programs-item {
   padding: 16px;
   padding-left: 8px;
   cursor: pointer;
 }
 
-.effects-item:hover {
+.programs-item:hover {
   background-color: papayawhip;
 }
 
-.ant-btn.effects-filter-button {
+.ant-btn.programs-filter-button {
   margin-bottom: 8px;
 }
 
-.ant-input.effects-filter {
+.ant-input.programs-filter {
   margin-bottom: 8px;
   width: 400px;
   margin-right: 8px;

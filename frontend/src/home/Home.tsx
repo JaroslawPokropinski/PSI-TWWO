@@ -17,6 +17,10 @@ function Home(): JSX.Element {
     history.push('/effects');
   }, [history]);
 
+  const onCards = useCallback(() => {
+    history.push('/cards');
+  }, [history]);
+
   const onPrograms = useCallback(() => {
     history.push('/programs');
   }, [history]);
@@ -36,6 +40,14 @@ function Home(): JSX.Element {
         onClick={onEffects}
       >
         Efekty kształcenia
+      </Button>
+      <Button
+        className="home-button"
+        type="primary"
+        size="large"
+        onClick={onCards}
+      >
+        Karty przedmiotów
       </Button>
       <Button
         className="home-button"

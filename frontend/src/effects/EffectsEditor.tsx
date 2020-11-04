@@ -16,6 +16,7 @@ function EffectsEditor(): JSX.Element {
     [history]
   );
   const [isModalVisible, showModal] = useState(false);
+  const [modify, setModify] = useState(query.get('state') === 'create');
   const onRemove = useCallback(() => {
     showModal(true);
   }, []);
@@ -28,10 +29,42 @@ function EffectsEditor(): JSX.Element {
   return (
     <div className="effects-editor">
       <Header title="Edycja efektu kształcenia" />
+      <div className="effects-controlls">
+        <Button
+          className="effects-controlls-button"
+          type="primary"
+          onClick={() => history.goBack()}
+        >
+          Wstecz
+        </Button>
+        {query.get('state') !== 'create' ? (
+          <Button
+            className="effects-controlls-button"
+            type="primary"
+            onClick={() => setModify(true)}
+            disabled={modify}
+          >
+            Modyfikuj
+          </Button>
+        ) : null}
+
+        {query.get('state') === 'update' ? (
+          <Button className="effects-remove-button" onClick={onRemove}>
+            Usuń
+          </Button>
+        ) : null}
+      </div>
       <Form
         className="effects-form"
         name="basic"
-        initialValues={{ code: query.get('code') ?? '' }}
+        initialValues={{
+          code: query.get('code') ?? '',
+          description:
+            'zna podstawy dotyczące architektury systemu Linux i jego eksploatacji jako serwera lub stacji roboczej użytkownika w systemach informatycznych opartych o platformę Linux',
+          category: 'knowledge',
+          prk: '6',
+          bachelor: true,
+        }}
         onFinish={onFinish}
       >
         <Form.Item
@@ -49,7 +82,7 @@ function EffectsEditor(): JSX.Element {
           name="description"
           rules={[{ required: true, message: 'Wprowadź opis efektu!' }]}
         >
-          <Input.TextArea />
+          <Input.TextArea disabled={!modify} />
         </Form.Item>
 
         <Form.Item
@@ -58,9 +91,10 @@ function EffectsEditor(): JSX.Element {
           hasFeedback
           rules={[{ required: true, message: 'Wybierz kategorie efektu!' }]}
         >
-          <Select placeholder="Wybierz kategorie efektu">
-            <Select.Option value="practice">Praktyczny</Select.Option>
-            <Select.Option value="academic">Ogólnouczelniany</Select.Option>
+          <Select placeholder="Wybierz kategorie efektu" disabled={!modify}>
+            <Select.Option value="knowledge">Wiedza</Select.Option>
+            <Select.Option value="skills">Umiejętności</Select.Option>
+            <Select.Option value="social">Kompetencje społeczne</Select.Option>
           </Select>
         </Form.Item>
 
@@ -70,7 +104,7 @@ function EffectsEditor(): JSX.Element {
           name="prk"
           rules={[{ required: true, message: 'Wprowadź poziom PRK efektu!' }]}
         >
-          <InputNumber min={1} max={8} />
+          <InputNumber min={1} max={8} disabled={!modify} />
         </Form.Item>
 
         <Form.Item
@@ -78,7 +112,7 @@ function EffectsEditor(): JSX.Element {
           name="bachelor"
           valuePropName="checked"
         >
-          <Checkbox>Umożliwia inżnyniera</Checkbox>
+          <Checkbox disabled={!modify}>Umożliwia inżnyniera</Checkbox>
         </Form.Item>
 
         <Form.Item
@@ -86,21 +120,16 @@ function EffectsEditor(): JSX.Element {
           name="language"
           valuePropName="checked"
         >
-          <Checkbox>Językowy</Checkbox>
+          <Checkbox disabled={!modify}>Językowy</Checkbox>
         </Form.Item>
 
         <Form.Item className="effects-form-item">
-          <Button type="primary" htmlType="submit">
-            Zatwierdź
-          </Button>
-        </Form.Item>
-        {query.get('state') === 'update' ? (
-          <Form.Item className="effects-form-item">
-            <Button className="effects-remove-button" onClick={onRemove}>
-              Usuń
+          {modify ? (
+            <Button type="primary" htmlType="submit">
+              Zatwierdź
             </Button>
-          </Form.Item>
-        ) : null}
+          ) : null}
+        </Form.Item>
       </Form>
       <RemoveModal
         visible={isModalVisible}

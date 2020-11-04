@@ -1,18 +1,18 @@
-.effects-editor {
+.programs-editor {
   max-width: 1090px;
   margin: 0 auto;
 }
-.ant-btn.effects-remove-button {
+.ant-btn.programs-remove-button {
   background-color: red;
   font-weight: bold;
   color: white;
 }
 
-.effects-controlls {
+.programs-controlls {
   padding-top: 8px;
   padding-bottom: 8px;
 }
 
-.ant-btn.effects-controlls-button {
+.ant-btn.programs-controlls-button {
   margin-right: 8px;
 }

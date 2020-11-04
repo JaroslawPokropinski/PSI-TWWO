@@ -9,9 +9,13 @@ import Effects from '../effects/Effects';
 import EffectsEditor from '../effects/EffectsEditor';
 import Home from '../home/Home';
 import Login from '../login/Login';
+import ProgramsEditor from '../programs/ProgramsEditor';
+import Programs from '../programs/Programs';
 
 import './App.css';
 import AuthContext from './AuthContext';
+import Cards from '../cards/Cards';
+import CardsEditor from '../cards/CardsEditor';
 
 function App(): JSX.Element {
   return (
@@ -19,6 +23,18 @@ function App(): JSX.Element {
       <Router basename={process.env.PUBLIC_URL}>
         <AuthContext.Provider value={{ token: null }}>
           <Switch>
+            <Route path="/cards/edit">
+              <CardsEditor />
+            </Route>
+            <Route path="/cards">
+              <Cards />
+            </Route>
+            <Route path="/programs/edit">
+              <ProgramsEditor />
+            </Route>
+            <Route path="/programs">
+              <Programs />
+            </Route>
             <Route path="/effects/edit">
               <EffectsEditor />
             </Route>
