@@ -20,18 +20,16 @@ function Cards(): JSX.Element {
   const onClick = useCallback(
     (cards: string | null) => {
       if (cards == null) {
-        history.push('/cards/edit?state=create');
+        history.push('/cards/view?state=create');
         return;
       }
-      history.push(
-        `/cards/edit?state=update&name=${encodeURIComponent(cards)}`
-      );
+      history.push(`/cards/view?state=view&name=${encodeURIComponent(cards)}`);
     },
     [history]
   );
   return (
     <div className="cards">
-      <Header title="Programy studiów" />
+      <Header title="Karty przedmiotów" />
       <div>
         <Input className="cards-filter" placeholder="Filtruj programy" />
         <Button

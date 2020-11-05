@@ -50,10 +50,10 @@ function Effects(): JSX.Element {
   const onClick = useCallback(
     (effect: string | null) => {
       if (effect == null) {
-        history.push('/effects/edit?state=create');
+        history.push('/effects/view?state=create');
         return;
       }
-      history.push(`/effects/edit?state=update&code=${effect}`);
+      history.push(`/effects/view?state=update&code=${effect}`);
     },
     [history]
   );

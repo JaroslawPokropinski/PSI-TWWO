@@ -1,54 +1,74 @@
 import { Button, Checkbox, Form, Input, InputNumber, Select } from 'antd';
-import React, { useCallback, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import RemoveModal from '../context/RemoveModal';
 import Header from '../shared/Header';
+import useQueryParam from '../shared/useQueryParam';
 
 import './EffectsEditor.css';
 
 function EffectsEditor(): JSX.Element {
   const history = useHistory();
-  const query = new URLSearchParams(useLocation().search);
+  const { state } = useParams<{ state: string }>();
+  const [code] = useQueryParam('code');
   const onFinish = useCallback(
-    (results) => {
-      history.goBack();
+    (/* results */) => {
+      // history.goBack();
     },
-    [history]
+    []
   );
   const [isModalVisible, showModal] = useState(false);
-  const [modify, setModify] = useState(query.get('state') === 'create');
+  const modify = useMemo(() => state === 'create' || state === 'edit', [state]);
   const onRemove = useCallback(() => {
     showModal(true);
   }, []);
+
   const onRemoveApprove = useCallback(() => {
     history.goBack();
   }, [history]);
+
   const onRemoveCancel = useCallback(() => {
     showModal(false);
   }, []);
+
+  const onEdit = useCallback(() => {
+    history.push(`/effects/edit?code=${code}`);
+  }, [history, code]);
+
   return (
     <div className="effects-editor">
       <Header title="Edycja efektu kształcenia" />
       <div className="effects-controlls">
-        <Button
-          className="effects-controlls-button"
-          type="primary"
-          onClick={() => history.goBack()}
-        >
-          Wstecz
-        </Button>
-        {query.get('state') !== 'create' ? (
+        {state === 'view' || state === 'create' ? (
           <Button
             className="effects-controlls-button"
             type="primary"
-            onClick={() => setModify(true)}
+            onClick={() => history.goBack()}
+          >
+            Wstecz
+          </Button>
+        ) : null}
+        {state === 'edit' ? (
+          <Button
+            className="effects-controlls-button"
+            type="primary"
+            onClick={() => history.goBack()}
+          >
+            Anuluj
+          </Button>
+        ) : null}
+        {state === 'view' ? (
+          <Button
+            className="effects-controlls-button"
+            type="primary"
+            onClick={onEdit}
             disabled={modify}
           >
-            Modyfikuj
+            Edytuj
           </Button>
         ) : null}
 
-        {query.get('state') === 'update' ? (
+        {state === 'view' ? (
           <Button className="effects-remove-button" onClick={onRemove}>
             Usuń
           </Button>
@@ -58,7 +78,7 @@ function EffectsEditor(): JSX.Element {
         className="effects-form"
         name="basic"
         initialValues={{
-          code: query.get('code') ?? '',
+          code,
           description:
             'zna podstawy dotyczące architektury systemu Linux i jego eksploatacji jako serwera lub stacji roboczej użytkownika w systemach informatycznych opartych o platformę Linux',
           category: 'knowledge',
@@ -70,15 +90,17 @@ function EffectsEditor(): JSX.Element {
         <Form.Item
           className="effects-form-item"
           label="Kod"
+          labelAlign="left"
           name="code"
           rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
         >
-          <Input disabled={!(query.get('state') === 'create')} />
+          <Input disabled={!(state === 'create')} />
         </Form.Item>
 
         <Form.Item
           className="effects-form-item"
           label="Opis"
+          labelAlign="left"
           name="description"
           rules={[{ required: true, message: 'Wprowadź opis efektu!' }]}
         >
@@ -88,6 +110,7 @@ function EffectsEditor(): JSX.Element {
         <Form.Item
           name="category"
           label="Kategoria"
+          labelAlign="left"
           hasFeedback
           rules={[{ required: true, message: 'Wybierz kategorie efektu!' }]}
         >
@@ -101,6 +124,7 @@ function EffectsEditor(): JSX.Element {
         <Form.Item
           className="effects-form-item"
           label="Poziom PRK"
+          labelAlign="left"
           name="prk"
           rules={[{ required: true, message: 'Wprowadź poziom PRK efektu!' }]}
         >

@@ -17,6 +17,20 @@
   margin-right: 8px;
 }
 
-.ant-form-item-required {
+
+
+.ant-input:disabled {
+  color: black !important;
+}
+
+.ant-select-selection-search-input:disabled {
+  color: black !important;
+}
+
+/* .ant-form-item-required {
+  min-width: 200px;
+} */
+
+.ant-form-item-label {
   min-width: 200px;
 }

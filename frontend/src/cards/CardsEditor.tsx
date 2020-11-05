@@ -1,101 +1,133 @@
-import { Button, Checkbox, Form, Input, InputNumber, Select } from 'antd';
-import React, { useCallback, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import RemoveModal from '../context/RemoveModal';
-import Header from '../shared/Header';
+import { Checkbox, Form, Input, InputNumber, Select } from 'antd';
+import React, { useCallback, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 
 import './CardsEditor.css';
+import useQueryParam from '../shared/useQueryParam';
+import EditorView from '../shared/EditorView';
+import CardGoals from './CardGoals';
+import CardEffects from './CardEffects';
+import CardRequirements from './CardRequirements';
+import CardTools from './CardTools';
+import CardClasses from './CardClasses';
+
+const mockedData = {
+  descriptions: [{ pol: 'Przykładowy cel przedmiotu' }],
+  angName: 'databases',
+  caretaker: 'Stanisław Przykładowy',
+  subjectType: 'notObligatory',
+  form: 'stationary',
+  degree: 1,
+  unit: 'w8',
+  tools: [{ tool: 'przykł narzędzie' }],
+  classes: [
+    {
+      class: 'lecture',
+      form: 'exam',
+      ects: 1,
+      zzu: 30,
+      cnps: 30,
+      p: 1,
+      bk: 1,
+      programContent: [{ content: 'treść programowa', hours: 30 }],
+    },
+  ],
+};
 
 function CardsEditor(): JSX.Element {
-  const history = useHistory();
-  const query = new URLSearchParams(useLocation().search);
-  const onFinish = useCallback(
-    (results) => {
-      history.goBack();
-    },
-    [history]
-  );
-  const [isModalVisible, showModal] = useState(false);
-  const [modify, setModify] = useState(query.get('state') === 'create');
-  const onRemove = useCallback(() => {
-    showModal(true);
-  }, []);
-  const onRemoveApprove = useCallback(() => {
-    history.goBack();
-  }, [history]);
-  const onRemoveCancel = useCallback(() => {
-    showModal(false);
-  }, []);
+  const { state } = useParams<{ state: string }>();
+  const [qname] = useQueryParam('name');
+  const onFinish = useCallback((e) => console.log(e), []);
+  const modify = useMemo(() => state === 'create' || state === 'edit', [state]);
+
   return (
     <div className="cards-editor">
-      <Header title="Edycja programu studiów" />
-      <div className="cards-controlls">
-        <Button
-          className="cards-controlls-button"
-          type="primary"
-          onClick={() => history.goBack()}
-        >
-          Wstecz
-        </Button>
-        {query.get('state') !== 'create' ? (
-          <Button
-            className="cards-controlls-button"
-            type="primary"
-            onClick={() => setModify(true)}
-            disabled={modify}
-          >
-            Modyfikuj
-          </Button>
-        ) : null}
-
-        {query.get('state') === 'update' ? (
-          <Button className="cards-remove-button" onClick={onRemove}>
-            Usuń
-          </Button>
-        ) : null}
-      </div>
-      <Form
-        className="cards-form"
-        name="basic"
-        initialValues={{
-          code: query.get('code') ?? '',
+      <EditorView
+        name="cards"
+        initialVals={{
+          name: qname,
+          ...mockedData,
         }}
         onFinish={onFinish}
+        queryParams={`?name=${qname}`}
+        header="Edycja karty przedmiotu"
       >
-        {/* Elementy karty przedmiotu */}
         <Form.Item
           className="cards-form-item"
           label="Nazwa przedmiotu"
+          labelAlign="left"
           name="name"
           rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
         >
-          <Input disabled={!(query.get('state') === 'create')} />
+          <Input disabled={!(state === 'create')} />
         </Form.Item>
-
         <Form.Item
           className="cards-form-item"
           label="Ang. nazwa przedmiotu"
+          labelAlign="left"
           name="angName"
           rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
         >
           <Input disabled={!modify} />
         </Form.Item>
-
+        {/* Użytkownik */}
         <Form.Item
-          name="form"
-          label="Forma zaliczenia"
-          hasFeedback
-          rules={[{ required: true, message: 'Wybierz forme zaliczenia!' }]}
+          className="form-item"
+          label="Opiekun przedmiotu"
+          labelAlign="left"
+          name="caretaker"
+          rules={[{ message: 'Wprowadź opiekuna przedmiotu!' }]}
         >
-          <Select placeholder="Wybierz forme zaliczenia" disabled={!modify}>
-            <Select.Option value="exam">Egzamin</Select.Option>
-            <Select.Option value="mark">Ocena</Select.Option>
+          <Input disabled={!modify} />
+        </Form.Item>
+        <Form.Item
+          className="cards-form-item"
+          label="Jednostka organizacyjna"
+          labelAlign="left"
+          name="unit"
+          rules={[
+            {
+              required: true,
+              message: 'Wprowadź jednostkę organizacyjną (wydział)!',
+            },
+          ]}
+        >
+          <Select
+            placeholder="Wprowadź jednostkę organizacyjną (wydział)"
+            disabled={!modify}
+          >
+            <Select.Option value="w8">
+              Wydział Informatyki i Zarządzania
+            </Select.Option>
+            <Select.Option value="w11">
+              Wydział Podstawowych Problemów Techniki
+            </Select.Option>
           </Select>
         </Form.Item>
-
+        {/* rodzajPrzedmiotu */}
+        <Form.Item
+          className="form-item"
+          label="Rodzaj przedmiotu"
+          labelAlign="left"
+          name="subjectType"
+          rules={[
+            {
+              required: true,
+              message: 'Wprowadź rodzaj przedmiotu!',
+            },
+          ]}
+        >
+          <Select placeholder="Wprowadź rodzaj przedmiotu" disabled={!modify}>
+            <Select.Option value="obligatory">Obowiązkowy</Select.Option>
+            <Select.Option value="notObligatory">Wybieralny</Select.Option>
+            <Select.Option value="general">Ogólnouczelniany</Select.Option>
+          </Select>
+        </Form.Item>
+        {/* formaStudiów */}
         <Form.Item
           name="form"
           label="Forma studiów"
+          labelAlign="left"
           hasFeedback
           rules={[{ required: true, message: 'Wybierz forme studiów!' }]}
         >
@@ -104,48 +136,31 @@ function CardsEditor(): JSX.Element {
             <Select.Option value="notStationary">Nie stacjonarne</Select.Option>
           </Select>
         </Form.Item>
-
+        {/* stopień */}
         <Form.Item
-          name="language"
-          label="Język prowadzenia"
+          name="degree"
+          label="Stopień"
+          labelAlign="left"
           hasFeedback
-          rules={[
-            { required: true, message: 'Wybierz język prowadzenia studiów!' },
-          ]}
+          rules={[{ required: true, message: 'Wybierz stopień studiów!' }]}
         >
-          <Select
-            placeholder="Wybierz język prowadzenia studiów"
-            disabled={!modify}
-          >
-            <Select.Option value="polish">Polski</Select.Option>
-            <Select.Option value="english">Angielski</Select.Option>
-          </Select>
+          <InputNumber min={1} max={2} disabled={!modify} />
         </Form.Item>
-
-        <Form.Item
-          className="cards-form-item"
-          label="Łączna liczba godzin"
-          name="hours"
-          rules={[
-            { required: true, message: 'Wprowadź łączną liczbe godzin!' },
-          ]}
-        >
-          <InputNumber min={1} disabled={!modify} />
+        {/* czyGrupaKursów */}
+        <Form.Item className="form-item" name="group" valuePropName="checked">
+          <Checkbox disabled={!modify}>Czy jest grupą kursów</Checkbox>
         </Form.Item>
-
-        <Form.Item className="cards-form-item">
-          {modify ? (
-            <Button type="primary" htmlType="submit">
-              Zatwierdź
-            </Button>
-          ) : null}
-        </Form.Item>
-      </Form>
-      <RemoveModal
-        visible={isModalVisible}
-        onOk={onRemoveApprove}
-        onCancel={onRemoveCancel}
-      />
+        {/* Adding descriptions */}
+        <CardGoals modify={modify} />
+        {/* Adding effects */}
+        <CardEffects modify={modify} />
+        {/* wymaganieWstępne */}
+        <CardRequirements modify={modify} />
+        {/* narzędziaDydaktyczne */}
+        <CardTools modify={modify} />
+        {/* Zajęcia */}
+        <CardClasses modify={modify} />
+      </EditorView>
     </div>
   );
 }

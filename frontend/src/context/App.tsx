@@ -16,6 +16,7 @@ import './App.css';
 import AuthContext from './AuthContext';
 import Cards from '../cards/Cards';
 import CardsEditor from '../cards/CardsEditor';
+import PlansEditor from '../plans/PlansEditor';
 
 function App(): JSX.Element {
   return (
@@ -23,19 +24,22 @@ function App(): JSX.Element {
       <Router basename={process.env.PUBLIC_URL}>
         <AuthContext.Provider value={{ token: null }}>
           <Switch>
-            <Route path="/cards/edit">
+            <Route path="/plans/:state">
+              <PlansEditor />
+            </Route>
+            <Route path="/cards/:state">
               <CardsEditor />
             </Route>
             <Route path="/cards">
               <Cards />
             </Route>
-            <Route path="/programs/edit">
+            <Route path="/programs/:state">
               <ProgramsEditor />
             </Route>
             <Route path="/programs">
               <Programs />
             </Route>
-            <Route path="/effects/edit">
+            <Route path="/effects/:state">
               <EffectsEditor />
             </Route>
             <Route path="/effects">
