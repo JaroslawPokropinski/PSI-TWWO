@@ -14,10 +14,10 @@ function Programs(): JSX.Element {
   const onClick = useCallback(
     (effect: string | null) => {
       if (effect == null) {
-        history.push('/programs/edit?state=create');
+        history.push('/programs/view?state=create');
         return;
       }
-      history.push(`/programs/edit?state=update&code=${effect}`);
+      history.push(`/programs/view?state=update&code=${effect}`);
     },
     [history]
   );

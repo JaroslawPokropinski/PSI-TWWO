@@ -37,7 +37,7 @@ const mockedData = {
 function CardsEditor(): JSX.Element {
   const { state } = useParams<{ state: string }>();
   const [qname] = useQueryParam('name');
-  const onFinish = useCallback((e) => console.log(e), []);
+  const onFinish = useCallback(() => null, []);
   const modify = useMemo(() => state === 'create' || state === 'edit', [state]);
 
   return (
