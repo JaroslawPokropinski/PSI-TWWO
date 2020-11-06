@@ -1,4 +1,4 @@
-import { Button, Form, Input, InputNumber, Select } from 'antd';
+import { Form, Input, InputNumber, Select } from 'antd';
 import React, { useCallback, useMemo } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import EditorView from '../shared/EditorView';
@@ -13,10 +13,12 @@ function ProgramsEditor(): JSX.Element {
   const { state } = useParams<{ state: string }>();
   const modify = useMemo(() => state === 'create' || state === 'edit', [state]);
   const onFinish = useCallback(
-    (_results) => {
-      history.goBack();
+    (/* results */) => {
+      // history.goBack();
     },
-    [history]
+    [
+      /* history */
+    ]
   );
 
   return (
