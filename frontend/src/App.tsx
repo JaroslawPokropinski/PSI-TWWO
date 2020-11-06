@@ -9,7 +9,7 @@ import axios from './configuration/axios';
 function App(): JSX.Element {
   const onFinish = useCallback((results) => {
     axios
-      .post('/login', {
+      .post('/api.user/signin', {
         username: results.username,
         password: results.password,
       })
