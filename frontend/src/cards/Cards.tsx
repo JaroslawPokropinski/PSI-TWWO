@@ -20,7 +20,7 @@ function Cards(): JSX.Element {
   const onClick = useCallback(
     (cards: string | null) => {
       if (cards == null) {
-        history.push('/cards/view?state=create');
+        history.push('/cards/edit');
         return;
       }
       history.push(`/cards/view?state=view&name=${encodeURIComponent(cards)}`);

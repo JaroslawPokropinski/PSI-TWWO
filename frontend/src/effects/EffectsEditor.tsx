@@ -1,14 +1,13 @@
-import { Button, Checkbox, Form, Input, InputNumber, Select } from 'antd';
-import React, { useCallback, useMemo, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import RemoveModal from '../context/RemoveModal';
-import Header from '../shared/Header';
+import { Checkbox, Form, Input, InputNumber, Select } from 'antd';
+import React, { useCallback, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
+import EditorView from '../shared/EditorView';
 import useQueryParam from '../shared/useQueryParam';
+import EffectMappings from './EffectMappings';
 
 import './EffectsEditor.css';
 
 function EffectsEditor(): JSX.Element {
-  const history = useHistory();
   const { state } = useParams<{ state: string }>();
   const [code] = useQueryParam('code');
   const onFinish = useCallback(
@@ -17,75 +16,25 @@ function EffectsEditor(): JSX.Element {
     },
     []
   );
-  const [isModalVisible, showModal] = useState(false);
   const modify = useMemo(() => state === 'create' || state === 'edit', [state]);
-  const onRemove = useCallback(() => {
-    showModal(true);
-  }, []);
-
-  const onRemoveApprove = useCallback(() => {
-    history.goBack();
-  }, [history]);
-
-  const onRemoveCancel = useCallback(() => {
-    showModal(false);
-  }, []);
-
-  const onEdit = useCallback(() => {
-    history.push(`/effects/edit?code=${code}`);
-  }, [history, code]);
 
   return (
     <div className="effects-editor">
-      <Header title="Edycja efektu kształcenia" />
-      <div className="effects-controlls">
-        {state === 'view' || state === 'create' ? (
-          <Button
-            className="effects-controlls-button"
-            type="primary"
-            onClick={() => history.goBack()}
-          >
-            Wstecz
-          </Button>
-        ) : null}
-        {state === 'edit' ? (
-          <Button
-            className="effects-controlls-button"
-            type="primary"
-            onClick={() => history.goBack()}
-          >
-            Anuluj
-          </Button>
-        ) : null}
-        {state === 'view' ? (
-          <Button
-            className="effects-controlls-button"
-            type="primary"
-            onClick={onEdit}
-            disabled={modify}
-          >
-            Edytuj
-          </Button>
-        ) : null}
-
-        {state === 'view' ? (
-          <Button className="effects-remove-button" onClick={onRemove}>
-            Usuń
-          </Button>
-        ) : null}
-      </div>
-      <Form
-        className="effects-form"
-        name="basic"
-        initialValues={{
+      <EditorView
+        header="Edycja efektu kształcenia"
+        initialVals={{
           code,
-          description:
-            'zna podstawy dotyczące architektury systemu Linux i jego eksploatacji jako serwera lub stacji roboczej użytkownika w systemach informatycznych opartych o platformę Linux',
+          description: code
+            ? 'zna podstawy dotyczące architektury systemu Linux i jego eksploatacji jako serwera lub stacji roboczej użytkownika w systemach informatycznych opartych o platformę Linux'
+            : '',
           category: 'knowledge',
           prk: '6',
           bachelor: true,
+          type: 'minist',
         }}
+        name="effects"
         onFinish={onFinish}
+        queryParams=""
       >
         <Form.Item
           className="effects-form-item"
@@ -94,7 +43,22 @@ function EffectsEditor(): JSX.Element {
           name="code"
           rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
         >
-          <Input disabled={!(state === 'create')} />
+          <Input disabled={!(state === 'edit' && code === '')} />
+        </Form.Item>
+
+        <Form.Item
+          className="form-item"
+          label="Typ efektu"
+          labelAlign="left"
+          name="type"
+          rules={[{ required: true, message: 'Wprowadź typ efektu!' }]}
+        >
+          <Select disabled={!modify}>
+            <Select.Option value="minist">Ministerialny</Select.Option>
+            <Select.Option value="kier">Kierunkowy</Select.Option>
+            <Select.Option value="special">Specjalnościowy</Select.Option>
+            <Select.Option value="przedm">Przedmiotowy</Select.Option>
+          </Select>
         </Form.Item>
 
         <Form.Item
@@ -146,20 +110,8 @@ function EffectsEditor(): JSX.Element {
         >
           <Checkbox disabled={!modify}>Językowy</Checkbox>
         </Form.Item>
-
-        <Form.Item className="effects-form-item">
-          {modify ? (
-            <Button type="primary" htmlType="submit">
-              Zatwierdź
-            </Button>
-          ) : null}
-        </Form.Item>
-      </Form>
-      <RemoveModal
-        visible={isModalVisible}
-        onOk={onRemoveApprove}
-        onCancel={onRemoveCancel}
-      />
+        <EffectMappings modify={modify} />
+      </EditorView>
     </div>
   );
 }

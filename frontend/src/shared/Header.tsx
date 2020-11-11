@@ -3,7 +3,7 @@ import Title from 'antd/lib/typography/Title';
 import { useHistory } from 'react-router-dom';
 
 import logo from '../resources/logo.png';
-import './Header.css';
+import './Header.less';
 
 function Header(props: { title: string }): JSX.Element {
   const { title } = props;

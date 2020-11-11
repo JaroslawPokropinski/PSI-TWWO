@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import RemoveModal from '../context/RemoveModal';
 import Header from './Header';
 
-import './EditorView.css';
+import './EditorView.less';
 
 const EditorView: React.FC<{
   name: string;
