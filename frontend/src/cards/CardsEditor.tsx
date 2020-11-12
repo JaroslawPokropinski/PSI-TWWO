@@ -59,7 +59,7 @@ function CardsEditor(): JSX.Element {
           name="name"
           rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
         >
-          <Input disabled={!(state === 'create')} />
+          <Input disabled={!(state === 'edit' && qname === '')} />
         </Form.Item>
         <Form.Item
           className="cards-form-item"

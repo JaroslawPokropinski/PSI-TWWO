@@ -38,7 +38,7 @@ function ProgramsEditor(): JSX.Element {
         name="code"
         rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
       >
-        <Input disabled={!(state === 'create')} />
+        <Input disabled={!(state === 'edit' && code === '')} />
       </Form.Item>
       {/* JednostkaOrganizacyjna */}
       <Form.Item
