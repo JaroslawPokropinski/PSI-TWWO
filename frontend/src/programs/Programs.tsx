@@ -14,7 +14,7 @@ function Programs(): JSX.Element {
   const onClick = useCallback(
     (effect: string | null) => {
       if (effect == null) {
-        history.push('/programs/view?state=create');
+        history.push('/programs/edit');
         return;
       }
       history.push(`/programs/view?state=update&code=${effect}`);

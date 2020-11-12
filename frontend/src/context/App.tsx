@@ -17,6 +17,7 @@ import AuthContext from './AuthContext';
 import Cards from '../cards/Cards';
 import CardsEditor from '../cards/CardsEditor';
 import PlansEditor from '../plans/PlansEditor';
+import Plans from '../plans/Plans';
 
 function App(): JSX.Element {
   return (
@@ -26,6 +27,9 @@ function App(): JSX.Element {
           <Switch>
             <Route path="/plans/:state">
               <PlansEditor />
+            </Route>
+            <Route path="/plans">
+              <Plans />
             </Route>
             <Route path="/cards/:state">
               <CardsEditor />

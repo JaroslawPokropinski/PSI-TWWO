@@ -3,54 +3,53 @@ import { Button, Input, List } from 'antd';
 import { useHistory } from 'react-router-dom';
 import Header from '../shared/Header';
 
-import './Cards.css';
+import './Plans.css';
 
 const pageSize = 6;
 const mockData = [
-  { name: 'Bazy danych' },
-  { name: 'Technologie wsp.wytw.oprogr' },
-  { name: 'Projektowanie sys. informat' },
-  { name: 'Podstawy biz. i ochr.wł.intel' },
-  { name: 'Bezpieczeństwo sys.web.i mob' },
+  {
+    code: 'INZ003854P',
+    name: 'Informatyka stosowana dla cyklu kształcenia od 2020/2021',
+  },
 ];
 
-function Cards(): JSX.Element {
+function Plans(): JSX.Element {
   const history = useHistory();
   const [listData, setListData] = useState(mockData.slice(0, pageSize));
   const onClick = useCallback(
-    (cards: string | null) => {
-      if (cards == null) {
-        history.push('/cards/edit');
+    (effect: string | null) => {
+      if (effect == null) {
+        history.push('/plans/edit');
         return;
       }
-      history.push(`/cards/view?state=view&name=${encodeURIComponent(cards)}`);
+      history.push(`/plans/view?state=update&code=${effect}`);
     },
     [history]
   );
   return (
-    <div className="cards">
-      <Header title="Karty przedmiotów" />
+    <div className="plans">
+      <Header title="Plany studiów" />
       <div>
-        <Input className="cards-filter" placeholder="Filtruj programy" />
+        <Input className="plans-filter" placeholder="Filtruj plany" />
         <Button
           type="primary"
-          className="cards-filter-button"
+          className="plans-filter-button"
           onClick={() => onClick(null)}
         >
-          filtruj
+          Filtruj
         </Button>
       </div>
 
       <Button
         type="primary"
-        className="cards-add"
+        className="plans-add"
         onClick={() => onClick(null)}
       >
         Dodaj
       </Button>
 
       <List
-        className="cards-list"
+        className="plans-list"
         itemLayout="vertical"
         size="small"
         pagination={{
@@ -66,9 +65,9 @@ function Cards(): JSX.Element {
         dataSource={listData}
         renderItem={(item) => (
           <List.Item
-            className="cards-item"
-            key={item.name}
-            onClick={() => onClick(item.name)}
+            className="plans-item"
+            key={item.code}
+            onClick={() => onClick(item.code)}
           >
             <div>{item.name}</div>
           </List.Item>
@@ -78,4 +77,4 @@ function Cards(): JSX.Element {
   );
 }
 
-export default Cards;
+export default Plans;
