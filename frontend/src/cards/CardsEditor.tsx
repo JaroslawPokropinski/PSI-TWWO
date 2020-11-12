@@ -51,6 +51,8 @@ function CardsEditor(): JSX.Element {
         onFinish={onFinish}
         queryParams={`?name=${qname}`}
         header="Edycja karty przedmiotu"
+        isVerifiable
+        isVerified={false}
       >
         <Form.Item
           className="cards-form-item"
