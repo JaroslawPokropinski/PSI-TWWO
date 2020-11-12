@@ -18,7 +18,7 @@ const CardGoals: React.FunctionComponent<{ modify: boolean }> = ({
                 fieldKey={[field.fieldKey, 'pol']}
                 rules={[{ required: true, message: 'Podaj cel!' }]}
               >
-                <Input placeholder="Podaj cel przedmiotu" />
+                <Input placeholder="Podaj cel przedmiotu" disabled={!modify} />
               </Form.Item>
 
               {modify ? (

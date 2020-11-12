@@ -20,7 +20,10 @@ const CardTools: React.FunctionComponent<{ modify: boolean }> = ({
                   { required: true, message: 'Podaj narzędzie dydaktyczne!' },
                 ]}
               >
-                <Input placeholder="Podaj narzędzie dydaktyczne" />
+                <Input
+                  placeholder="Podaj narzędzie dydaktyczne"
+                  disabled={!modify}
+                />
               </Form.Item>
 
               {modify ? (

@@ -4,6 +4,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import EditorView from '../shared/EditorView';
 import useQueryParam from '../shared/useQueryParam';
 import ProgramBlocks from './ProgramBlocks';
+import ProgramDisciplines from './ProgramDisciplines';
+import ProgramEffects from './ProgramEffects';
 
 import './ProgramsEditor.css';
 
@@ -36,7 +38,7 @@ function ProgramsEditor(): JSX.Element {
         label="Kod"
         labelAlign="left"
         name="code"
-        rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
+        rules={[{ required: true, message: 'Wprowadź kod programu uczenia!' }]}
       >
         <Input disabled={!(state === 'create')} />
       </Form.Item>
@@ -167,10 +169,30 @@ function ProgramsEditor(): JSX.Element {
 
       <Form.Item
         className="form-item"
-        label="Łączna liczba godzin"
+        label="Liczba semestrów"
+        labelAlign="left"
+        name="periods"
+        rules={[{ required: true, message: 'Wprowadź liczbę semestrów!' }]}
+      >
+        <InputNumber min={1} disabled={!modify} />
+      </Form.Item>
+
+      <Form.Item
+        className="form-item"
+        label="Łączna liczba godzin (CNPS)"
         labelAlign="left"
         name="hours"
         rules={[{ required: true, message: 'Wprowadź łączną liczbe godzin!' }]}
+      >
+        <InputNumber min={1} disabled={!modify} />
+      </Form.Item>
+
+      <Form.Item
+        className="form-item"
+        label="Liczba punktów ECTS"
+        labelAlign="left"
+        name="ects"
+        rules={[{ required: true, message: 'Wprowadź liczbę punktów!' }]}
       >
         <InputNumber min={1} disabled={!modify} />
       </Form.Item>
@@ -228,6 +250,10 @@ function ProgramsEditor(): JSX.Element {
 
       {/* BlokiZajęć */}
       <ProgramBlocks modify={modify} />
+      {/* Programowe Efekty Kształcenia */}
+      <ProgramEffects modify={modify} />
+      {/* Dyscypliny */}
+      <ProgramDisciplines modify={modify} />
     </EditorView>
   );
 }

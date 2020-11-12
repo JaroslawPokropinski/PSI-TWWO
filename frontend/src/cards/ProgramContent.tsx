@@ -19,7 +19,10 @@ const ProgramContent: React.FunctionComponent<{
                 name={[field.name, 'content']}
                 rules={[{ required: true, message: 'Podaj treść programową!' }]}
               >
-                <Input placeholder="Podaj treść programową" />
+                <Input
+                  placeholder="Podaj treść programową"
+                  disabled={!modify}
+                />
               </Form.Item>
 
               <Form.Item
@@ -33,7 +36,7 @@ const ProgramContent: React.FunctionComponent<{
                   },
                 ]}
               >
-                <InputNumber min={1} max={900} />
+                <InputNumber min={1} max={900} disabled={!modify} />
               </Form.Item>
 
               {modify ? (

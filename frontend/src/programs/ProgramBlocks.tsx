@@ -28,7 +28,7 @@ const ProgramBlocks: React.FunctionComponent<{
               );
             }}
           />
-          <Button icon={<PlusOutlined />}>Dodaj efekt kształcenia</Button>
+          <Button icon={<PlusOutlined />}>Dodaj blok zajęciowy</Button>
         </Form.Item>
       ) : null}
       <Form.Item className="form-item">
