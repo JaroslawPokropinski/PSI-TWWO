@@ -4,12 +4,10 @@ import { PlusOutlined } from '@ant-design/icons';
 
 const mockData = [
   {
-    value:
-      'zna podstawy dotyczące architektury systemu Linux i jego eksploatacji jako serwera lub stacji roboczej użytkownika w systemach informatycznych opartych o platformę Linux',
+    value: 'Dyscyplina 1',
   },
   {
-    value:
-      'posiada wiedzę na temat podstaw funkcjonowania systemu Lunux w sieci komputerowej i wykorzystania platformy Linux w budowie infrastruktury sieciowej i usług sieciowych',
+    value: 'Dyscyplina 2',
   },
 ];
 
@@ -18,7 +16,7 @@ const ProgramDisciplines: React.FunctionComponent<{
 }> = ({ modify = false }) => {
   return (
     <>
-      Programowe Efekty kształcenia
+      Dyscypliny
       {modify ? (
         <Form.Item>
           <AutoComplete
@@ -33,7 +31,7 @@ const ProgramDisciplines: React.FunctionComponent<{
               );
             }}
           />
-          <Button icon={<PlusOutlined />}>Dodaj efekt kształcenia</Button>
+          <Button icon={<PlusOutlined />}>Dodaj dyscyplinę</Button>
         </Form.Item>
       ) : null}
       <Form.Item className="cards-form-item">

@@ -6,6 +6,9 @@ const mockData = [
   {
     value: 'Grafika komputerowa',
   },
+  {
+    value: 'Systemy Wbudowane i Mobilne',
+  },
 ];
 
 const ProgramBlocks: React.FunctionComponent<{
@@ -34,7 +37,10 @@ const ProgramBlocks: React.FunctionComponent<{
       <Form.Item className="form-item">
         <List
           bordered
-          dataSource={['Bazy danych', 'potrafi ...']}
+          dataSource={[
+            'Paradygmaty Programowania',
+            'Projektowanie Aplikacji Mobilnych',
+          ]}
           renderItem={(item) => <List.Item>{item}</List.Item>}
         />
       </Form.Item>
