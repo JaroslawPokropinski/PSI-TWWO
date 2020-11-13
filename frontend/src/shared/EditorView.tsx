@@ -1,6 +1,8 @@
-import { Button, Form } from 'antd';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { Button, Form } from 'antd';
+import { Store } from 'antd/lib/form/interface';
+import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 import RemoveModal from '../context/RemoveModal';
 import Header from './Header';
 
@@ -11,10 +13,12 @@ const EditorView: React.FunctionComponent<{
   name: string;
   onFinish: (results: unknown) => void;
   queryParams: string;
-  initialVals: any;
+  initialVals: Store;
   header: string;
   isVerified?: boolean;
   isVerifiable?: boolean;
+  useArchive?: boolean;
+  archiveVals?: Store;
 }> = ({
   name = '',
   queryParams = '',
@@ -24,6 +28,8 @@ const EditorView: React.FunctionComponent<{
   children = [],
   isVerified = false,
   isVerifiable = true,
+  useArchive = false,
+  archiveVals = null,
 }) => {
   const history = useHistory();
   const { state } = useParams<{ state: string }>();
@@ -38,6 +44,7 @@ const EditorView: React.FunctionComponent<{
   );
   const [isModalVisible, showModal] = useState(false);
   const [isVerifyModalVisible, showVerifyModal] = useState(false);
+  const [isShowingHistory, showHistory] = useState(false);
   const modify = useMemo(() => state === 'create' || state === 'edit', [state]);
   const onRemove = useCallback(() => {
     showModal(true);
@@ -123,28 +130,65 @@ const EditorView: React.FunctionComponent<{
           </Button>
         ) : null}
 
+        <Button
+          className="controlls-button"
+          type="primary"
+          onClick={() => showHistory(!isShowingHistory)}
+        >
+          Historia
+        </Button>
+
+        {isShowingHistory ? (
+          <>
+            <Button className="controlls-button" type="primary">
+              <CaretLeftOutlined />
+            </Button>
+            <Button className="controlls-button" type="primary">
+              <CaretRightOutlined />
+            </Button>
+          </>
+        ) : null}
+
         {state === 'view' ? (
           <Button className="remove-button" onClick={onRemove}>
             Usuń
           </Button>
         ) : null}
       </div>
-      <Form
-        className="form"
-        name="basic"
-        initialValues={initialVals}
-        onFinish={handleFinish}
-      >
-        {children}
+      <div className="form-container">
+        <Form
+          className="form"
+          name="basic"
+          initialValues={initialVals}
+          onFinish={handleFinish}
+        >
+          {React.Children.map(children, (child, i) => {
+            if (i !== 0) return null;
+            return child;
+          })}
 
-        <Form.Item className="form-item">
-          {modify ? (
-            <Button type="primary" htmlType="submit">
-              Zatwierdź
-            </Button>
-          ) : null}
-        </Form.Item>
-      </Form>
+          <Form.Item className="form-item">
+            {modify ? (
+              <Button type="primary" htmlType="submit">
+                Zatwierdź
+              </Button>
+            ) : null}
+          </Form.Item>
+        </Form>
+        {useArchive && archiveVals != null && isShowingHistory ? (
+          <Form
+            className="form"
+            name="basic"
+            initialValues={archiveVals}
+            onFinish={handleFinish}
+          >
+            {React.Children.map(children, (child, i) => {
+              if (i !== 1) return null;
+              return child;
+            })}
+          </Form>
+        ) : null}
+      </div>
       <RemoveModal
         visible={isModalVisible}
         onOk={onRemoveApprove}
