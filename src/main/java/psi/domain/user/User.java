@@ -18,6 +18,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
+import static psi.infrastructure.utils.PersistenceConstants.ID_GENERATOR;
+
 @Entity
 @Table(name = "USER")
 @AllArgsConstructor
@@ -27,7 +29,7 @@ import java.util.Objects;
 public class User extends AuditedObject {
 
     @Id
-    @GeneratedValue(generator = "ID_GENERATOR")
+    @GeneratedValue(generator = ID_GENERATOR)
     private Long id;
 
     @NotBlank
