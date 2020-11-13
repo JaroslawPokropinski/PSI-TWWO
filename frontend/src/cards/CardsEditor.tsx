@@ -54,114 +54,118 @@ function CardsEditor(): JSX.Element {
         isVerifiable
         isVerified={false}
       >
-        <Form.Item
-          className="cards-form-item"
-          label="Nazwa przedmiotu"
-          labelAlign="left"
-          name="name"
-          rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
-        >
-          <Input disabled={!(state === 'edit' && qname === '')} />
-        </Form.Item>
-        <Form.Item
-          className="cards-form-item"
-          label="Ang. nazwa przedmiotu"
-          labelAlign="left"
-          name="angName"
-          rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
-        >
-          <Input disabled={!modify} />
-        </Form.Item>
-        {/* Użytkownik */}
-        <Form.Item
-          className="form-item"
-          label="Opiekun przedmiotu"
-          labelAlign="left"
-          name="caretaker"
-          rules={[{ message: 'Wprowadź opiekuna przedmiotu!' }]}
-        >
-          <Input disabled={!modify} />
-        </Form.Item>
-        <Form.Item
-          className="cards-form-item"
-          label="Jednostka organizacyjna"
-          labelAlign="left"
-          name="unit"
-          rules={[
-            {
-              required: true,
-              message: 'Wprowadź jednostkę organizacyjną (wydział)!',
-            },
-          ]}
-        >
-          <Select
-            placeholder="Wprowadź jednostkę organizacyjną (wydział)"
-            disabled={!modify}
+        <div>
+          <Form.Item
+            className="cards-form-item"
+            label="Nazwa przedmiotu"
+            labelAlign="left"
+            name="name"
+            rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
           >
-            <Select.Option value="w8">
-              Wydział Informatyki i Zarządzania
-            </Select.Option>
-            <Select.Option value="w11">
-              Wydział Podstawowych Problemów Techniki
-            </Select.Option>
-          </Select>
-        </Form.Item>
-        {/* rodzajPrzedmiotu */}
-        <Form.Item
-          className="form-item"
-          label="Rodzaj przedmiotu"
-          labelAlign="left"
-          name="subjectType"
-          rules={[
-            {
-              required: true,
-              message: 'Wprowadź rodzaj przedmiotu!',
-            },
-          ]}
-        >
-          <Select placeholder="Wprowadź rodzaj przedmiotu" disabled={!modify}>
-            <Select.Option value="obligatory">Obowiązkowy</Select.Option>
-            <Select.Option value="notObligatory">Wybieralny</Select.Option>
-            <Select.Option value="general">Ogólnouczelniany</Select.Option>
-          </Select>
-        </Form.Item>
-        {/* formaStudiów */}
-        <Form.Item
-          name="form"
-          label="Forma studiów"
-          labelAlign="left"
-          hasFeedback
-          rules={[{ required: true, message: 'Wybierz forme studiów!' }]}
-        >
-          <Select placeholder="Wybierz forme studiów" disabled={!modify}>
-            <Select.Option value="stationary">Stacjonarne</Select.Option>
-            <Select.Option value="notStationary">Nie stacjonarne</Select.Option>
-          </Select>
-        </Form.Item>
-        {/* stopień */}
-        <Form.Item
-          name="degree"
-          label="Stopień"
-          labelAlign="left"
-          hasFeedback
-          rules={[{ required: true, message: 'Wybierz stopień studiów!' }]}
-        >
-          <InputNumber min={1} max={2} disabled={!modify} />
-        </Form.Item>
-        {/* czyGrupaKursów */}
-        <Form.Item className="form-item" name="group" valuePropName="checked">
-          <Checkbox disabled={!modify}>Czy jest grupą kursów</Checkbox>
-        </Form.Item>
-        {/* Adding descriptions */}
-        <CardGoals modify={modify} />
-        {/* Adding effects */}
-        <CardEffects modify={modify} />
-        {/* wymaganieWstępne */}
-        <CardRequirements modify={modify} />
-        {/* narzędziaDydaktyczne */}
-        <CardTools modify={modify} />
-        {/* Zajęcia */}
-        <CardClasses modify={modify} />
+            <Input disabled={!(state === 'edit' && qname === '')} />
+          </Form.Item>
+          <Form.Item
+            className="cards-form-item"
+            label="Ang. nazwa przedmiotu"
+            labelAlign="left"
+            name="angName"
+            rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
+          >
+            <Input disabled={!modify} />
+          </Form.Item>
+          {/* Użytkownik */}
+          <Form.Item
+            className="form-item"
+            label="Opiekun przedmiotu"
+            labelAlign="left"
+            name="caretaker"
+            rules={[{ message: 'Wprowadź opiekuna przedmiotu!' }]}
+          >
+            <Input disabled={!modify} />
+          </Form.Item>
+          <Form.Item
+            className="cards-form-item"
+            label="Jednostka organizacyjna"
+            labelAlign="left"
+            name="unit"
+            rules={[
+              {
+                required: true,
+                message: 'Wprowadź jednostkę organizacyjną (wydział)!',
+              },
+            ]}
+          >
+            <Select
+              placeholder="Wprowadź jednostkę organizacyjną (wydział)"
+              disabled={!modify}
+            >
+              <Select.Option value="w8">
+                Wydział Informatyki i Zarządzania
+              </Select.Option>
+              <Select.Option value="w11">
+                Wydział Podstawowych Problemów Techniki
+              </Select.Option>
+            </Select>
+          </Form.Item>
+          {/* rodzajPrzedmiotu */}
+          <Form.Item
+            className="form-item"
+            label="Rodzaj przedmiotu"
+            labelAlign="left"
+            name="subjectType"
+            rules={[
+              {
+                required: true,
+                message: 'Wprowadź rodzaj przedmiotu!',
+              },
+            ]}
+          >
+            <Select placeholder="Wprowadź rodzaj przedmiotu" disabled={!modify}>
+              <Select.Option value="obligatory">Obowiązkowy</Select.Option>
+              <Select.Option value="notObligatory">Wybieralny</Select.Option>
+              <Select.Option value="general">Ogólnouczelniany</Select.Option>
+            </Select>
+          </Form.Item>
+          {/* formaStudiów */}
+          <Form.Item
+            name="form"
+            label="Forma studiów"
+            labelAlign="left"
+            hasFeedback
+            rules={[{ required: true, message: 'Wybierz forme studiów!' }]}
+          >
+            <Select placeholder="Wybierz forme studiów" disabled={!modify}>
+              <Select.Option value="stationary">Stacjonarne</Select.Option>
+              <Select.Option value="notStationary">
+                Nie stacjonarne
+              </Select.Option>
+            </Select>
+          </Form.Item>
+          {/* stopień */}
+          <Form.Item
+            name="degree"
+            label="Stopień"
+            labelAlign="left"
+            hasFeedback
+            rules={[{ required: true, message: 'Wybierz stopień studiów!' }]}
+          >
+            <InputNumber min={1} max={2} disabled={!modify} />
+          </Form.Item>
+          {/* czyGrupaKursów */}
+          <Form.Item className="form-item" name="group" valuePropName="checked">
+            <Checkbox disabled={!modify}>Czy jest grupą kursów</Checkbox>
+          </Form.Item>
+          {/* Adding descriptions */}
+          <CardGoals modify={modify} />
+          {/* Adding effects */}
+          <CardEffects modify={modify} />
+          {/* wymaganieWstępne */}
+          <CardRequirements modify={modify} />
+          {/* narzędziaDydaktyczne */}
+          <CardTools modify={modify} />
+          {/* Zajęcia */}
+          <CardClasses modify={modify} />
+        </div>
       </EditorView>
     </div>
   );
