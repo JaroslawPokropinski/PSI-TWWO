@@ -4,43 +4,43 @@ import { useHistory } from 'react-router-dom';
 import Header from '../shared/Header';
 
 import './Effects.css';
+import { getSurrogateAvatar } from '../shared/AvatarUtils';
 
 const pageSize = 6;
 const mockData = [
   {
     code: 'PEK_W01',
     description:
-      'zna podstawy dotyczące architektury systemu Linux i jego eksploatacji jako serwera lub stacji roboczej użytkownika w systemach informatycznych opartych o platformę Linux',
+      'Zna podstawy dotyczące architektury systemu Linux i jego eksploatacji jako serwera lub stacji roboczej użytkownika w systemach informatycznych opartych o platformę Linux',
   },
   {
     code: 'PEK_W02',
     description:
-      'posiada wiedzę na temat podstaw funkcjonowania systemu Lunux w sieci komputerowej i wykorzystania platformy Linux w budowie infrastruktury sieciowej i usług sieciowych',
+      'Posiada wiedzę na temat podstaw funkcjonowania systemu Lunux w sieci komputerowej i wykorzystania platformy Linux w budowie infrastruktury sieciowej i usług sieciowych',
   },
   {
     code: 'PEK_W03',
     description:
-      'posiada wiedzę na temat podstaw funkcjonowania systemu Lunux w sieci komputerowej i wykorzystania platformy Linux w budowie infrastruktury sieciowej i usług sieciowych',
+      'Posiada podstawową wiedzę na temat konfiguracji systemu Linux zuwzględnieniem aspektów bezpieczeństwa.',
   },
   {
-    code: 'PEK_W04',
+    code: 'PEK_U01',
     description:
-      'posiada wiedzę na temat podstaw funkcjonowania systemu Lunux w sieci komputerowej i wykorzystania platformy Linux w budowie infrastruktury sieciowej i usług sieciowych',
+      'Potrafi wykonać podstawowe czynności administracyjne związane z instalacją',
   },
   {
-    code: 'PEK_W05',
+    code: 'PEK_U02',
     description:
-      'posiada wiedzę na temat podstaw funkcjonowania systemu Lunux w sieci komputerowej i wykorzystania platformy Linux w budowie infrastruktury sieciowej i usług sieciowych',
+      'Potrafi skonfigurować podstawowe elementy podsystemu sieciowego platformy Linux oraz uruchamiać na niej usługi sieciowe',
   },
   {
-    code: 'PEK_W06',
+    code: 'PEK_U03',
     description:
-      'posiada wiedzę na temat podstaw funkcjonowania systemu Lunux w sieci komputerowej i wykorzystania platformy Linux w budowie infrastruktury sieciowej i usług sieciowych',
+      'Potrafi, w podstawowym zakresie, zabezpieczyć system operacyjny Linux.',
   },
   {
-    code: 'PEK_W07',
-    description:
-      'posiada wiedzę na temat podstaw funkcjonowania systemu Lunux w sieci komputerowej i wykorzystania platformy Linux w budowie infrastruktury sieciowej i usług sieciowych',
+    code: 'PEK_K01',
+    description: 'Umie zespołowo pracować nad rozwiązaniem problemów.',
   },
 ];
 
@@ -100,7 +100,11 @@ function Effects(): JSX.Element {
             key={item.code}
             onClick={() => onClick(item.code)}
           >
-            <div>{item.description}</div>
+            <List.Item.Meta
+              avatar={getSurrogateAvatar(item.code.substring(4, 5), 30, 20)}
+              title={item.code}
+              description={item.description}
+            />
           </List.Item>
         )}
       />
