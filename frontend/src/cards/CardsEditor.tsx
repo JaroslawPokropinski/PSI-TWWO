@@ -10,6 +10,7 @@ import CardEffects from './CardEffects';
 import CardRequirements from './CardRequirements';
 import CardTools from './CardTools';
 import CardClasses from './CardClasses';
+import CardLiterature from './CardLiterature';
 
 const mockedData = {
   descriptions: [{ pol: 'Przykładowy cel przedmiotu' }],
@@ -19,6 +20,7 @@ const mockedData = {
   subjectType: 'notObligatory',
   form: 'stationary',
   degree: 1,
+  fieldOfStudy: 'inf',
   unit: 'w8',
   tools: [{ tool: 'przykł narzędzie' }],
   classes: [
@@ -92,6 +94,22 @@ function CardsEditor(): JSX.Element {
             rules={[{ message: 'Wprowadź opiekuna przedmiotu!' }]}
           >
             <Input disabled={!modify} />
+          </Form.Item>
+          <Form.Item
+            className="cards-form-item"
+            label="Kierunek"
+            labelAlign="left"
+            name="fieldOfStudy"
+            rules={[
+              {
+                required: false,
+                message: 'Wprowadź kierunek!',
+              },
+            ]}
+          >
+            <Select placeholder="Wprowadź kierunek" disabled={!modify}>
+              <Select.Option value="inf">Informatyka</Select.Option>
+            </Select>
           </Form.Item>
           <Form.Item
             className="cards-form-item"
@@ -175,6 +193,8 @@ function CardsEditor(): JSX.Element {
           <CardTools modify={modify} />
           {/* Zajęcia */}
           <CardClasses modify={modify} />
+          {/* literatura */}
+          <CardLiterature modify={modify} />
         </div>
       </EditorView>
     </div>
