@@ -4,14 +4,15 @@ import { useHistory } from 'react-router-dom';
 import Header from '../shared/Header';
 
 import './Cards.css';
+import { getSurrogateAvatar } from '../shared/AvatarUtils';
 
 const pageSize = 6;
 const mockData = [
-  { name: 'Bazy danych' },
-  { name: 'Technologie wsp.wytw.oprogr' },
-  { name: 'Projektowanie sys. informat' },
-  { name: 'Podstawy biz. i ochr.wł.intel' },
-  { name: 'Bezpieczeństwo sys.web.i mob' },
+  { name: 'Bazy danych', code: 'INZ005234' },
+  { name: 'Technologie wsp.wytw.oprogr', code: 'INZ005234' },
+  { name: 'Projektowanie sys. informat', code: 'INZ005734' },
+  { name: 'Podstawy biz. i ochr.wł.intel', code: 'INZ009204' },
+  { name: 'Bezpieczeństwo sys.web.i mob', code: 'INZ002231' },
 ];
 
 function Cards(): JSX.Element {
@@ -70,7 +71,11 @@ function Cards(): JSX.Element {
             key={item.name}
             onClick={() => onClick(item.name)}
           >
-            <div>{item.name}</div>
+            <List.Item.Meta
+              avatar={getSurrogateAvatar(item.name, 30, 20)}
+              title={item.code}
+              description={item.name}
+            />
           </List.Item>
         )}
       />

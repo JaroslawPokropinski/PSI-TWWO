@@ -13,6 +13,7 @@ import CardClasses from './CardClasses';
 
 const mockedData = {
   descriptions: [{ pol: 'Przykładowy cel przedmiotu' }],
+  code: 'INZ005234',
   angName: 'databases',
   caretaker: 'Stanisław Przykładowy',
   subjectType: 'notObligatory',
@@ -55,6 +56,15 @@ function CardsEditor(): JSX.Element {
         isVerified={false}
       >
         <div>
+          <Form.Item
+            className="cards-form-item"
+            label="Kod przedmiotu"
+            labelAlign="left"
+            name="code"
+            rules={[{ required: true, message: 'Wprowadź kod przedmiotu!' }]}
+          >
+            <Input disabled={!(state === 'edit' && qname === '')} />
+          </Form.Item>
           <Form.Item
             className="cards-form-item"
             label="Nazwa przedmiotu"
