@@ -20,7 +20,7 @@ const EffectMappings: React.FunctionComponent<{ modify: boolean }> = ({
       {modify ? (
         <Form.Item>
           <AutoComplete
-            style={{ width: 800 }}
+            // style={{ width: 800 }}
             options={mockData}
             placeholder="Znajdź efekt kształcenia"
             filterOption={(inputValue, option) => {

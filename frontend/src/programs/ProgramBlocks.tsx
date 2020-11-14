@@ -20,7 +20,6 @@ const ProgramBlocks: React.FunctionComponent<{
       {modify ? (
         <Form.Item>
           <AutoComplete
-            style={{ width: 800 }}
             options={mockData}
             placeholder="Znajdź bloki zajęć"
             filterOption={(inputValue, option) => {

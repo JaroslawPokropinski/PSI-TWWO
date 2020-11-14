@@ -22,7 +22,6 @@ const CardEffects: React.FunctionComponent<{
       {modify ? (
         <Form.Item>
           <AutoComplete
-            style={{ width: 800 }}
             options={mockData}
             placeholder="Znajdź efekt kształcenia"
             filterOption={(inputValue, option) => {
