@@ -37,7 +37,7 @@ const ProgramDisciplines: React.FunctionComponent<{
       <Form.Item className="cards-form-item">
         <List
           bordered
-          dataSource={['typ ...', 'kategoria naukowa ...']}
+          dataSource={['typ ...']}
           renderItem={(item) => <List.Item>{item}</List.Item>}
         />
       </Form.Item>

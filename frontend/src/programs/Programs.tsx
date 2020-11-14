@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import Header from '../shared/Header';
 
 import './Programs.css';
+import { getSurrogateAvatar } from '../shared/AvatarUtils';
 
 const pageSize = 6;
 const mockData = [{ code: 'INZ003854P', name: 'Informatyka stosowana' }];
@@ -64,7 +65,11 @@ function Programs(): JSX.Element {
             key={item.code}
             onClick={() => onClick(item.code)}
           >
-            <div>{item.name}</div>
+            <List.Item.Meta
+              avatar={getSurrogateAvatar(item.name, 30, 20)}
+              title={item.code}
+              description={item.name}
+            />
           </List.Item>
         )}
       />
