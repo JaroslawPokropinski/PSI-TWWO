@@ -200,7 +200,7 @@ function CardsEditor(): JSX.Element {
         }}
         onFinish={onFinish}
         queryParams={`?name=${qname}`}
-        header="Edycja karty przedmiotu"
+        header="Karta przedmiotu"
         isVerifiable
         isVerified={false}
         useArchive

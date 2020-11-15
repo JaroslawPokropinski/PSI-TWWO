@@ -16,7 +16,7 @@ import './App.css';
 import AuthContext from './AuthContext';
 import Cards from '../cards/Cards';
 import CardsEditor from '../cards/CardsEditor';
-import PlansEditor from '../plans/PlansEditor';
+import PlanView from '../plans/PlanView';
 import Plans from '../plans/Plans';
 
 function App(): JSX.Element {
@@ -26,7 +26,7 @@ function App(): JSX.Element {
         <AuthContext.Provider value={{ token: null }}>
           <Switch>
             <Route path="/plans/:state">
-              <PlansEditor />
+              <PlanView />
             </Route>
             <Route path="/plans">
               <Plans />

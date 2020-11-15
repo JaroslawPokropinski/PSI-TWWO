@@ -9,7 +9,7 @@ import { getSurrogateAvatar } from '../shared/AvatarUtils';
 const pageSize = 6;
 const mockData = [
   {
-    code: 'INZ003854P',
+    code: 'PO-W08-IST-IO--ST-IIM-WRO-/2020L',
     name: 'Informatyka stosowana dla cyklu kształcenia od 2020/2021',
   },
 ];

@@ -108,7 +108,7 @@ function EffectsEditor(): JSX.Element {
   return (
     <div className="effects-editor">
       <EditorView
-        header="Edycja efektu kształcenia"
+        header="Efekt kształcenia"
         initialVals={{
           code,
           description: code
