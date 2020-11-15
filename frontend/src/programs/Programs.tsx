@@ -7,7 +7,10 @@ import './Programs.css';
 import { getSurrogateAvatar } from '../shared/AvatarUtils';
 
 const pageSize = 6;
-const mockData = [{ code: 'INZ003854P', name: 'Informatyka stosowana' }];
+const mockData = [
+  { code: 'PO-W08-ISTAN-CE--ST-IIM-WRO-/2020', name: 'Informatyka stosowana' },
+  { code: 'PO-W08-ZZZ-PIP--ST-IIM-WRO-/2020', name: 'Zarządzanie' },
+];
 
 function Programs(): JSX.Element {
   const history = useHistory();

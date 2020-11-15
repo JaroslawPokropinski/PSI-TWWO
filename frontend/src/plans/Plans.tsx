@@ -12,6 +12,10 @@ const mockData = [
     code: 'PO-W08-IST-IO--ST-IIM-WRO-/2020L',
     name: 'Informatyka stosowana dla cyklu kształcenia od 2020/2021',
   },
+  {
+    code: 'PO-W08-IST-IS--ST-IIM-WRO-/2020L',
+    name: 'Inżynieria systemów dla cyklu kształcenia od 2020/2021',
+  },
 ];
 
 function Plans(): JSX.Element {
