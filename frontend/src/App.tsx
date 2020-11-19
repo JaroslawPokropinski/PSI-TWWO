@@ -27,7 +27,7 @@ function App(): JSX.Element {
         <header>
           <img className="head-logo" src={logo} alt="Logo PWR" />
 
-          <Title className="head-text">Kreator programów krztałcenia PWR</Title>
+          <Title className="head-text">Kreator programów kształcenia PWR</Title>
         </header>
         <Form
           className="login-form"

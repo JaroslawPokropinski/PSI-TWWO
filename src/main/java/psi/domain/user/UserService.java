@@ -1,6 +1,8 @@
 package psi.domain.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,6 +14,7 @@ import psi.domain.auditedobject.ObjectState;
 import psi.infrastructure.exception.IllegalArgumentAppException;
 import psi.infrastructure.security.TokenHandler;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.regex.Pattern;
 
@@ -98,6 +101,22 @@ public class UserService {
 
     public boolean userExistsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void addAdminUser() {
+        if (!userExistsByUsername("admin")) {
+            User defaultUser = User.builder()
+                    .name("admin")
+                    .surname("admin")
+                    .username("admin")
+                    .password("12345678")
+                    .email("admin@example.com")
+                    .phoneNumber("123")
+                    .role(UserRole.ROLE_ADMIN)
+                    .build();
+            createUser(defaultUser);
+        }
     }
 
 }
