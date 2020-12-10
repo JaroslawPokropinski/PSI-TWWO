@@ -7,8 +7,8 @@ pipeline {
       }
     }
     stage('Build') {
-      agent {
-        docker { image 'openjdk:11-jdk' }
+      tools {
+        jdk "jdk-11"
       }
       steps {
         sh 'chmod u+x gradlew'
