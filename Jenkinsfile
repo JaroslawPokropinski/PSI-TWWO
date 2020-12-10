@@ -13,7 +13,7 @@ pipeline {
       steps {
         sh 'java -version'
         sh 'chmod u+x gradlew'
-        sh './gradlew -Dskip.tests build'
+        sh './gradlew build -x test '
       }
     }
   }
