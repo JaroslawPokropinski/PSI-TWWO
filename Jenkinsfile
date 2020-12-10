@@ -8,7 +8,6 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'sudo apt-get install default-jdk'
         sh 'java -version'
         sh 'chmod u+x gradlew'
         sh './gradlew build'
