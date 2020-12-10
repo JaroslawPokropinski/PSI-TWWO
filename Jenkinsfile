@@ -7,8 +7,9 @@ pipeline {
       }
     }
     stage('Build') {
-      jdk = tool name: 'JDK17'
-      env.JAVA_HOME = "${jdk}"
+      agent {
+        docker { image 'openjdk:11-jdk' }
+      }
       steps {
         sh 'chmod u+x gradlew'
         sh './gradlew build'
