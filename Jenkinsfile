@@ -7,6 +7,9 @@ pipeline {
       }
     }
     stage('Build') {
+      tools {
+        jdk "openjdk-11"
+      }
       steps {
         sh 'java -version'
         sh 'chmod u+x gradlew'
