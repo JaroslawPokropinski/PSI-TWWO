@@ -7,6 +7,8 @@ pipeline {
       }
     }
     stage('Build') {
+      jdk = tool name: 'JDK17'
+      env.JAVA_HOME = "${jdk}"
       steps {
         sh 'chmod u+x gradlew'
         sh './gradlew build'
