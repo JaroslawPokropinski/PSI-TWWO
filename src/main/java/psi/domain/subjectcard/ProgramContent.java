@@ -3,13 +3,23 @@ package psi.domain.subjectcard;
 import lombok.Getter;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Embeddable
 @Getter
 public class ProgramContent {
 
-    private int number;
-    private String content;
-    private double numberOfHours;
+    @NotNull
+    @Positive
+    private Integer number;
+
+    @NotBlank
+    private String description;
+
+    @NotNull
+    @Positive
+    private Double numberOfHours;
 
 }

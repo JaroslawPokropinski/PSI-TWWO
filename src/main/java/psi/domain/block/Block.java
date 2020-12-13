@@ -1,7 +1,8 @@
-package psi.domain.fieldofstudy;
+package psi.domain.block;
 
-import psi.domain.educationaleffect.EducationalEffect;
-import psi.domain.organisationalunit.OrganisationalUnit;
+import lombok.Getter;
+import psi.domain.studiesprogram.StudiesProgram;
+import psi.domain.subjectcard.SubjectCard;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,7 +21,8 @@ import java.util.Set;
 import static psi.infrastructure.utils.PersistenceConstants.ID_GENERATOR;
 
 @Entity
-public class FieldOfStudy {
+@Getter
+public class Block {
 
     @Id
     @GeneratedValue(generator = ID_GENERATOR)
@@ -29,14 +31,20 @@ public class FieldOfStudy {
     @NotBlank
     private String name;
 
+    @NotBlank
+    private String mainType;
+
+    @NotBlank
+    private String type;
+
     @NotNull
     @ManyToOne
-    private OrganisationalUnit organisationalUnit;
+    private StudiesProgram studiesProgram;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "FIELD_OF_STUDY_X_EDUCATIONAL_EFFECT",
-            joinColumns = @JoinColumn(name = "FIELD_OF_STUDY_ID"),
-            inverseJoinColumns = @JoinColumn(name = "EDUCATIONAL_EFFECT_ID"))
-    private Set<EducationalEffect> educationalEffects = new LinkedHashSet<>();
+    @JoinTable(name = "BLOCK_X_SUBJECT_CARD",
+            joinColumns = @JoinColumn(name = "BLOCK_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SUBJECT_CARD_ID"))
+    private Set<SubjectCard> subjectCards = new LinkedHashSet<>();
 
 }

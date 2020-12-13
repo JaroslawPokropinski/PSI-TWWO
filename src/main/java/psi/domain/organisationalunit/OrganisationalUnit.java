@@ -5,6 +5,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import static psi.infrastructure.utils.PersistenceConstants.ID_GENERATOR;
 
@@ -15,8 +17,10 @@ public class OrganisationalUnit {
     @GeneratedValue(generator = ID_GENERATOR)
     private Long id;
 
+    @NotBlank
     private String name;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private OrganisationalUnitType type;
 

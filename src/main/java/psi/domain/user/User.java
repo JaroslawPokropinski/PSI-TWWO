@@ -48,10 +48,10 @@ public class User extends AuditedObject {
     @Size(max = 100)
     private String password;
 
-    @Column(unique = true)
+    @Email
     @NotBlank
     @Size(max = 40)
-    @Email
+    @Column(unique = true)
     private String email;
 
     @NotBlank
@@ -60,14 +60,12 @@ public class User extends AuditedObject {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    public User setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
-        return this;
     }
 
-    public User setRole(UserRole role) {
+    public void setRole(UserRole role) {
         this.role = role;
-        return this;
     }
 
     @Override

@@ -8,6 +8,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OrderBy;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -19,23 +22,36 @@ public class SubjectClasses {
     @Id
     @GeneratedValue(generator = ID_GENERATOR)
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private SubjectClassesType subjectClassesType;
 
-    private int zzuHours;
+    @NotNull
+    @Positive
+    private Integer zzuHours;
 
-    private int cnpsHours;
+    @NotNull
+    @Positive
+    private Integer cnpsHours;
 
-    private boolean isFinalCourse;
+    @NotNull
+    private Boolean isFinalCourse;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     private CreditingForm creditingForm;
 
-    private int ectsPoints;
+    @NotNull
+    @PositiveOrZero
+    private Integer ectsPoints;
 
-    private int practicalEctsPoints;
+    @NotNull
+    @PositiveOrZero
+    private Integer practicalEctsPoints;
 
-    private int buEctsPoints;
+    @NotNull
+    @PositiveOrZero
+    private Integer buEctsPoints;
 
     @ElementCollection
     @CollectionTable(name = "SUBJECT_CLASSES_PROGRAM")
