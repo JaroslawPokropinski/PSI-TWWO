@@ -86,14 +86,9 @@ public class SubjectCard extends AuditedObject {
     private Set<Item> subjectObjectives = new LinkedHashSet<>();
 
     @ElementCollection
-    @CollectionTable(name = "PRIMARY_LITERATURE")
-    @OrderBy(Item_.NUMBER)
-    private Set<Item> primaryLiterature = new LinkedHashSet<>();
-
-    @ElementCollection
-    @CollectionTable(name = "SECONDARY_LITERATURE")
-    @OrderBy(Item_.NUMBER)
-    private Set<Item> secondaryLiterature = new LinkedHashSet<>();
+    @CollectionTable(name = "LITERATURE")
+    @OrderBy(Literature_.NUMBER)
+    private Set<Literature> literature = new LinkedHashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "TEACHING_TOOL")
@@ -106,6 +101,7 @@ public class SubjectCard extends AuditedObject {
 
     @Size(max = 5)
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "SUBJECT_CARD_ID")
     private Set<SubjectClasses> subjectClasses = new LinkedHashSet<>();
 
     @ManyToMany(cascade = CascadeType.PERSIST)

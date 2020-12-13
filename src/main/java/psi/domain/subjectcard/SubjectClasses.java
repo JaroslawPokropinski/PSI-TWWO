@@ -21,6 +21,7 @@ public class SubjectClasses {
 
     @Id
     @GeneratedValue(generator = ID_GENERATOR)
+    private Long id;
 
     @NotNull
     @Enumerated(EnumType.STRING)

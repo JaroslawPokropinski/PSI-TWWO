@@ -34,7 +34,7 @@ public class FieldOfStudy {
     private OrganisationalUnit organisationalUnit;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "FIELD_OF_STUDY_X_EDUCATIONAL_EFFECT",
+    @JoinTable(name = "FIELD_OF_STUDY_X_DISCIPLINE",
             joinColumns = @JoinColumn(name = "FIELD_OF_STUDY_ID"),
             inverseJoinColumns = @JoinColumn(name = "EDUCATIONAL_EFFECT_ID"))
     private Set<EducationalEffect> educationalEffects = new LinkedHashSet<>();
