@@ -20,6 +20,7 @@ public class EducationalEffectMapping {
     @EmbeddedId
     private Id id;
 
+    //HHH-8714
     @MapsId("mappedEducationalEffectId")
     @ManyToOne
     private EducationalEffect mappedEducationalEffect;
