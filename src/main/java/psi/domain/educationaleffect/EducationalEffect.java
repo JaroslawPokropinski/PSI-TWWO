@@ -1,8 +1,10 @@
 package psi.domain.educationaleffect;
 
 import lombok.Getter;
+import org.hibernate.annotations.NaturalId;
 import psi.domain.auditedobject.AuditedObject;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -12,7 +14,9 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import static psi.infrastructure.utils.PersistenceConstants.ID_GENERATOR;
+import java.util.Objects;
+
+import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 @Getter
@@ -23,7 +27,9 @@ public class EducationalEffect extends AuditedObject {
     @GeneratedValue(generator = ID_GENERATOR)
     private Long id;
 
+    @NaturalId
     @NotBlank
+    @Column(unique = true, nullable = false)
     private String code;
 
     @NotNull
@@ -43,5 +49,20 @@ public class EducationalEffect extends AuditedObject {
 
     @NotBlank
     private String description;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EducationalEffect)) return false;
+
+        EducationalEffect that = (EducationalEffect) o;
+
+        return Objects.equals(getCode(), that.getCode());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code);
+    }
 
 }

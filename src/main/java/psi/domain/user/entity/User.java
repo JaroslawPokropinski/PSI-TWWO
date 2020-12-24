@@ -1,11 +1,15 @@
-package psi.domain.user;
+package psi.domain.user.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalIdCache;
 import psi.domain.auditedobject.AuditedObject;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,7 +22,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
-import static psi.infrastructure.utils.PersistenceConstants.ID_GENERATOR;
+import static psi.infrastructure.jpa.CacheRegions.USER_ENTITY_CACHE;
+import static psi.infrastructure.jpa.CacheRegions.USER_NATURAL_ID_CACHE;
+import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 @Table(name = "USER")
@@ -26,6 +32,9 @@ import static psi.infrastructure.utils.PersistenceConstants.ID_GENERATOR;
 @NoArgsConstructor
 @Getter
 @SuperBuilder
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = USER_ENTITY_CACHE)
+@NaturalIdCache(region = USER_NATURAL_ID_CACHE)
 public class User extends AuditedObject {
 
     @Id

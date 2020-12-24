@@ -6,12 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import psi.domain.user.User;
-import psi.domain.user.UserService;
+import psi.domain.user.entity.User;
+import psi.domain.user.control.UserService;
 import psi.infrastructure.security.UserInfo;
+import psi.infrastructure.security.UserInfoProvider;
 
 import java.util.Optional;
 
@@ -31,12 +29,8 @@ public class AuditingConfig {
 
         @Override
         public Optional<User> getCurrentAuditor() {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-                return Optional.empty();
-            }
-            UserInfo userInfo = (UserInfo) authentication.getPrincipal();
-            return Optional.ofNullable(userInfo.getId())
+            return UserInfoProvider.getAuthenticatedUser()
+                    .map(UserInfo::getId)
                     .map(userService::getExistingUser);
         }
     }

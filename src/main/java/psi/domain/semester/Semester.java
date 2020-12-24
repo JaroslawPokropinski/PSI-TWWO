@@ -19,7 +19,7 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static psi.infrastructure.utils.PersistenceConstants.ID_GENERATOR;
+import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 @Getter

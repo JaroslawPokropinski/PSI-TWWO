@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
-import static psi.infrastructure.utils.PersistenceConstants.ID_GENERATOR;
+import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 public class DisciplineType {

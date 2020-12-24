@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import psi.domain.user.User;
-import psi.domain.user.UserRepository;
+import psi.domain.user.entity.User;
+import psi.domain.user.control.UserRepository;
 
 import java.text.MessageFormat;
 

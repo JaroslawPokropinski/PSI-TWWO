@@ -1,5 +1,7 @@
-package psi.domain.user;
+package psi.domain.user.boundary;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,13 +15,18 @@ import psi.api.user.CredentialsDTO;
 import psi.api.user.RegistrationDTO;
 import psi.api.user.TokenDTO;
 import psi.api.user.UserDTO;
+import psi.domain.user.entity.User;
+import psi.domain.user.control.UserService;
 import psi.infrastructure.security.UserInfo;
 import psi.infrastructure.security.annotation.HasAnyRole;
 import psi.infrastructure.security.annotation.LoggedUser;
-import javax.validation.Valid;
-import static psi.infrastructure.utils.ResourcePaths.ID;
-import static psi.infrastructure.utils.ResourcePaths.ID_PATH;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
+import static psi.infrastructure.rest.ResourcePaths.ID;
+import static psi.infrastructure.rest.ResourcePaths.ID_PATH;
+
+@Api(tags = "Users")
 @RestController
 @RequestMapping(UserController.MAIN_RESOURCE)
 @RequiredArgsConstructor
@@ -34,12 +41,14 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
+    @ApiOperation(value = "${api.users.authenticateUser.value}", notes = "${api.users.authenticateUser.notes}")
     @PostMapping("/signin")
     public TokenDTO authenticateUser(@Valid @RequestBody CredentialsDTO credentials) {
         String token = userService.signInUser(credentials.getUsername(), credentials.getPassword());
         return new TokenDTO(token);
     }
 
+    @ApiOperation(value = "${api.users.registerUser.value}", notes = "${api.users.registerUser.notes}")
     @PostMapping("/signup")
     public ResourceDTO registerUser(@Valid @RequestBody RegistrationDTO registrationFormDTO) {
         User userToCreate = userMapper.mapToUser(registrationFormDTO);
@@ -47,25 +56,29 @@ public class UserController {
         return userMapper.mapToResourceDTO(createdUser);
     }
 
+    @ApiOperation(value = "${api.users.checkIfUsernameIsAvailable.value}", notes = "${api.users.checkIfUsernameIsAvailable.notes}")
     @GetMapping(CHECK_USERNAME_RESOURCE)
     public ResponseDTO<Boolean> checkUsernameAvailable(@PathVariable(USERNAME_PATH_PARAM) String username) {
         boolean isAvailable = !userService.userExistsByUsername(username);
         return new ResponseDTO<>(isAvailable, isAvailable ? "Username is available" : "Username is already taken");
     }
 
+    @ApiOperation(value = "${api.users.checkIfEmailIsAvailable.value}", notes = "${api.users.checkIfEmailIsAvailable.notes}")
     @GetMapping(CHECK_EMAIL_RESOURCE)
     public ResponseDTO<Boolean> checkIfEmailAvailable(@PathVariable(EMAIL_PATH_PARAM) String email) {
         boolean isAvailable = !userService.userExistsByEmail(email);
         return new ResponseDTO<>(isAvailable, isAvailable ? "Email is available" : "Email is already taken");
     }
 
+    @ApiOperation(value = "${api.users.getCurrentUser.value}", notes = "${api.users.getCurrentUser.notes}")
     @GetMapping("/current")
     @HasAnyRole
-    public UserDTO getCurrentUser(@LoggedUser UserInfo currentUserInfo) {
+    public UserDTO getCurrentUser(@ApiIgnore @LoggedUser UserInfo currentUserInfo) {
         User user = userService.getExistingUser(currentUserInfo.getId());
         return userMapper.mapToUserDTO(user);
     }
 
+    @ApiOperation(value = "${api.users.getUser.value}", notes = "${api.users.getUser.notes}")
     @GetMapping(ID_PATH)
     @HasAnyRole
     public UserDTO getUser(@PathVariable(ID) Long id) {

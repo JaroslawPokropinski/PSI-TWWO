@@ -1,4 +1,4 @@
-package psi.domain.user;
+package psi.domain.user.control;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import psi.domain.auditedobject.ObjectState;
+import psi.domain.user.entity.User;
+import psi.domain.user.entity.UserRole;
 import psi.infrastructure.exception.IllegalArgumentAppException;
 import psi.infrastructure.security.TokenHandler;
 

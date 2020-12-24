@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import psi.domain.user.User;
-import psi.domain.user.UserRole;
+import psi.domain.user.entity.User;
+import psi.domain.user.entity.UserRole;
 
 import java.util.Collection;
 import java.util.Collections;

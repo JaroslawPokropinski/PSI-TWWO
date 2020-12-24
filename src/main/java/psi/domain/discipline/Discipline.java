@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import static psi.infrastructure.utils.PersistenceConstants.ID_GENERATOR;
+import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 public class Discipline {

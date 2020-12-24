@@ -1,18 +1,17 @@
-package psi.domain.user;
+package psi.domain.user.boundary;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import psi.api.common.ResourceDTO;
 import psi.api.user.RegistrationDTO;
 import psi.api.user.UserDTO;
+import psi.domain.user.entity.User;
 
 import java.net.URI;
 
-import static psi.infrastructure.utils.ResourcePaths.ID_PATH;
+import static psi.infrastructure.rest.ResourcePaths.ID_PATH;
 
 @Service
-@RequiredArgsConstructor
 public class UserMapper {
 
     public UserDTO mapToUserDTO(User user) {

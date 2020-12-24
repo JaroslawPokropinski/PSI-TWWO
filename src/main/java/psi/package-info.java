@@ -8,4 +8,4 @@
 )
 package psi;
 
-import static psi.infrastructure.utils.PersistenceConstants.ID_GENERATOR;
+import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;

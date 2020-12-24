@@ -1,16 +1,18 @@
 package psi.domain.subjectcard;
 
 import lombok.Getter;
+import org.hibernate.annotations.NaturalId;
 import psi.domain.auditedobject.AuditedObject;
 import psi.domain.educationaleffect.EducationalEffect;
 import psi.domain.fieldofstudy.FieldOfStudy;
 import psi.domain.organisationalunit.OrganisationalUnit;
 import psi.domain.studiesprogram.StudiesForm;
 import psi.domain.studiesprogram.StudiesLevel;
-import psi.domain.user.User;
+import psi.domain.user.entity.User;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -29,9 +31,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
-import static psi.infrastructure.utils.PersistenceConstants.ID_GENERATOR;
+import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 @Getter
@@ -65,7 +68,9 @@ public class SubjectCard extends AuditedObject {
     @Enumerated(EnumType.STRING)
     private SubjectType subjectType;
 
+    @NaturalId
     @NotBlank
+    @Column(unique = true, nullable = false)
     private String subjectCode;
 
     @NotNull
@@ -109,5 +114,20 @@ public class SubjectCard extends AuditedObject {
             joinColumns = @JoinColumn(name = "SUBJECT_CARD_ID"),
             inverseJoinColumns = @JoinColumn(name = "EDUCATIONAL_EFFECT_ID"))
     private Set<EducationalEffect> educationalEffects = new LinkedHashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SubjectCard)) return false;
+
+        SubjectCard that = (SubjectCard) o;
+
+        return Objects.equals(getSubjectCode(), that.getSubjectCode());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSubjectCode());
+    }
 
 }

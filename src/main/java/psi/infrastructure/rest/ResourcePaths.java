@@ -1,4 +1,4 @@
-package psi.infrastructure.utils;
+package psi.infrastructure.rest;
 
 import lombok.experimental.UtilityClass;
 

@@ -1,4 +1,4 @@
-package psi.domain.user;
+package psi.domain.user.entity;
 
 public enum UserRole {
 
