@@ -3,7 +3,7 @@ package psi.domain.studiesprogram;
 import lombok.Getter;
 import org.hibernate.annotations.NaturalId;
 import psi.domain.auditedobject.entity.AuditedObject;
-import psi.domain.discipline.Discipline;
+import psi.domain.discipline.entity.Discipline;
 import psi.domain.fieldofstudy.entity.FieldOfStudy;
 import psi.domain.subjectcard.Item;
 import psi.domain.subjectcard.Item_;

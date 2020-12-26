@@ -1,4 +1,4 @@
-package psi.domain.discipline;
+package psi.domain.discipline.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
