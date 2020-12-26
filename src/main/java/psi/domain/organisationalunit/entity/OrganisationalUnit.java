@@ -1,4 +1,6 @@
-package psi.domain.organisationalunit;
+package psi.domain.organisationalunit.entity;
+
+import lombok.Getter;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
+@Getter
 public class OrganisationalUnit {
 
     @Id

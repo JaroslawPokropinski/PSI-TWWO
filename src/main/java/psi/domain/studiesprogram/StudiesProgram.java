@@ -1,8 +1,10 @@
 package psi.domain.studiesprogram;
 
+import lombok.Getter;
+import org.hibernate.annotations.NaturalId;
 import psi.domain.auditedobject.AuditedObject;
 import psi.domain.discipline.Discipline;
-import psi.domain.fieldofstudy.FieldOfStudy;
+import psi.domain.fieldofstudy.entity.FieldOfStudy;
 import psi.domain.subjectcard.Item;
 import psi.domain.subjectcard.Item_;
 
@@ -26,16 +28,22 @@ import javax.validation.constraints.Positive;
 
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
+@Getter
 public class StudiesProgram extends AuditedObject {
 
     @Id
     @GeneratedValue(generator = ID_GENERATOR)
     private Long id;
+
+    @NaturalId
+    @Column(unique = true, nullable = false)
+    private String code;
 
     @NotNull
     @ManyToOne
@@ -100,5 +108,20 @@ public class StudiesProgram extends AuditedObject {
             joinColumns = @JoinColumn(name = "STUDIES_PROGRAM_ID"),
             inverseJoinColumns = @JoinColumn(name = "DISCIPLINE_ID"))
     private Set<Discipline> disciplines = new LinkedHashSet<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof StudiesProgram)) return false;
+
+        StudiesProgram that = (StudiesProgram) o;
+
+        return Objects.equals(getCode(), that.getCode());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCode());
+    }
 
 }

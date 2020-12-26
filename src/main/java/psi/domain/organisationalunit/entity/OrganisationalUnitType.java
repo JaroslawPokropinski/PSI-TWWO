@@ -1,4 +1,4 @@
-package psi.domain.organisationalunit;
+package psi.domain.organisationalunit.entity;
 
 public enum OrganisationalUnitType {
 

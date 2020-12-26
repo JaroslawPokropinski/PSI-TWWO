@@ -1,7 +1,8 @@
-package psi.domain.fieldofstudy;
+package psi.domain.fieldofstudy.entity;
 
+import lombok.Getter;
 import psi.domain.educationaleffect.EducationalEffect;
-import psi.domain.organisationalunit.OrganisationalUnit;
+import psi.domain.organisationalunit.entity.OrganisationalUnit;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import java.util.Set;
 import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
+@Getter
 public class FieldOfStudy {
 
     @Id
