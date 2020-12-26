@@ -2,8 +2,8 @@ package psi.domain.subjectcard;
 
 import lombok.Getter;
 import org.hibernate.annotations.NaturalId;
-import psi.domain.auditedobject.AuditedObject;
-import psi.domain.educationaleffect.EducationalEffect;
+import psi.domain.auditedobject.entity.AuditedObject;
+import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.domain.fieldofstudy.entity.FieldOfStudy;
 import psi.domain.organisationalunit.entity.OrganisationalUnit;
 import psi.domain.studiesprogram.StudiesForm;

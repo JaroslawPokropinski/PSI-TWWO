@@ -1,7 +1,7 @@
 package psi.domain.fieldofstudy.entity;
 
 import lombok.Getter;
-import psi.domain.educationaleffect.EducationalEffect;
+import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.domain.organisationalunit.entity.OrganisationalUnit;
 
 import javax.persistence.CascadeType;

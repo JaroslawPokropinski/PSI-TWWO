@@ -1,4 +1,4 @@
-package psi.domain.educationaleffect;
+package psi.domain.educationaleffect.entity;
 
 public enum EducationalEffectType {
 

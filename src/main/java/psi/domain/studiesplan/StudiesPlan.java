@@ -2,7 +2,7 @@ package psi.domain.studiesplan;
 
 import lombok.Getter;
 import org.hibernate.annotations.NaturalId;
-import psi.domain.auditedobject.AuditedObject;
+import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.studiesprogram.StudiesProgram;
 
 import javax.persistence.Column;

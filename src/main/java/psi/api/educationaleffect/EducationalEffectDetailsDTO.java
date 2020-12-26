@@ -1,14 +1,19 @@
 package psi.api.educationaleffect;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import psi.domain.educationaleffect.EducationalEffectCategory;
-import psi.domain.educationaleffect.EducationalEffectType;
+import psi.api.user.UserDTO;
+import psi.domain.auditedobject.entity.ObjectState;
+import psi.domain.educationaleffect.entity.EducationalEffectCategory;
+import psi.domain.educationaleffect.entity.EducationalEffectType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
 
 @Data
+@Builder
 @AllArgsConstructor
 public class EducationalEffectDetailsDTO {
 
@@ -35,5 +40,20 @@ public class EducationalEffectDetailsDTO {
 
     @NotBlank
     private String description;
+
+    @NotNull
+    private ObjectState objectState;
+
+    @NotNull
+    private UserDTO createdBy;
+
+    @NotNull
+    private Instant createdAt;
+
+    @NotNull
+    private UserDTO lastUpdatedBy;
+
+    @NotNull
+    private Instant lastUpdatedAt;
 
 }

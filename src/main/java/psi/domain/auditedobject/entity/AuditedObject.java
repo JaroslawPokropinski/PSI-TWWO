@@ -1,4 +1,4 @@
-package psi.domain.auditedobject;
+package psi.domain.auditedobject.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

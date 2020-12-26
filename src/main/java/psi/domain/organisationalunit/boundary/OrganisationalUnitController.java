@@ -23,7 +23,7 @@ public class OrganisationalUnitController {
     private final OrganisationalUnitService organisationalUnitService;
     private final OrganisationalUnitMapper organisationalUnitMapper;
 
-    @ApiOperation(value = "${api.users.getAllOrganisationalUnits.value}", notes = "${api.users.getAllOrganisationalUnits.notes}")
+    @ApiOperation(value = "${api.organisational-units.getAllOrganisationalUnits.value}", notes = "${api.organisational-units.getAllOrganisationalUnits.notes}")
     @GetMapping
     public List<OrganisationalUnitDTO> getAllOrganisationalUnits() {
         List<OrganisationalUnit> foundOrganisationalUnits = organisationalUnitService.getAllOrganisationalUnits();

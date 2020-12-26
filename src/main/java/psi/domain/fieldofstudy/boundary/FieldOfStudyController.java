@@ -1,6 +1,7 @@
 package psi.domain.fieldofstudy.boundary;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,7 @@ public class FieldOfStudyController {
     private final FieldOfStudyService fieldOfStudyService;
     private final FieldOfStudyMapper fieldOfStudyMapper;
 
+    @ApiOperation(value = "${api.field-of-studies.getAllFiledOfStudies.value}", notes = "${api.field-of-studies.getAllFiledOfStudies.notes}")
     @GetMapping
     public List<FieldOfStudyDTO> getAllFiledOfStudies() {
         List<FieldOfStudy> foundFiledOfStudies = fieldOfStudyService.getAllFiledOfStudies();

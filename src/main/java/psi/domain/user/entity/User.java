@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalIdCache;
-import psi.domain.auditedobject.AuditedObject;
+import psi.domain.auditedobject.entity.AuditedObject;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;

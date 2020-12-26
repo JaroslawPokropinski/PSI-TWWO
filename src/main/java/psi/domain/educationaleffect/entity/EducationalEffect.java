@@ -1,8 +1,11 @@
-package psi.domain.educationaleffect;
+package psi.domain.educationaleffect.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.NaturalId;
-import psi.domain.auditedobject.AuditedObject;
+import psi.domain.auditedobject.entity.AuditedObject;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +23,9 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 @Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
 @Table(name = "EDUCATIONAL_EFFFECT")
 public class EducationalEffect extends AuditedObject {
 
@@ -39,9 +45,11 @@ public class EducationalEffect extends AuditedObject {
     @NotNull
     private Integer prkLevel;
 
-    private boolean isEngineerEffect;
+    @NotNull
+    private Boolean isEngineerEffect;
 
-    private boolean isLingualEffect;
+    @NotNull
+    private Boolean isLingualEffect;
 
     @NotNull
     @Enumerated(EnumType.STRING)

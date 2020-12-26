@@ -3,6 +3,7 @@ package psi.domain.educationaleffect;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import psi.domain.educationaleffect.entity.EducationalEffect;
 
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
