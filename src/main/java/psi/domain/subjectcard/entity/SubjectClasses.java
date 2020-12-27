@@ -1,4 +1,4 @@
-package psi.domain.subjectcard;
+package psi.domain.subjectcard.entity;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;

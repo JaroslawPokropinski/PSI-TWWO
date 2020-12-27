@@ -1,4 +1,4 @@
-package psi.domain.subjectcard;
+package psi.domain.subjectcard.entity;
 
 public enum SubjectClassesType {
 

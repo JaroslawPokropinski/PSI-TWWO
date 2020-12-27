@@ -2,7 +2,7 @@ package psi.domain.semester;
 
 import lombok.Getter;
 import psi.domain.studiesplan.StudiesPlan;
-import psi.domain.subjectcard.SubjectCard;
+import psi.domain.subjectcard.entity.SubjectCard;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

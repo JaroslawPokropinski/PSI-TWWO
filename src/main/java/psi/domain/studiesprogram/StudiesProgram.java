@@ -5,8 +5,8 @@ import org.hibernate.annotations.NaturalId;
 import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.discipline.entity.Discipline;
 import psi.domain.fieldofstudy.entity.FieldOfStudy;
-import psi.domain.subjectcard.Item;
-import psi.domain.subjectcard.Item_;
+import psi.domain.subjectcard.entity.Item;
+import psi.domain.subjectcard.entity.Item_;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;

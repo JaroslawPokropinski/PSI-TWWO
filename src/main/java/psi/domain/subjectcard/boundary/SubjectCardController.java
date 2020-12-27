@@ -1,0 +1,80 @@
+package psi.domain.subjectcard.boundary;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import psi.api.common.ResourceDTO;
+import psi.api.common.ResponseDTO;
+import psi.api.common.SearchResultDTO;
+import psi.api.subjectcard.SubjectCardDTO;
+import psi.api.subjectcard.SubjectCardDetailsDTO;
+import psi.domain.subjectcard.entity.SubjectCard;
+import psi.domain.subjectcard.control.SubjectCardService;
+
+import javax.validation.Valid;
+import java.util.List;
+
+import static psi.infrastructure.rest.ResourcePaths.IDS;
+import static psi.infrastructure.rest.ResourcePaths.IDS_PATH;
+
+@Api(tags = "Subject Card")
+@RestController
+@RequestMapping(SubjectCardController.SUBJECT_CARD_RESOURCE)
+@RequiredArgsConstructor
+public class SubjectCardController {
+
+    public static final String SUBJECT_CARD_RESOURCE = "/api/subject-card";
+    private static final String SEARCH_RESOURCE = "/search";
+
+    private final SubjectCardService subjectCardService;
+    private final SubjectCardMapper subjectCardMapper;
+
+    @ApiOperation(value = "${api.subject-cards.searchSubjectCards.value}", notes = "${api.subject-cards.searchSubjectCards.notes}")
+    @GetMapping(SEARCH_RESOURCE)
+    public SearchResultDTO<SubjectCardDetailsDTO> searchSubjectCards(@RequestParam String query, @Valid Pageable pageable) {
+        Page<SubjectCard> subjectCardPage = subjectCardService.searchSubjectCardsByRSQL(query, pageable);
+        return subjectCardMapper.mapToSearchResultDTO(subjectCardPage, query);
+    }
+
+    @ApiOperation(value = "${api.subject-cards.getSubjectCards.value}", notes = "${api.subject-cards.getSubjectCards.notes}")
+    @GetMapping(IDS_PATH)
+    public List<SubjectCardDetailsDTO> getSubjectCards(@PathVariable(IDS) List<Long> ids) {
+        List<SubjectCard> foundSubjectCards = subjectCardService.getSubjectCardsByIds(ids);
+        return subjectCardMapper.mapToSubjectCardDetailsDTOs(foundSubjectCards);
+    }
+
+    @ApiOperation(value = "${api.subject-cards.createSubjectCards.value}", notes = "${api.subject-cards.createSubjectCards.notes}")
+    @PostMapping
+    public List<ResourceDTO> createSubjectCards(@Valid @RequestBody List<SubjectCardDTO> subjectCardDTOs) {
+        List<SubjectCard> subjectCards = subjectCardMapper.mapToSubjectCards(subjectCardDTOs);
+        List<SubjectCard> createdSubjectCards = subjectCardService.createSubjectCards(subjectCards);
+        return subjectCardMapper.mapToResourceDTOs(createdSubjectCards);
+    }
+
+    @ApiOperation(value = "${api.subject-cards.updateSubjectCards.value}", notes = "${api.subject-cards.updateSubjectCards.notes}")
+    @PutMapping
+    public List<ResourceDTO> updateSubjectCards(@Valid @RequestBody List<SubjectCardDTO> subjectCardDTOs) {
+        List<SubjectCard> subjectCards = subjectCardMapper.mapToSubjectCards(subjectCardDTOs);
+        subjectCardService.updateSubjectCards(subjectCards);
+        return subjectCardMapper.mapToResourceDTOs(subjectCards);
+    }
+
+    @ApiOperation(value = "${api.subject-cards.deleteSubjectCards.value}", notes = "${api.subject-cards.deleteSubjectCards.notes}")
+    @DeleteMapping(IDS_PATH)
+    public ResponseDTO<Boolean> deleteSubjectCards(@PathVariable(IDS) List<Long> ids) {
+        subjectCardService.deleteSubjectCards(ids);
+        return new ResponseDTO<>(true, "Subject cards deleted successfully");
+    }
+
+}

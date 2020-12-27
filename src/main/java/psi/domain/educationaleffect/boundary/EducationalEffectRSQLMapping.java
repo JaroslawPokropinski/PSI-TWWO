@@ -11,6 +11,7 @@ import java.util.Map;
 @UtilityClass
 public class EducationalEffectRSQLMapping {
 
+    public static final Map<String, String> RSQL_TO_JPA_ATTRIBUTE_MAPPING = getRsqlToJpaAttributeMapping();
     private static final String ID = "id";
     private static final String CODE = "code";
     private static final String TYPE = "type";
@@ -19,8 +20,6 @@ public class EducationalEffectRSQLMapping {
     private static final String IS_LINGUAL_EFFECT = "is-lingual-effect";
     private static final String CATEGORY = "category";
     private static final String DESCRIPTION = "description";
-
-    public static final Map<String, String> RSQL_TO_JPA_ATTRIBUTE_MAPPING = getRsqlToJpaAttributeMapping();
 
     private static Map<String, String> getRsqlToJpaAttributeMapping() {
         Map<String, String> educationalEffectsMapping = Map.of(
