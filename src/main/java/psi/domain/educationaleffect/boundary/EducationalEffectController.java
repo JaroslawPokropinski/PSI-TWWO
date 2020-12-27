@@ -54,7 +54,7 @@ public class EducationalEffectController {
     @GetMapping(IDS_PATH)
     public List<EducationalEffectDetailsDTO> getEducationalEffects(@PathVariable(IDS) List<Long> ids) {
         List<EducationalEffect> foundEducationalEffects = educationalEffectService.getEducationalEffectsByIds(ids);
-        return educationalEffectMapper.mapToEducationalEffectDetailDTOs(foundEducationalEffects);
+        return educationalEffectMapper.mapToEducationalEffectDetailsDTOs(foundEducationalEffects);
     }
 
     @ApiOperation(value = "${api.educational-effects.createEducationalEffects.value}", notes = "${api.educational-effects.createEducationalEffects.notes}")

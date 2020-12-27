@@ -1,11 +1,16 @@
 package psi.domain.subjectcard.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.NaturalId;
 import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.domain.fieldofstudy.entity.FieldOfStudy;
 import psi.domain.organisationalunit.entity.OrganisationalUnit;
+import psi.domain.simpleattribute.entity.SimpleAttribute;
+import psi.domain.simpleattribute.entity.SimpleAttribute_;
 import psi.domain.studiesprogram.StudiesForm;
 import psi.domain.studiesprogram.StudiesLevel;
 import psi.domain.user.entity.User;
@@ -38,6 +43,9 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 @Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
 @Table(name = "SUBJECT_CARD")
 public class SubjectCard extends AuditedObject {
 
@@ -82,13 +90,13 @@ public class SubjectCard extends AuditedObject {
 
     @ElementCollection
     @CollectionTable(name = "PREREQUISITE")
-    @OrderBy(Item_.NUMBER)
-    private Set<Item> prerequisites = new LinkedHashSet<>();
+    @OrderBy(SimpleAttribute_.NUMBER)
+    private Set<SimpleAttribute> prerequisites = new LinkedHashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "SUBJECT_GOAL")
-    @OrderBy(Item_.NUMBER)
-    private Set<Item> subjectObjectives = new LinkedHashSet<>();
+    @OrderBy(SimpleAttribute_.NUMBER)
+    private Set<SimpleAttribute> subjectObjectives = new LinkedHashSet<>();
 
     @ElementCollection
     @CollectionTable(name = "LITERATURE")
@@ -97,15 +105,15 @@ public class SubjectCard extends AuditedObject {
 
     @ElementCollection
     @CollectionTable(name = "TEACHING_TOOL")
-    @OrderBy(Item_.NUMBER)
-    private Set<Item> usedTeachingTools = new LinkedHashSet<>();
+    @OrderBy(SimpleAttribute_.NUMBER)
+    private Set<SimpleAttribute> usedTeachingTools = new LinkedHashSet<>();
 
     @NotNull
     @ManyToOne
     private User supervisor;
 
     @Size(max = 5)
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "SUBJECT_CARD_ID")
     private Set<SubjectClasses> subjectClasses = new LinkedHashSet<>();
 

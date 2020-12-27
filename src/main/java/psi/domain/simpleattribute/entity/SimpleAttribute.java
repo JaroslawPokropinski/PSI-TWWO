@@ -1,6 +1,8 @@
-package psi.domain.subjectcard.entity;
+package psi.domain.simpleattribute.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotBlank;
@@ -9,7 +11,9 @@ import javax.validation.constraints.Positive;
 
 @Embeddable
 @Getter
-public class Item {
+@NoArgsConstructor
+@AllArgsConstructor
+public class SimpleAttribute {
 
     @NotNull
     @Positive

@@ -21,6 +21,9 @@ import psi.api.subjectcard.SubjectCardDTO;
 import psi.api.subjectcard.SubjectCardDetailsDTO;
 import psi.domain.subjectcard.entity.SubjectCard;
 import psi.domain.subjectcard.control.SubjectCardService;
+import psi.infrastructure.security.UserInfo;
+import psi.infrastructure.security.annotation.LoggedUser;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -35,7 +38,7 @@ import static psi.infrastructure.rest.ResourcePaths.IDS_PATH;
 public class SubjectCardController {
 
     public static final String SUBJECT_CARD_RESOURCE = "/api/subject-card";
-    private static final String SEARCH_RESOURCE = "/search";
+    public static final String SEARCH_RESOURCE = "/search";
 
     private final SubjectCardService subjectCardService;
     private final SubjectCardMapper subjectCardMapper;
@@ -64,16 +67,16 @@ public class SubjectCardController {
 
     @ApiOperation(value = "${api.subject-cards.updateSubjectCards.value}", notes = "${api.subject-cards.updateSubjectCards.notes}")
     @PutMapping
-    public List<ResourceDTO> updateSubjectCards(@Valid @RequestBody List<SubjectCardDTO> subjectCardDTOs) {
+    public List<ResourceDTO> updateSubjectCards(@Valid @RequestBody List<SubjectCardDTO> subjectCardDTOs, @ApiIgnore @LoggedUser UserInfo userInfo) {
         List<SubjectCard> subjectCards = subjectCardMapper.mapToSubjectCards(subjectCardDTOs);
-        subjectCardService.updateSubjectCards(subjectCards);
+        subjectCardService.updateSubjectCards(subjectCards, userInfo.getId());
         return subjectCardMapper.mapToResourceDTOs(subjectCards);
     }
 
     @ApiOperation(value = "${api.subject-cards.deleteSubjectCards.value}", notes = "${api.subject-cards.deleteSubjectCards.notes}")
     @DeleteMapping(IDS_PATH)
-    public ResponseDTO<Boolean> deleteSubjectCards(@PathVariable(IDS) List<Long> ids) {
-        subjectCardService.deleteSubjectCards(ids);
+    public ResponseDTO<Boolean> deleteSubjectCards(@PathVariable(IDS) List<Long> ids, @ApiIgnore @LoggedUser UserInfo userInfo) {
+        subjectCardService.deleteSubjectCards(ids, userInfo.getId());
         return new ResponseDTO<>(true, "Subject cards deleted successfully");
     }
 

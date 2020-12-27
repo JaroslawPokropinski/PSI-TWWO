@@ -13,9 +13,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class SubjectClassDTO {
-
-    private Long id;
+public class SubjectClassesDTO {
 
     @NotNull
     private SubjectClassesType subjectClassesType;

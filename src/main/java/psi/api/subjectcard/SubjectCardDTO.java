@@ -64,7 +64,7 @@ public class SubjectCardDTO {
     private Long supervisor;
 
     @NotNull
-    private List<SubjectClassDTO> subjectClasses;
+    private List<SubjectClassesDTO> subjectClasses;
 
     @NotNull
     private List<Long> educationalEffects;

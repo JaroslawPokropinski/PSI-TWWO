@@ -31,7 +31,7 @@ public class EducationalEffectMapper {
             return null;
         }
         return SearchResultDTO.<EducationalEffectDetailsDTO>builder()
-                .results(mapToEducationalEffectDetailDTOs(educationalEffectPage.getContent()))
+                .results(mapToEducationalEffectDetailsDTOs(educationalEffectPage.getContent()))
                 .totalSize(educationalEffectPage.getTotalElements())
                 .pageSize(educationalEffectPage.getSize())
                 .pageNumber(educationalEffectPage.getNumber())
@@ -49,13 +49,13 @@ public class EducationalEffectMapper {
                 .queryParam("query", query);
     }
 
-    public List<EducationalEffectDetailsDTO> mapToEducationalEffectDetailDTOs(Collection<EducationalEffect> educationalEffects) {
+    public List<EducationalEffectDetailsDTO> mapToEducationalEffectDetailsDTOs(Collection<EducationalEffect> educationalEffects) {
         return educationalEffects.stream()
-                .map(this::mapToEducationalEffectDTO)
+                .map(this::mapToEducationalEffectDetailsDTO)
                 .collect(Collectors.toList());
     }
 
-    private EducationalEffectDetailsDTO mapToEducationalEffectDTO(EducationalEffect educationalEffect) {
+    private EducationalEffectDetailsDTO mapToEducationalEffectDetailsDTO(EducationalEffect educationalEffect) {
         if (educationalEffect == null) {
             return null;
         }
@@ -95,6 +95,25 @@ public class EducationalEffectMapper {
                 .isLingualEffect(educationalEffectDTO.getIsLingualEffect())
                 .category(educationalEffectDTO.getCategory())
                 .description(educationalEffectDTO.getDescription())
+                .build();
+    }
+
+    public List<EducationalEffectDTO> mapToEducationalEffectDTOs(Collection<EducationalEffect> educationalEffects) {
+        return educationalEffects.stream()
+                .map(this::mapToEducationalEffectDTO)
+                .collect(Collectors.toList());
+    }
+
+    private EducationalEffectDTO mapToEducationalEffectDTO(EducationalEffect educationalEffect) {
+        return EducationalEffectDTO.builder()
+                .id(educationalEffect.getId())
+                .code(educationalEffect.getCode())
+                .type(educationalEffect.getType())
+                .prkLevel(educationalEffect.getPrkLevel())
+                .isEngineerEffect(educationalEffect.getIsEngineerEffect())
+                .isLingualEffect(educationalEffect.getIsLingualEffect())
+                .category(educationalEffect.getCategory())
+                .description(educationalEffect.getDescription())
                 .build();
     }
 

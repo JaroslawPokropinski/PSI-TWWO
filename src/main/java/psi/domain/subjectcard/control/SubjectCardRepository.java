@@ -5,6 +5,13 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import psi.domain.subjectcard.entity.SubjectCard;
 
+import java.util.Collection;
+import java.util.List;
+
 @Repository
 public interface SubjectCardRepository extends JpaRepository<SubjectCard, Long>, JpaSpecificationExecutor<SubjectCard> {
+
+    List<SubjectCard> findAllBySubjectCodeIn(Collection<String> subjectCodes);
+    List<SubjectCard> findAllBySubjectCodeInAndIdNotIn(Collection<String> subjectCodes, Collection<Long> ids);
+
 }

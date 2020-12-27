@@ -12,7 +12,7 @@ import psi.domain.fieldofstudy.entity.FieldOfStudy;
 
 import java.util.List;
 
-@Api(tags = "Filed of study")
+@Api(tags = "Field of study")
 @RestController
 @RequestMapping(FieldOfStudyController.FILED_OF_STUDY_RESOURCE)
 @RequiredArgsConstructor

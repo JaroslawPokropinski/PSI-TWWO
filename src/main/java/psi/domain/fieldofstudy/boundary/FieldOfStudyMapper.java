@@ -17,7 +17,7 @@ public class FieldOfStudyMapper {
                 .collect(Collectors.toList());
     }
 
-    private FieldOfStudyDTO mapToFieldOfStudyDTO(FieldOfStudy fieldOfStudy) {
+    public FieldOfStudyDTO mapToFieldOfStudyDTO(FieldOfStudy fieldOfStudy) {
         return new FieldOfStudyDTO(fieldOfStudy.getId(), fieldOfStudy.getName(), fieldOfStudy.getOrganisationalUnit().getId());
     }
 

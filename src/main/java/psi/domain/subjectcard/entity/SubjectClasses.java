@@ -1,5 +1,11 @@
 package psi.domain.subjectcard.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -17,6 +23,11 @@ import java.util.Set;
 import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class SubjectClasses {
 
     @Id

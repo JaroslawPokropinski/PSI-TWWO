@@ -17,7 +17,7 @@ public class OrganisationalUnitMapper {
                 .collect(Collectors.toList());
     }
 
-    private OrganisationalUnitDTO mapToOrganisationalUnitDTO(OrganisationalUnit organisationalUnit) {
+    public OrganisationalUnitDTO mapToOrganisationalUnitDTO(OrganisationalUnit organisationalUnit) {
         return new OrganisationalUnitDTO(organisationalUnit.getId(), organisationalUnit.getName(), organisationalUnit.getType());
     }
 

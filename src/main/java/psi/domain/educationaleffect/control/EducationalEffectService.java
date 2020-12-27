@@ -81,7 +81,7 @@ public class EducationalEffectService {
     private void validateIfThereAreNoCodeDuplicatesAmongExistingEducationalEffects(Collection<EducationalEffect> educationalEffects) {
         List<EducationalEffect> foundDuplicates = findDuplicatedCodes(educationalEffects);
         if (!foundDuplicates.isEmpty()) {
-            throw new IllegalArgumentAppException(MessageFormat.format("There are existing educational effects with given names {0}", getCodes(foundDuplicates)));
+            throw new IllegalArgumentAppException(MessageFormat.format("There are existing educational effects with given codes {0}", getCodes(foundDuplicates)));
         }
     }
 

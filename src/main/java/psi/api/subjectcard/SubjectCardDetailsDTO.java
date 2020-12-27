@@ -43,7 +43,7 @@ public class SubjectCardDetailsDTO {
     private SubjectType subjectType;
 
     @NotNull
-    private String code;
+    private String subjectCode;
 
     @NotNull
     private Boolean isGroupOfCourses;
@@ -70,7 +70,7 @@ public class SubjectCardDetailsDTO {
     private UserDTO supervisor;
 
     @NotNull
-    private List<SubjectClassDTO> subjectClasses;
+    private List<SubjectClassesDTO> subjectClasses;
 
     @NotNull
     private List<EducationalEffectDTO> educationalEffects;

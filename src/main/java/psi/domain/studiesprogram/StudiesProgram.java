@@ -5,8 +5,8 @@ import org.hibernate.annotations.NaturalId;
 import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.discipline.entity.Discipline;
 import psi.domain.fieldofstudy.entity.FieldOfStudy;
-import psi.domain.subjectcard.entity.Item;
-import psi.domain.subjectcard.entity.Item_;
+import psi.domain.simpleattribute.entity.SimpleAttribute;
+import psi.domain.simpleattribute.entity.SimpleAttribute_;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -74,9 +74,9 @@ public class StudiesProgram extends AuditedObject {
     private Integer totalNumberOfHours;
 
     @ElementCollection
-    @CollectionTable(name = "PREREQUISITE")
-    @OrderBy(Item_.NUMBER)
-    private Set<Item> prerequisites = new LinkedHashSet<>();
+    @CollectionTable(name = "STUDIES_PROGRAM_PREREQUISITE")
+    @OrderBy(SimpleAttribute_.NUMBER)
+    private Set<SimpleAttribute> prerequisites = new LinkedHashSet<>();
 
     @NotNull
     @Enumerated(EnumType.STRING)
