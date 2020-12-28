@@ -6,7 +6,6 @@ plugins {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
@@ -31,7 +30,9 @@ dependencies {
 	implementation 'org.hibernate:hibernate-jcache:5.4.12.Final'
 	implementation 'org.ehcache:ehcache:3.8.1'
 	implementation 'org.apache.commons:commons-lang3:3.10'
+	implementation 'commons-io:commons-io:2.7'
 	implementation 'io.github.perplexhub:rsql-jpa-spring-boot-starter:5.0.6'
+	implementation 'com.itextpdf:itextpdf:5.5.13.2'
 	annotationProcessor('org.hibernate:hibernate-jpamodelgen:5.4.23.Final')
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

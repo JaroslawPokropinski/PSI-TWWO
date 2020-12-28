@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.NaturalId;
 import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.educationaleffect.entity.EducationalEffect;
+import psi.domain.educationaleffect.entity.EducationalEffectCategory;
 import psi.domain.fieldofstudy.entity.FieldOfStudy;
 import psi.domain.organisationalunit.entity.OrganisationalUnit;
 import psi.domain.simpleattribute.entity.SimpleAttribute;
@@ -35,9 +36,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import java.util.Comparator;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
@@ -122,6 +129,25 @@ public class SubjectCard extends AuditedObject {
             joinColumns = @JoinColumn(name = "SUBJECT_CARD_ID"),
             inverseJoinColumns = @JoinColumn(name = "EDUCATIONAL_EFFECT_ID"))
     private Set<EducationalEffect> educationalEffects = new LinkedHashSet<>();
+
+    public Optional<FieldOfStudy> getMainFieldOfStudy() {
+        return Optional.ofNullable(mainFieldOfStudy);
+    }
+
+    public Optional<String> getSpecialization() {
+        return Optional.ofNullable(specialization);
+    }
+
+    public Map<EducationalEffectCategory, List<String>> getEducationalEffectCodesByCategory() {
+        return educationalEffects.stream()
+                .sorted(Comparator.comparing(EducationalEffect::getCode))
+                .collect(Collectors.groupingBy(EducationalEffect::getCategory, Collectors.mapping(EducationalEffect::getCode, Collectors.toList())));
+    }
+
+    public Map<SubjectClassesType, SubjectClasses> getSubjectClassesByType() {
+        return subjectClasses.stream()
+                .collect(Collectors.toMap(SubjectClasses::getSubjectClassesType, Function.identity(), (e1, e2) -> e1));
+    }
 
     @Override
     public boolean equals(Object o) {

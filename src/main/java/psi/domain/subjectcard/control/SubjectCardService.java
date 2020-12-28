@@ -36,6 +36,11 @@ public class SubjectCardService {
         return subjectCardRepository.findAll(RSQLJPASupport.toSpecification(query, SubjectCardRSQLMapping.RSQL_TO_JPA_ATTRIBUTE_MAPPING), pageable);
     }
 
+    public SubjectCard getSubjectCardById(Long id) {
+        return subjectCardRepository.findById(id)
+                .orElseThrow(() -> ExceptionUtils.getObjectNotFoundException(SubjectCard.class, id));
+    }
+
     public List<SubjectCard> getSubjectCardsByIds(Collection<Long> ids) {
         return subjectCardRepository.findAllById(ids);
     }
@@ -152,8 +157,8 @@ public class SubjectCardService {
     private void updateSubjectCard(SubjectCard existingSubjectCard, SubjectCard updatedSubjectCard) {
         existingSubjectCard.setSubjectName(updatedSubjectCard.getSubjectName());
         existingSubjectCard.setSubjectNameInEnglish(updatedSubjectCard.getSubjectNameInEnglish());
-        existingSubjectCard.setMainFieldOfStudy(updatedSubjectCard.getMainFieldOfStudy());
-        existingSubjectCard.setSpecialization(updatedSubjectCard.getSpecialization());
+        existingSubjectCard.setMainFieldOfStudy(updatedSubjectCard.getMainFieldOfStudy().orElse(null));
+        existingSubjectCard.setSpecialization(updatedSubjectCard.getSpecialization().orElse(null));
         existingSubjectCard.setStudiesLevel(updatedSubjectCard.getStudiesLevel());
         existingSubjectCard.setStudiesForm(updatedSubjectCard.getStudiesForm());
         existingSubjectCard.setSubjectType(updatedSubjectCard.getSubjectType());

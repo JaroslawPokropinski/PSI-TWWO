@@ -3,8 +3,11 @@ package psi.domain.subjectcard.boundary;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +22,11 @@ import psi.api.common.ResponseDTO;
 import psi.api.common.SearchResultDTO;
 import psi.api.subjectcard.SubjectCardDTO;
 import psi.api.subjectcard.SubjectCardDetailsDTO;
+import psi.domain.document.Document;
+import psi.domain.document.DocumentGenerator;
 import psi.domain.subjectcard.entity.SubjectCard;
 import psi.domain.subjectcard.control.SubjectCardService;
+import psi.infrastructure.mediatype.MediaTypeResolver;
 import psi.infrastructure.security.UserInfo;
 import psi.infrastructure.security.annotation.LoggedUser;
 import springfox.documentation.annotations.ApiIgnore;
@@ -28,8 +34,10 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.validation.Valid;
 import java.util.List;
 
+import static psi.infrastructure.rest.ResourcePaths.ID;
 import static psi.infrastructure.rest.ResourcePaths.IDS;
 import static psi.infrastructure.rest.ResourcePaths.IDS_PATH;
+import static psi.infrastructure.rest.ResourcePaths.ID_PATH;
 
 @Api(tags = "Subject Card")
 @RestController
@@ -42,6 +50,8 @@ public class SubjectCardController {
 
     private final SubjectCardService subjectCardService;
     private final SubjectCardMapper subjectCardMapper;
+    private final DocumentGenerator<SubjectCard> subjectCardPdfDocumentGenerator;
+    private final MediaTypeResolver mediaTypeResolver;
 
     @ApiOperation(value = "${api.subject-cards.searchSubjectCards.value}", notes = "${api.subject-cards.searchSubjectCards.notes}")
     @GetMapping(SEARCH_RESOURCE)
@@ -78,6 +88,17 @@ public class SubjectCardController {
     public ResponseDTO<Boolean> deleteSubjectCards(@PathVariable(IDS) List<Long> ids, @ApiIgnore @LoggedUser UserInfo userInfo) {
         subjectCardService.deleteSubjectCards(ids, userInfo.getId());
         return new ResponseDTO<>(true, "Subject cards deleted successfully");
+    }
+
+    @ApiOperation(value = "${api.subject-cards.downloadSubjectCardFile.value}", notes = "${api.subject-cards.downloadSubjectCardFile.notes}")
+    @GetMapping("/download" + ID_PATH)
+    public ResponseEntity<Resource> downloadSubjectCardFile(@PathVariable(ID) Long id) {
+        SubjectCard subjectCard = subjectCardService.getSubjectCardById(id);
+        Document document = subjectCardPdfDocumentGenerator.generateDocument(subjectCard);
+        return ResponseEntity.ok()
+                .contentType(mediaTypeResolver.getMediaTypeForFile(document.getName()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + document.getName() + "\"")
+                .body(document.getResource());
     }
 
 }
