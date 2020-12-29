@@ -6,9 +6,9 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -33,6 +33,7 @@ import psi.infrastructure.exception.ThrowingConsumer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -49,16 +50,25 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SubjectCardPdfDocumentGenerator implements DocumentGenerator<SubjectCard> {
 
-    private static final String FILENAME_PATTERN = "{0}-{1}-{2}.pdf";
-    private static final Font titleFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 24, Font.BOLD, BaseColor.BLACK);
-    private static final Font headingFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 16, Font.BOLD, BaseColor.BLACK);
-    private static final Font labelFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 11, Font.BOLD, BaseColor.BLACK);
-    private static final Font valueFont = FontFactory.getFont(FontFactory.TIMES_ROMAN, 11, Font.NORMAL, BaseColor.BLACK);
+    private static final String FILENAME_PATTERN = "{0} - {1}.pdf";
+    private static final BaseFont baseFont = createFont();
+    private static final Font titleFont = new Font(baseFont, 24, Font.BOLD, BaseColor.BLACK);
+    private static final Font headingFont = new Font(baseFont, 16, Font.BOLD, BaseColor.BLACK);
+    private static final Font labelFont = new Font(baseFont, 11, Font.BOLD, BaseColor.BLACK);
+    private static final Font valueFont = new Font(baseFont, 11, Font.NORMAL, BaseColor.BLACK);
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     private final MessageSource messageSource;
     private final SimpleAttributeMapper simpleAttributeMapper;
     private final LiteratureMapper literatureMapper;
+
+    private static BaseFont createFont() {
+        try {
+            return BaseFont.createFont("font/times_unicode.ttf", BaseFont.CP1250, BaseFont.NOT_EMBEDDED);
+        } catch (DocumentException|IOException e) {
+            throw new IllegalArgumentAppException("Error during font creation", e);
+        }
+    }
 
     @Override
     public psi.domain.document.Document generateDocument(SubjectCard subjectCard) {
@@ -406,7 +416,7 @@ public class SubjectCardPdfDocumentGenerator implements DocumentGenerator<Subjec
     }
 
     private String generateFilename(SubjectCard subjectCard) {
-        return MessageFormat.format(FILENAME_PATTERN, subjectCard.getSubjectCode(), subjectCard.getSubjectName(), subjectCard.getOrganisationalUnit().getName());
+        return MessageFormat.format(FILENAME_PATTERN, subjectCard.getSubjectCode(), subjectCard.getSubjectName());
     }
 
 }
