@@ -12,23 +12,20 @@ function Login(): JSX.Element {
   const authContext = useContext(AuthContext);
   const onFinish = useCallback(
     (results) => {
-      // Commented for demonstration purposes
-      // axios
-      //   .post<string>('/login', {
-      //     username: results.username,
-      //     password: results.password,
-      //   })
-      //   .then((res) => {
-      //     authContext.token = res.data;
-      //     history.replace('/home');
-      //   })
-      //   .catch(() => {
-      //     // TODO: Inform user
-      //     // eslint-disable-next-line no-console
-      //     console.error('Login failed!');
-      //   });
-      authContext.token = null;
-      history.replace('/home');
+      axios
+        .post<string>('/api/user/signin', {
+          username: results.username,
+          password: results.password,
+        })
+        .then((res) => {
+          authContext.token = res.data;
+          history.replace('/home');
+        })
+        .catch(() => {
+          // TODO: Inform user
+          // eslint-disable-next-line no-console
+          console.error('Login failed!');
+        });
     },
     [history, authContext]
   );

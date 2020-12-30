@@ -1,16 +1,15 @@
 import React, { useCallback, useContext } from 'react';
-import Title from 'antd/lib/typography/Title';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Button } from 'antd';
 import { useHistory } from 'react-router-dom';
-import axios from '../configuration/axios';
-import AuthContext from '../context/AuthContext';
-
-import logo from '../resources/logo.png';
-import './Home.css';
+import { FormattedMessage } from 'react-intl';
 import Header from '../shared/Header';
+import { LangContext } from '../context/LangContext';
+
+import './Home.css';
 
 function Home(): JSX.Element {
   const history = useHistory();
+  const lang = useContext(LangContext);
   // const authContext = useContext(AuthContext);
 
   const onEffects = useCallback(() => {
@@ -31,7 +30,7 @@ function Home(): JSX.Element {
 
   return (
     <div className="Home">
-      <Header title="Kreator programów kształcenia PWR" />
+      <Header title={lang.messages['app.title']} />
 
       <Button
         className="home-button"
@@ -39,7 +38,7 @@ function Home(): JSX.Element {
         size="large"
         onClick={onEffects}
       >
-        Efekty kształcenia
+        <FormattedMessage id="efects" />
       </Button>
       <Button
         className="home-button"
@@ -47,7 +46,7 @@ function Home(): JSX.Element {
         size="large"
         onClick={onCards}
       >
-        Karty przedmiotów
+        <FormattedMessage id="cards" />
       </Button>
       <Button
         className="home-button"
@@ -55,7 +54,7 @@ function Home(): JSX.Element {
         size="large"
         onClick={onPrograms}
       >
-        Programy studiów
+        <FormattedMessage id="programs" />
       </Button>
       <Button
         className="home-button"
@@ -63,7 +62,7 @@ function Home(): JSX.Element {
         size="large"
         onClick={onPlans}
       >
-        Plany studiów
+        <FormattedMessage id="plans" />
       </Button>
     </div>
   );
