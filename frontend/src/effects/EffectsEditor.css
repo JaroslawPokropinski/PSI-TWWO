@@ -1,0 +1,14 @@
+.ant-btn.effects-remove-button {
+  background-color: red;
+  font-weight: bold;
+  color: white;
+}
+
+.effects-controlls {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.ant-btn.effects-controlls-button {
+  margin-right: 8px;
+}

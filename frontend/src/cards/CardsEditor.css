@@ -1,0 +1,36 @@
+.cards-editor {
+  max-width: 1090px;
+  margin: 0 auto;
+}
+.ant-btn.cards-remove-button {
+  background-color: red;
+  font-weight: bold;
+  color: white;
+}
+
+.cards-controlls {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.ant-btn.cards-controlls-button {
+  margin-right: 8px;
+}
+
+
+
+.ant-input:disabled {
+  color: black !important;
+}
+
+.ant-select-selection-search-input:disabled {
+  color: black !important;
+}
+
+/* .ant-form-item-required {
+  min-width: 200px;
+} */
+
+.ant-form-item-label {
+  min-width: 200px;
+}
