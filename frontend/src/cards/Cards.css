@@ -1,0 +1,37 @@
+.cards {
+  height: 100%;
+  max-width: 1090px;
+  margin: 0 auto;
+}
+
+.ant-btn.cards-add {
+ float: left;
+ z-index: 1;
+}
+.ant-pagination {
+  float: right;
+}
+
+.ant-list-pagination {
+  height: 40px;
+}
+
+.ant-list-item.ant-list-item-no-flex.cards-item {
+  padding: 16px;
+  padding-left: 8px;
+  cursor: pointer;
+}
+
+.cards-item:hover {
+  background-color: papayawhip;
+}
+
+.ant-btn.cards-filter-button {
+  margin-bottom: 8px;
+}
+
+.ant-input.cards-filter {
+  margin-bottom: 8px;
+  width: 400px;
+  margin-right: 8px;
+}
