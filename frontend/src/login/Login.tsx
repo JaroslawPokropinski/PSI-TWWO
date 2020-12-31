@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button, Checkbox, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import axios from '../configuration/axios';
 import AuthContext from '../context/AuthContext';
@@ -21,10 +21,12 @@ function Login(): JSX.Element {
           authContext.token = res.data;
           history.replace('/home');
         })
-        .catch(() => {
-          // TODO: Inform user
-          // eslint-disable-next-line no-console
-          console.error('Login failed!');
+        .catch((err) => {
+          if (err.response && err.response.data.error) {
+            message.error(`Login failed: ${err.response.data.error}`);
+          } else {
+            message.error(`Login failed: ${err.message}`);
+          }
         });
     },
     [history, authContext]
