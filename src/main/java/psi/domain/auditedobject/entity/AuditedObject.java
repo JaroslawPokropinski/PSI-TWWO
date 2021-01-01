@@ -31,6 +31,8 @@ import java.time.Instant;
 @EntityListeners(AuditingEntityListener.class)
 public class AuditedObject {
 
+    public static final String IS_NOT_REMOVED_OBJECT = "object_state <> 'REMOVED'";
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private Instant createdAt;

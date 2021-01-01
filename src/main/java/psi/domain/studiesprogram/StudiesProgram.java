@@ -1,7 +1,9 @@
 package psi.domain.studiesprogram;
 
 import lombok.Getter;
+import org.hibernate.annotations.Loader;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Where;
 import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.discipline.entity.Discipline;
 import psi.domain.fieldofstudy.entity.FieldOfStudy;
@@ -21,6 +23,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OrderBy;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -35,6 +38,9 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 @Getter
+@Loader(namedQuery = "findStudiesProgramById")
+@NamedQuery(name = "findStudiesProgramById", query = "SELECT s FROM StudiesProgram s WHERE s.id = ?1 AND s.objectState <> psi.domain.auditedobject.entity.ObjectState.REMOVED")
+@Where(clause = AuditedObject.IS_NOT_REMOVED_OBJECT)
 public class StudiesProgram extends AuditedObject {
 
     @Id
