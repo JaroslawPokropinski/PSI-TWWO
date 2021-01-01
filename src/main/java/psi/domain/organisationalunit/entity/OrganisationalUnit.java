@@ -1,6 +1,10 @@
 package psi.domain.organisationalunit.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -14,6 +18,10 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 @Getter
+@Setter
+@Audited
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrganisationalUnit {
 
     @Id

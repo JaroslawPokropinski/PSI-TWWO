@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalIdCache;
+import org.hibernate.envers.Audited;
 import psi.domain.auditedobject.entity.AuditedObject;
 
 import javax.persistence.Cacheable;
@@ -33,6 +34,7 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Getter
 @SuperBuilder
 @Cacheable
+@Audited
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = USER_ENTITY_CACHE)
 @NaturalIdCache(region = USER_NATURAL_ID_CACHE)
 public class User extends AuditedObject {

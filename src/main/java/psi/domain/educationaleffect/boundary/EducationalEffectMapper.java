@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 import psi.api.common.ResourceDTO;
-import psi.api.common.SearchResultDTO;
+import psi.api.common.PaginatedResultsDTO;
 import psi.api.educationaleffect.EducationalEffectDTO;
 import psi.api.educationaleffect.EducationalEffectDetailsDTO;
 import psi.domain.educationaleffect.entity.EducationalEffect;
@@ -26,11 +26,11 @@ public class EducationalEffectMapper {
 
     private final UserMapper userMapper;
 
-    public SearchResultDTO<EducationalEffectDetailsDTO> mapToSearchResultDTO(Page<EducationalEffect> educationalEffectPage, String query) {
+    public PaginatedResultsDTO<EducationalEffectDetailsDTO> mapToSearchResultDTO(Page<EducationalEffect> educationalEffectPage, String query) {
         if (educationalEffectPage == null) {
             return null;
         }
-        return SearchResultDTO.<EducationalEffectDetailsDTO>builder()
+        return PaginatedResultsDTO.<EducationalEffectDetailsDTO>builder()
                 .results(mapToEducationalEffectDetailsDTOs(educationalEffectPage.getContent()))
                 .totalSize(educationalEffectPage.getTotalElements())
                 .pageSize(educationalEffectPage.getSize())

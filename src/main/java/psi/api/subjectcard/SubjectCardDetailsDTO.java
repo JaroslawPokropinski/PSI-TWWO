@@ -6,6 +6,7 @@ import psi.api.educationaleffect.EducationalEffectDTO;
 import psi.api.fieldofstudy.FieldOfStudyDTO;
 import psi.api.organisationalunit.OrganisationalUnitDTO;
 import psi.api.user.UserDTO;
+import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.studiesprogram.StudiesForm;
 import psi.domain.studiesprogram.StudiesLevel;
 import psi.domain.subjectcard.entity.SubjectType;
@@ -74,6 +75,9 @@ public class SubjectCardDetailsDTO {
 
     @NotNull
     private List<EducationalEffectDTO> educationalEffects;
+
+    @NotNull
+    private ObjectState objectState;
 
     @NotNull
     private UserDTO createdBy;

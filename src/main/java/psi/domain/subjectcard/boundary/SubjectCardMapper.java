@@ -2,11 +2,13 @@ package psi.domain.subjectcard.boundary;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.history.Revision;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 import psi.api.common.ResourceDTO;
-import psi.api.common.SearchResultDTO;
+import psi.api.common.PaginatedResultsDTO;
+import psi.api.revision.RevisionDTO;
 import psi.api.subjectcard.SubjectCardDTO;
 import psi.api.subjectcard.SubjectCardDetailsDTO;
 import psi.domain.educationaleffect.boundary.EducationalEffectMapper;
@@ -46,8 +48,8 @@ public class SubjectCardMapper {
     private final LiteratureMapper literatureMapper;
     private final EducationalEffectMapper educationalEffectMapper;
 
-    public SearchResultDTO<SubjectCardDetailsDTO> mapToSearchResultDTO(Page<SubjectCard> subjectCardPage, String query) {
-        return SearchResultDTO.<SubjectCardDetailsDTO>builder()
+    public PaginatedResultsDTO<SubjectCardDetailsDTO> mapToSearchResultDTO(Page<SubjectCard> subjectCardPage, String query) {
+        return PaginatedResultsDTO.<SubjectCardDetailsDTO>builder()
                 .results(mapToSubjectCardDetailsDTOs(subjectCardPage.getContent()))
                 .totalSize(subjectCardPage.getTotalElements())
                 .pageSize(subjectCardPage.getSize())
@@ -96,6 +98,11 @@ public class SubjectCardMapper {
                 .supervisor(userMapper.mapToUserDTO(subjectCard.getSupervisor()))
                 .subjectClasses(subjectClassMapper.mapToSubjectClassesDTOs(subjectCard.getSubjectClasses()))
                 .educationalEffects(educationalEffectMapper.mapToEducationalEffectDTOs(subjectCard.getEducationalEffects()))
+                .objectState(subjectCard.getObjectState())
+                .createdBy(userMapper.mapToUserDTO(subjectCard.getCreatedBy()))
+                .createdAt(subjectCard.getCreatedAt())
+                .lastUpdatedBy(userMapper.mapToUserDTO(subjectCard.getUpdatedBy()))
+                .lastUpdatedAt(subjectCard.getUpdatedAt())
                 .build();
     }
 
@@ -154,6 +161,43 @@ public class SubjectCardMapper {
                 .path(IDS_PATH)
                 .buildAndExpand(subjectCard.getId())
                 .toUri();
+    }
+
+    public PaginatedResultsDTO<RevisionDTO<SubjectCardDetailsDTO>> mapToRevisionDTOs(Page<Revision<Integer, SubjectCard>> subjectCardHistoryPage) {
+        return PaginatedResultsDTO.<RevisionDTO<SubjectCardDetailsDTO>>builder()
+                .results(mapToRevisionDTOs(subjectCardHistoryPage.getContent()))
+                .totalSize(subjectCardHistoryPage.getTotalElements())
+                .pageSize(subjectCardHistoryPage.getSize())
+                .pageNumber(subjectCardHistoryPage.getNumber())
+                .nextPage(PageUri.generatePageUri(getHistoryResourceUri(), subjectCardHistoryPage.nextOrLastPageable()))
+                .previousPage(PageUri.generatePageUri(getHistoryResourceUri(), subjectCardHistoryPage.previousOrFirstPageable()))
+                .firstPage(PageUri.generatePageUri(getHistoryResourceUri(), subjectCardHistoryPage.getPageable().first()))
+                .lastPage(PageUri.generatePageUri(getHistoryResourceUri(), PageUri.getLastPageable(subjectCardHistoryPage)))
+                .build();
+    }
+
+    private List<RevisionDTO<SubjectCardDetailsDTO>> mapToRevisionDTOs(Collection<Revision<Integer, SubjectCard>> revisions) {
+        return revisions.stream()
+                .map(this::mapToRevisionDTO)
+                .collect(Collectors.toList());
+    }
+
+    private RevisionDTO<SubjectCardDetailsDTO> mapToRevisionDTO(Revision<Integer, SubjectCard> revision) {
+        if (revision == null) {
+            return null;
+        }
+        return RevisionDTO.<SubjectCardDetailsDTO>builder()
+                .revisionId(revision.getRequiredRevisionNumber())
+                .revisionInstant(revision.getRequiredRevisionInstant())
+                .revisionType(revision.getMetadata().getRevisionType())
+                .entity(mapToSubjectCardDetailsDTO(revision.getEntity()))
+                .build();
+    }
+
+    private UriComponentsBuilder getHistoryResourceUri() {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(SubjectCardController.SUBJECT_CARD_RESOURCE)
+                .path(SubjectCardController.HISTORY);
     }
 
 }

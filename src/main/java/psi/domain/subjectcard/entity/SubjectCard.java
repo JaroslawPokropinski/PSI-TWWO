@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.envers.Audited;
 import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.domain.educationaleffect.entity.EducationalEffectCategory;
@@ -51,6 +52,7 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Entity
 @Getter
 @Setter
+@Audited
 @SuperBuilder
 @NoArgsConstructor
 @Table(name = "SUBJECT_CARD")

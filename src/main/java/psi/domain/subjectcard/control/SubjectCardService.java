@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.history.Revision;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import psi.domain.auditedobject.entity.ObjectState;
@@ -182,6 +183,10 @@ public class SubjectCardService {
     private void validateBeforeDelete(Collection<Long> ids, Collection<SubjectCard> subjectCards, Long userId) {
         validateIfAllSubjectCardsExists(ids, subjectCards);
         validatePermissions(subjectCards, userId);
+    }
+
+    public Page<Revision<Integer, SubjectCard>> getSubjectCardHistory(Long id, Pageable pageable) {
+        return  subjectCardRepository.findRevisions(id, pageable);
     }
 
 }

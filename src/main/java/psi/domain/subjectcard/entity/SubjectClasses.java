@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
@@ -26,6 +27,7 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Getter
 @Setter
 @Builder
+@Audited
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubjectClasses {

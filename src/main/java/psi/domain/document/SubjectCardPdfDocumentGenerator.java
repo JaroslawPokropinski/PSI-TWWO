@@ -83,10 +83,10 @@ public class SubjectCardPdfDocumentGenerator implements DocumentGenerator<Subjec
             p.add(dateFormat.format(new Date()));
             document.add(p);
 
-            addTitle("subject_card.title", document);
+            addTitle(document);
 
             addHeading("subject_card.general_information", document);
-            addLineSeparator(headingFont, document);
+            addLineSeparator(document);
             addNewLine(document);
             addFacultyOrDepartment(subjectCard, document);
             addLabelWithStringValue("subject_card.subject_name", subjectCard.getSubjectName(), document);
@@ -97,27 +97,27 @@ public class SubjectCardPdfDocumentGenerator implements DocumentGenerator<Subjec
             addLabelWithEnumValue("subject_card.studies_form", subjectCard.getStudiesForm(), document);
             addLabelWithEnumValue("subject_card.subject_type", subjectCard.getSubjectType(), document);
             addLabelWithStringValue("subject_card.subject_code", subjectCard.getSubjectCode(), document);
-            addLabelWithBooleanValue("subject_card.group_of_courses", subjectCard.getIsGroupOfCourses(), document);
+            addLabelWithBooleanValue(subjectCard.getIsGroupOfCourses(), document);
 
             addNewLine(document);
             addSubjectClassesInfoTable(subjectCard, document);
 
             addNewLine(document);
             addHeading("subject_card.prerequisites", document);
-            addLineSeparator(headingFont, document);
+            addLineSeparator(document);
             addNewLine(document);
             addList(simpleAttributeMapper.mapToStrings(subjectCard.getPrerequisites()), document);
 
             addNextPage(document);
             addHeading("subject_card.objectives", document);
-            addLineSeparator(headingFont, document);
+            addLineSeparator(document);
             addNewLine(document);
             addList(simpleAttributeMapper.mapToStrings(subjectCard.getSubjectObjectives()), document);
 
             Map<EducationalEffectCategory, List<String>> educationalEffectCodesByCategory = subjectCard.getEducationalEffectCodesByCategory();
             addNewLine(document);
             addHeading("subject_card.educational_effects", document);
-            addLineSeparator(headingFont, document);
+            addLineSeparator(document);
             addNewLine(document);
             if (educationalEffectCodesByCategory.get(EducationalEffectCategory.KNOWLEDGE) != null) {
                 addLabelWithStringValue("subject_card.educational_effects.knowledge", "", document);
@@ -136,31 +136,31 @@ public class SubjectCardPdfDocumentGenerator implements DocumentGenerator<Subjec
 
             addNewLine(document);
             addHeading("subject_card.programme_content", document);
-            addLineSeparator(headingFont, document);
+            addLineSeparator(document);
             addNewLine(document);
             addProgramContentTable(subjectCard, document);
 
             addNewLine(document);
             addHeading("subject_card.used_teaching_tools", document);
-            addLineSeparator(headingFont, document);
+            addLineSeparator(document);
             addNewLine(document);
             addList(simpleAttributeMapper.mapToStrings(subjectCard.getUsedTeachingTools()), document);
 
             addNewLine(document);
             addHeading("subject_card.primary_literature", document);
-            addLineSeparator(headingFont, document);
+            addLineSeparator(document);
             addNewLine(document);
             addList(literatureMapper.mapToPrimaryLiteratureStrings(subjectCard.getLiterature()), document);
 
             addNewLine(document);
             addHeading("subject_card.secondary_literature", document);
-            addLineSeparator(headingFont, document);
+            addLineSeparator(document);
             addNewLine(document);
             addList(literatureMapper.mapToSecondaryLiteratureStrings(subjectCard.getLiterature()), document);
 
             addNewLine(document);
             addHeading("subject_card.supervisor", document);
-            addLineSeparator(headingFont, document);
+            addLineSeparator(document);
             addNewLine(document);
             addLabelWithStringValue("subject_card.name", subjectCard.getSupervisor().getName() + " " + subjectCard.getSupervisor().getSurname(), document);
             addLabelWithStringValue("subject_card.phone", subjectCard.getSupervisor().getPhoneNumber(), document);
@@ -173,8 +173,8 @@ public class SubjectCardPdfDocumentGenerator implements DocumentGenerator<Subjec
         return new psi.domain.document.Document(generateFilename(subjectCard), new InputStreamResource(new ByteArrayInputStream(out.toByteArray())));
     }
 
-    private void addTitle(String label, Document document) throws DocumentException {
-        Paragraph title = new Paragraph(getTranslatedLabel(label), titleFont);
+    private void addTitle(Document document) throws DocumentException {
+        Paragraph title = new Paragraph(getTranslatedLabel("subject_card.title"), titleFont);
         title.setAlignment(Element.ALIGN_CENTER);
         document.add(title);
         document.add(Chunk.NEWLINE);
@@ -190,8 +190,8 @@ public class SubjectCardPdfDocumentGenerator implements DocumentGenerator<Subjec
         document.add(heading);
     }
 
-    private void addLineSeparator(Font font, Document document) throws DocumentException {
-        document.add(new LineSeparator(font));
+    private void addLineSeparator(Document document) throws DocumentException {
+        document.add(new LineSeparator(SubjectCardPdfDocumentGenerator.headingFont));
     }
 
     private void addNewLine(Document document) throws DocumentException {
@@ -234,8 +234,8 @@ public class SubjectCardPdfDocumentGenerator implements DocumentGenerator<Subjec
         return prefix + "." + value.name().toLowerCase();
     }
 
-    private void addLabelWithBooleanValue(String label, boolean value, Document document) {
-        addLabelWithStringValue(label, value ? getTranslatedLabel("yes") : getTranslatedLabel("no"), document);
+    private void addLabelWithBooleanValue(boolean value, Document document) {
+        addLabelWithStringValue("subject_card.group_of_courses", value ? getTranslatedLabel("yes") : getTranslatedLabel("no"), document);
     }
 
     private void addSubjectClassesInfoTable(SubjectCard subjectCard, Document document) throws DocumentException {
@@ -314,11 +314,11 @@ public class SubjectCardPdfDocumentGenerator implements DocumentGenerator<Subjec
     }
 
     private String getCreditingForm(SubjectClasses subjectClasses) {
-        return getSubjectClassesProperty(subjectClasses, applyTranslation("subject_card.crediting_form", SubjectClasses::getCreditingForm));
+        return getSubjectClassesProperty(subjectClasses, applyTranslation(SubjectClasses::getCreditingForm));
     }
 
-    private <T extends Enum<T>> Function<SubjectClasses, String> applyTranslation(String translationPrefix, Function<SubjectClasses, T> function) {
-        return function.andThen(value -> getTranslatedLabel(getLabelForEnum(value, translationPrefix)));
+    private <T extends Enum<T>> Function<SubjectClasses, String> applyTranslation(Function<SubjectClasses, T> function) {
+        return function.andThen(value -> getTranslatedLabel(getLabelForEnum(value, "subject_card.crediting_form")));
     }
 
     private String getIsFinalCourse(SubjectClasses subjectClasses) {

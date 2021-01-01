@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import psi.api.common.ResourceDTO;
 import psi.api.common.ResponseDTO;
-import psi.api.common.SearchResultDTO;
+import psi.api.common.PaginatedResultsDTO;
 import psi.api.educationaleffect.EducationalEffectDTO;
 import psi.api.educationaleffect.EducationalEffectDetailsDTO;
 import psi.domain.educationaleffect.control.EducationalEffectService;
@@ -45,7 +45,7 @@ public class EducationalEffectController {
 
     @ApiOperation(value = "${api.educational-effects.searchEducationalEffects.value}", notes = "${api.educational-effects.searchEducationalEffects.notes}")
     @GetMapping(SEARCH_RESOURCE)
-    public SearchResultDTO<EducationalEffectDetailsDTO> searchEducationalEffects(@RequestParam String query, Pageable pageable) {
+    public PaginatedResultsDTO<EducationalEffectDetailsDTO> searchEducationalEffects(@RequestParam String query, Pageable pageable) {
         Page<EducationalEffect> educationalEffectPage = educationalEffectService.getEducationalEffectsByRSQL(query, pageable);
         return educationalEffectMapper.mapToSearchResultDTO(educationalEffectPage, query);
     }

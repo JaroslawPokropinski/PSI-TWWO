@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class SearchResultDTO<T> {
+public class PaginatedResultsDTO<T> {
 
     private List<T> results;
     private Long totalSize;
