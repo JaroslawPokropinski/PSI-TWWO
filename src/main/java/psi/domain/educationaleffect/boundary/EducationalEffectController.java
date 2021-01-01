@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.history.Revision;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import psi.api.common.ResponseDTO;
 import psi.api.common.PaginatedResultsDTO;
 import psi.api.educationaleffect.EducationalEffectDTO;
 import psi.api.educationaleffect.EducationalEffectDetailsDTO;
+import psi.api.revision.RevisionDTO;
 import psi.domain.educationaleffect.control.EducationalEffectService;
 import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.infrastructure.security.UserInfo;
@@ -28,8 +30,10 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.validation.Valid;
 import java.util.List;
 
+import static psi.infrastructure.rest.ResourcePaths.ID;
 import static psi.infrastructure.rest.ResourcePaths.IDS;
 import static psi.infrastructure.rest.ResourcePaths.IDS_PATH;
+import static psi.infrastructure.rest.ResourcePaths.ID_PATH;
 
 @Api(tags = "Educational Effect")
 @RestController
@@ -39,6 +43,7 @@ public class EducationalEffectController {
 
     public static final String EDUCATIONAL_EFFECT_RESOURCE = "/api/educational-effects";
     public static final String SEARCH_RESOURCE = "/search";
+    public static final String HISTORY = "/history";
 
     private final EducationalEffectMapper educationalEffectMapper;
     private final EducationalEffectService educationalEffectService;
@@ -78,6 +83,13 @@ public class EducationalEffectController {
     public ResponseDTO<Boolean> deleteEducationalEffects(@PathVariable(IDS) List<Long> ids, @ApiIgnore @LoggedUser UserInfo userInfo) {
         educationalEffectService.deleteEducationalEffects(ids, userInfo.getId());
         return new ResponseDTO<>(true, "Educational effects deleted successfully");
+    }
+
+    @ApiOperation(value = "${api.educational-effects.getEducationalEffectHistory.value}", notes = "${api.educational-effects.getEducationalEffectHistory.notes}")
+    @GetMapping(HISTORY + ID_PATH)
+    public PaginatedResultsDTO<RevisionDTO<EducationalEffectDetailsDTO>> getEducationalEffectHistory(@PathVariable(ID) Long id, Pageable pageable) {
+        Page<Revision<Integer, EducationalEffect>> educationalEffectPage = educationalEffectService.getEducationalEffectHistory(id, pageable);
+        return educationalEffectMapper.mapToRevisionDTOs(educationalEffectPage);
     }
 
 }

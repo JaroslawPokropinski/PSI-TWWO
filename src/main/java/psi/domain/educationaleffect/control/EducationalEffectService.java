@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.history.Revision;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import psi.domain.auditedobject.entity.ObjectState;
@@ -168,6 +169,10 @@ public class EducationalEffectService {
     private void validateBeforeDelete(Collection<Long> ids, Collection<EducationalEffect> educationalEffects, Long userId) {
         validateIfAllEducationalEffectsExists(ids, educationalEffects);
         validatePermissions(educationalEffects, userId);
+    }
+
+    public Page<Revision<Integer, EducationalEffect>> getEducationalEffectHistory(Long id, Pageable pageable) {
+        return educationalEffectRepository.findRevisions(id, pageable);
     }
 
 }
