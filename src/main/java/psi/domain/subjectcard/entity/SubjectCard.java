@@ -15,8 +15,8 @@ import psi.domain.fieldofstudy.entity.FieldOfStudy;
 import psi.domain.organisationalunit.entity.OrganisationalUnit;
 import psi.domain.simpleattribute.entity.SimpleAttribute;
 import psi.domain.simpleattribute.entity.SimpleAttribute_;
-import psi.domain.studiesprogram.StudiesForm;
-import psi.domain.studiesprogram.StudiesLevel;
+import psi.domain.studiesprogram.entity.StudiesForm;
+import psi.domain.studiesprogram.entity.StudiesLevel;
 import psi.domain.user.entity.User;
 
 import javax.persistence.CascadeType;

@@ -1,4 +1,4 @@
-package psi.domain.studiesprogram;
+package psi.domain.studiesprogram.entity;
 
 public enum StudiesLevel {
 

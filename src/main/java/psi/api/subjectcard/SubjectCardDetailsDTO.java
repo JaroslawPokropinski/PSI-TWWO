@@ -7,8 +7,8 @@ import psi.api.fieldofstudy.FieldOfStudyDTO;
 import psi.api.organisationalunit.OrganisationalUnitDTO;
 import psi.api.user.UserDTO;
 import psi.domain.auditedobject.entity.ObjectState;
-import psi.domain.studiesprogram.StudiesForm;
-import psi.domain.studiesprogram.StudiesLevel;
+import psi.domain.studiesprogram.entity.StudiesForm;
+import psi.domain.studiesprogram.entity.StudiesLevel;
 import psi.domain.subjectcard.entity.SubjectType;
 
 import javax.validation.constraints.NotBlank;

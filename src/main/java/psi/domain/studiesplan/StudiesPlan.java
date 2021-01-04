@@ -5,7 +5,7 @@ import org.hibernate.annotations.Loader;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Where;
 import psi.domain.auditedobject.entity.AuditedObject;
-import psi.domain.studiesprogram.StudiesProgram;
+import psi.domain.studiesprogram.entity.StudiesProgram;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

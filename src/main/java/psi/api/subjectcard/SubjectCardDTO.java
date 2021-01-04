@@ -2,8 +2,8 @@ package psi.api.subjectcard;
 
 import lombok.Builder;
 import lombok.Data;
-import psi.domain.studiesprogram.StudiesForm;
-import psi.domain.studiesprogram.StudiesLevel;
+import psi.domain.studiesprogram.entity.StudiesForm;
+import psi.domain.studiesprogram.entity.StudiesLevel;
 import psi.domain.subjectcard.entity.SubjectType;
 
 import javax.validation.constraints.NotBlank;
