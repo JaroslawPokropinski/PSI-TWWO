@@ -82,14 +82,14 @@ public class StudiesProgram extends AuditedObject {
     private String languageOfStudies;
 
     @NotBlank
-    @Column(length = 10000)
+    @Column(length = 1000)
     private String graduateProfile;
 
     @NotBlank
     private String possibilityOfContinuingStudies;
 
     @NotBlank
-    @Column(length = 10000)
+    @Column(length = 1000)
     private String connectionWithMissionAndDevelopmentStrategy;
 
     @NotNull
