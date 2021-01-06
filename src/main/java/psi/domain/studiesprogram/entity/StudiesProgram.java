@@ -1,7 +1,9 @@
 package psi.domain.studiesprogram.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Loader;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Where;
@@ -27,6 +29,8 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Entity
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
 @Loader(namedQuery = "findStudiesProgramById")
 @NamedQuery(name = "findStudiesProgramById", query = "SELECT s FROM StudiesProgram s WHERE s.id = ?1 AND s.objectState <> psi.domain.auditedobject.entity.ObjectState.REMOVED")
 @Where(clause = AuditedObject.IS_NOT_REMOVED_OBJECT)

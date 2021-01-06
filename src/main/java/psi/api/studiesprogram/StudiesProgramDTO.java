@@ -2,6 +2,9 @@ package psi.api.studiesprogram;
 
 import lombok.Builder;
 import lombok.Data;
+import psi.api.discipline.DisciplineDTO;
+import psi.api.fieldofstudy.FieldOfStudyDTO;
+import psi.domain.discipline.entity.Discipline;
 import psi.domain.simpleattribute.entity.SimpleAttribute;
 import psi.domain.studiesprogram.entity.DegreeTitle;
 import psi.domain.studiesprogram.entity.StudiesForm;
@@ -22,7 +25,7 @@ public class StudiesProgramDTO {
     private String code;
 
     @NotBlank
-    private Long fieldOfStudy;
+    private Long fieldOfStudyId;
 
     @NotNull
     private StudiesLevel studiesLevel;
@@ -37,9 +40,12 @@ public class StudiesProgramDTO {
     private Integer numberOfSemesters;
 
     @NotBlank
+    private Integer totalNumberOfEctsPoints;
+
+    @NotBlank
     private Integer totalNumberOfHours;
 
-    private List<SimpleAttribute> prerequisites;
+    private List<String> prerequisites;
 
     @NotBlank
     private DegreeTitle degreeTitle;
@@ -57,8 +63,8 @@ public class StudiesProgramDTO {
     private String connectionWithMissionAndDevelopmentStrategy;
 
     @NotNull
-    private Long mainDiscipline;
+    private Long mainDisciplineId;
 
-    private List<Long> disciplines;
+    private List<Long> disciplinesIds;
 
 }
