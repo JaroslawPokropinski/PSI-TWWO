@@ -2,13 +2,15 @@ package psi.domain.educationaleffect.boundary;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.history.Revision;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 import psi.api.common.ResourceDTO;
-import psi.api.common.SearchResultDTO;
+import psi.api.common.PaginatedResultsDTO;
 import psi.api.educationaleffect.EducationalEffectDTO;
 import psi.api.educationaleffect.EducationalEffectDetailsDTO;
+import psi.api.revision.RevisionDTO;
 import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.domain.user.boundary.UserMapper;
 import psi.infrastructure.rest.PageUri;
@@ -26,11 +28,11 @@ public class EducationalEffectMapper {
 
     private final UserMapper userMapper;
 
-    public SearchResultDTO<EducationalEffectDetailsDTO> mapToSearchResultDTO(Page<EducationalEffect> educationalEffectPage, String query) {
+    public PaginatedResultsDTO<EducationalEffectDetailsDTO> mapToSearchResultDTO(Page<EducationalEffect> educationalEffectPage, String query) {
         if (educationalEffectPage == null) {
             return null;
         }
-        return SearchResultDTO.<EducationalEffectDetailsDTO>builder()
+        return PaginatedResultsDTO.<EducationalEffectDetailsDTO>builder()
                 .results(mapToEducationalEffectDetailsDTOs(educationalEffectPage.getContent()))
                 .totalSize(educationalEffectPage.getTotalElements())
                 .pageSize(educationalEffectPage.getSize())
@@ -140,6 +142,43 @@ public class EducationalEffectMapper {
                 .path(IDS_PATH)
                 .buildAndExpand(educationalEffect.getId())
                 .toUri();
+    }
+
+    public PaginatedResultsDTO<RevisionDTO<EducationalEffectDetailsDTO>> mapToRevisionDTOs(Page<Revision<Integer, EducationalEffect>> educationalEffectPage) {
+        return PaginatedResultsDTO.<RevisionDTO<EducationalEffectDetailsDTO>>builder()
+                .results(mapToRevisionDTOs(educationalEffectPage.getContent()))
+                .totalSize(educationalEffectPage.getTotalElements())
+                .pageSize(educationalEffectPage.getSize())
+                .pageNumber(educationalEffectPage.getNumber())
+                .nextPage(PageUri.generatePageUri(getHistoryResourceUri(), educationalEffectPage.nextOrLastPageable()))
+                .previousPage(PageUri.generatePageUri(getHistoryResourceUri(), educationalEffectPage.previousOrFirstPageable()))
+                .firstPage(PageUri.generatePageUri(getHistoryResourceUri(), educationalEffectPage.getPageable().first()))
+                .lastPage(PageUri.generatePageUri(getHistoryResourceUri(), PageUri.getLastPageable(educationalEffectPage)))
+                .build();
+    }
+
+    private List<RevisionDTO<EducationalEffectDetailsDTO>> mapToRevisionDTOs(Collection<Revision<Integer, EducationalEffect>> revisions) {
+        return revisions.stream()
+                .map(this::mapToRevisionDTO)
+                .collect(Collectors.toList());
+    }
+
+    private RevisionDTO<EducationalEffectDetailsDTO> mapToRevisionDTO(Revision<Integer, EducationalEffect> revision) {
+        if (revision == null) {
+            return null;
+        }
+        return RevisionDTO.<EducationalEffectDetailsDTO>builder()
+                .revisionId(revision.getRequiredRevisionNumber())
+                .revisionInstant(revision.getRequiredRevisionInstant())
+                .revisionType(revision.getMetadata().getRevisionType())
+                .entity(mapToEducationalEffectDetailsDTO(revision.getEntity()))
+                .build();
+    }
+
+    private UriComponentsBuilder getHistoryResourceUri() {
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(EducationalEffectController.EDUCATIONAL_EFFECT_RESOURCE)
+                .path(EducationalEffectController.HISTORY);
     }
 
 }

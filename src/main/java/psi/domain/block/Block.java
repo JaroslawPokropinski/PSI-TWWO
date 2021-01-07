@@ -1,7 +1,7 @@
 package psi.domain.block;
 
 import lombok.Getter;
-import psi.domain.studiesprogram.StudiesProgram;
+import psi.domain.studiesprogram.entity.StudiesProgram;
 import psi.domain.subjectcard.entity.SubjectCard;
 
 import javax.persistence.CascadeType;

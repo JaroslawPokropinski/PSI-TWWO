@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class FieldOfStudyDTO {
 
-    @NotNull
     private Long id;
 
     @NotBlank

@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class OrganisationalUnitDTO {
 
-    @NotNull
     private Long id;
 
     @NotBlank

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -23,11 +24,14 @@ import java.time.Instant;
 
 @MappedSuperclass
 @Data
+@Audited
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class AuditedObject {
+
+    public static final String IS_NOT_REMOVED_OBJECT = "object_state <> 'REMOVED'";
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

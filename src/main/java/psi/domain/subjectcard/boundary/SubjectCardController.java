@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.history.Revision;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import psi.api.common.ResourceDTO;
 import psi.api.common.ResponseDTO;
-import psi.api.common.SearchResultDTO;
+import psi.api.common.PaginatedResultsDTO;
+import psi.api.revision.RevisionDTO;
 import psi.api.subjectcard.SubjectCardDTO;
 import psi.api.subjectcard.SubjectCardDetailsDTO;
 import psi.domain.document.Document;
@@ -47,6 +49,7 @@ public class SubjectCardController {
 
     public static final String SUBJECT_CARD_RESOURCE = "/api/subject-card";
     public static final String SEARCH_RESOURCE = "/search";
+    public static final String HISTORY = "/history";
 
     private final SubjectCardService subjectCardService;
     private final SubjectCardMapper subjectCardMapper;
@@ -55,7 +58,7 @@ public class SubjectCardController {
 
     @ApiOperation(value = "${api.subject-cards.searchSubjectCards.value}", notes = "${api.subject-cards.searchSubjectCards.notes}")
     @GetMapping(SEARCH_RESOURCE)
-    public SearchResultDTO<SubjectCardDetailsDTO> searchSubjectCards(@RequestParam String query, @Valid Pageable pageable) {
+    public PaginatedResultsDTO<SubjectCardDetailsDTO> searchSubjectCards(@RequestParam String query, @Valid Pageable pageable) {
         Page<SubjectCard> subjectCardPage = subjectCardService.searchSubjectCardsByRSQL(query, pageable);
         return subjectCardMapper.mapToSearchResultDTO(subjectCardPage, query);
     }
@@ -99,6 +102,13 @@ public class SubjectCardController {
                 .contentType(mediaTypeResolver.getMediaTypeForFile(document.getName()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + document.getName() + "\"")
                 .body(document.getResource());
+    }
+
+    @ApiOperation(value = "${api.subject-cards.getSubjectCardHistory.value}", notes = "${api.subject-cards.getSubjectCardHistory.notes}")
+    @GetMapping(HISTORY + ID_PATH)
+    public PaginatedResultsDTO<RevisionDTO<SubjectCardDetailsDTO>> getSubjectCardHistory(@PathVariable(ID) Long id, Pageable pageable) {
+        Page<Revision<Integer, SubjectCard>> subjectCardHistoryPage = subjectCardService.getSubjectCardHistory(id, pageable);
+        return subjectCardMapper.mapToRevisionDTOs(subjectCardHistoryPage);
     }
 
 }

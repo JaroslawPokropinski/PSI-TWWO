@@ -4,7 +4,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Loader;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Where;
+import org.hibernate.envers.Audited;
 import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.domain.educationaleffect.entity.EducationalEffectCategory;
@@ -12,8 +15,8 @@ import psi.domain.fieldofstudy.entity.FieldOfStudy;
 import psi.domain.organisationalunit.entity.OrganisationalUnit;
 import psi.domain.simpleattribute.entity.SimpleAttribute;
 import psi.domain.simpleattribute.entity.SimpleAttribute_;
-import psi.domain.studiesprogram.StudiesForm;
-import psi.domain.studiesprogram.StudiesLevel;
+import psi.domain.studiesprogram.entity.StudiesForm;
+import psi.domain.studiesprogram.entity.StudiesLevel;
 import psi.domain.user.entity.User;
 
 import javax.persistence.CascadeType;
@@ -29,6 +32,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -51,8 +55,12 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Entity
 @Getter
 @Setter
+@Audited
 @SuperBuilder
 @NoArgsConstructor
+@Loader(namedQuery = "findSubjectCardById")
+@NamedQuery(name = "findSubjectCardById", query = "SELECT s FROM SubjectCard s WHERE s.id = ?1 AND s.objectState <> psi.domain.auditedobject.entity.ObjectState.REMOVED")
+@Where(clause = AuditedObject.IS_NOT_REMOVED_OBJECT)
 @Table(name = "SUBJECT_CARD")
 public class SubjectCard extends AuditedObject {
 

@@ -1,27 +1,20 @@
-package psi.domain.studiesprogram;
+package psi.domain.studiesprogram.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Loader;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Where;
+import org.hibernate.envers.Audited;
 import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.discipline.entity.Discipline;
 import psi.domain.fieldofstudy.entity.FieldOfStudy;
 import psi.domain.simpleattribute.entity.SimpleAttribute;
 import psi.domain.simpleattribute.entity.SimpleAttribute_;
 
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OrderBy;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -35,6 +28,13 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 @Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+@Loader(namedQuery = "findStudiesProgramById")
+@NamedQuery(name = "findStudiesProgramById", query = "SELECT s FROM StudiesProgram s WHERE s.id = ?1 AND s.objectState <> psi.domain.auditedobject.entity.ObjectState.REMOVED")
+@Where(clause = AuditedObject.IS_NOT_REMOVED_OBJECT)
+@Table( name = "STUDIES_PROGRAM")
 public class StudiesProgram extends AuditedObject {
 
     @Id
@@ -86,14 +86,14 @@ public class StudiesProgram extends AuditedObject {
     private String languageOfStudies;
 
     @NotBlank
-    @Column(length = 10000)
+    @Column(length = 1000)
     private String graduateProfile;
 
     @NotBlank
     private String possibilityOfContinuingStudies;
 
     @NotBlank
-    @Column(length = 10000)
+    @Column(length = 1000)
     private String connectionWithMissionAndDevelopmentStrategy;
 
     @NotNull

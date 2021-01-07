@@ -6,9 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.history.Revision;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import psi.domain.auditedobject.entity.ObjectState;
+import psi.domain.fieldofstudy.entity.FieldOfStudy;
+import psi.domain.organisationalunit.entity.OrganisationalUnit;
 import psi.domain.subjectcard.entity.SubjectCard;
 import psi.domain.subjectcard.boundary.SubjectCardRSQLMapping;
 import psi.infrastructure.exception.ExceptionUtils;
@@ -62,6 +65,7 @@ public class SubjectCardService {
 
     private void validateBeforeCreate(Collection<SubjectCard> subjectCards) {
         validateSubjectCodeUniqueness(subjectCards);
+        validateIfFiledOfStudyIsConsistentWithFaculty(subjectCards);
     }
 
     private void validateSubjectCodeUniqueness(Collection<SubjectCard> subjectCards) {
@@ -104,6 +108,20 @@ public class SubjectCardService {
                 .collect(Collectors.toSet());
     }
 
+    private void validateIfFiledOfStudyIsConsistentWithFaculty(Collection<SubjectCard> subjectCards) {
+        if (!subjectCards.stream().allMatch(this::isOrganisationalUnitFromFieldOfStudyTheSameAsFaculty)) {
+            throw new IllegalArgumentAppException("Some subject cards have different organisational unit than faculty of specified field of study.");
+        }
+    }
+
+    private boolean isOrganisationalUnitFromFieldOfStudyTheSameAsFaculty(SubjectCard subjectCard) {
+        return subjectCard.getMainFieldOfStudy()
+                .map(FieldOfStudy::getOrganisationalUnit)
+                .map(OrganisationalUnit::getId)
+                .map(facultyId -> subjectCard.getOrganisationalUnit().getId().equals(facultyId))
+                .orElse(true);
+    }
+
     public void updateSubjectCards(Collection<SubjectCard> updatedSubjectCards, Long userId) {
         List<SubjectCard> foundSubjectCards = subjectCardRepository.findAllById(getNonNullUniqueIds(updatedSubjectCards));
         validateBeforeUpdate(foundSubjectCards, updatedSubjectCards, userId);
@@ -113,6 +131,7 @@ public class SubjectCardService {
     private void validateBeforeUpdate(Collection<SubjectCard> existingSubjectCards, Collection<SubjectCard> updatedSubjectCards, Long userId) {
         validateIfAllSubjectCardsHaveUniqueId(updatedSubjectCards);
         validateIfAllSubjectCardsExists(getNonNullUniqueIds(updatedSubjectCards), existingSubjectCards);
+        validateIfFiledOfStudyIsConsistentWithFaculty(updatedSubjectCards);
         validatePermissions(existingSubjectCards, userId);
     }
 
@@ -182,6 +201,10 @@ public class SubjectCardService {
     private void validateBeforeDelete(Collection<Long> ids, Collection<SubjectCard> subjectCards, Long userId) {
         validateIfAllSubjectCardsExists(ids, subjectCards);
         validatePermissions(subjectCards, userId);
+    }
+
+    public Page<Revision<Integer, SubjectCard>> getSubjectCardHistory(Long id, Pageable pageable) {
+        return  subjectCardRepository.findRevisions(id, pageable);
     }
 
 }

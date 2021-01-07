@@ -6,7 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Loader;
 import org.hibernate.annotations.NaturalIdCache;
+import org.hibernate.annotations.Where;
+import org.hibernate.envers.Audited;
 import psi.domain.auditedobject.entity.AuditedObject;
 
 import javax.persistence.Cacheable;
@@ -16,6 +19,7 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -33,6 +37,10 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Getter
 @SuperBuilder
 @Cacheable
+@Audited
+@Loader(namedQuery = "findUserById")
+@NamedQuery(name = "findUserById", query = "SELECT u FROM User u WHERE u.id = ?1 AND u.objectState <> psi.domain.auditedobject.entity.ObjectState.REMOVED")
+@Where(clause = AuditedObject.IS_NOT_REMOVED_OBJECT)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = USER_ENTITY_CACHE)
 @NaturalIdCache(region = USER_NATURAL_ID_CACHE)
 public class User extends AuditedObject {
