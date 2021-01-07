@@ -10,18 +10,14 @@ import psi.api.common.PaginatedResultsDTO;
 import psi.api.common.ResourceDTO;
 import psi.api.revision.RevisionDTO;
 import psi.api.studiesprogram.StudiesProgramDTO;
-import psi.api.subjectcard.SubjectCardDetailsDTO;
 import psi.domain.discipline.boundary.DisciplineMapper;
 import psi.domain.discipline.control.DisciplineService;
 import psi.domain.discipline.entity.Discipline;
 import psi.domain.fieldofstudy.boundary.FieldOfStudyMapper;
 import psi.domain.fieldofstudy.control.FieldOfStudyService;
-import psi.domain.fieldofstudy.entity.FieldOfStudy;
 import psi.domain.simpleattribute.boundary.SimpleAttributeMapper;
-import psi.domain.simpleattribute.entity.SimpleAttribute;
 import psi.domain.studiesprogram.entity.StudiesProgram;
 import psi.domain.subjectcard.boundary.SubjectCardController;
-import psi.domain.subjectcard.entity.SubjectCard;
 import psi.infrastructure.rest.PageUri;
 
 import java.net.URI;
@@ -168,14 +164,10 @@ public class StudiesProgramMapper {
                 .build();
     }
 
-
-
     private UriComponentsBuilder getHistoryResourceUri() {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(StudiesProgramController.STUDIES_PROGRAM_RESOURCE)
                 .path(StudiesProgramController.HISTORY);
     }
-
-
 
 }

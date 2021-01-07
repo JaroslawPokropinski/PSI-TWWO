@@ -9,7 +9,6 @@ import org.springframework.data.history.Revision;
 import org.springframework.stereotype.Service;
 import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.studiesprogram.entity.StudiesProgram;
-import psi.domain.subjectcard.entity.SubjectCard;
 import psi.infrastructure.exception.ExceptionUtils;
 import psi.infrastructure.exception.IllegalArgumentAppException;
 

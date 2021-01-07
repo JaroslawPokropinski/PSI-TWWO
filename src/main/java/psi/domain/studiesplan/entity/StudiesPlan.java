@@ -1,4 +1,4 @@
-package psi.domain.studiesplan;
+package psi.domain.studiesplan.entity;
 
 import lombok.Getter;
 import org.hibernate.annotations.Loader;

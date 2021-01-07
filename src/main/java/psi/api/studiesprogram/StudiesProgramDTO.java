@@ -13,6 +13,8 @@ import psi.domain.studiesprogram.entity.StudiesProfile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -61,6 +63,9 @@ public class StudiesProgramDTO {
 
     @NotBlank
     private String connectionWithMissionAndDevelopmentStrategy;
+
+    @NotNull
+    private Instant inEffectSince;
 
     @NotNull
     private Long mainDisciplineId;
