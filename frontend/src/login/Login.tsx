@@ -1,11 +1,12 @@
 import React, { useCallback, useContext } from 'react';
-import { Form, Input, Button, Checkbox, message } from 'antd';
+import { Form, Input, Button, Checkbox } from 'antd';
 import { useHistory } from 'react-router-dom';
-import axios from '../configuration/axios';
+import axios, { setAuthToken } from '../configuration/axios';
 import AuthContext from '../context/AuthContext';
 
 import './Login.css';
 import Header from '../shared/Header';
+import handleHttpError from '../shared/handleHttpError';
 
 function Login(): JSX.Element {
   const history = useHistory();
@@ -13,21 +14,15 @@ function Login(): JSX.Element {
   const onFinish = useCallback(
     (results) => {
       axios
-        .post<string>('/api/user/signin', {
+        .post<{ accessToken: string }>('/api/user/signin', {
           username: results.username,
           password: results.password,
         })
         .then((res) => {
-          authContext.token = res.data;
+          authContext.token = `Bearer ${res.data.accessToken}`;
           history.replace('/home');
         })
-        .catch((err) => {
-          if (err.response && err.response.data.error) {
-            message.error(`Login failed: ${err.response.data.error}`);
-          } else {
-            message.error(`Login failed: ${err.message}`);
-          }
-        });
+        .catch((err) => handleHttpError(err));
     },
     [history, authContext]
   );

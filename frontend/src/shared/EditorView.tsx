@@ -19,6 +19,8 @@ const EditorView: React.FunctionComponent<{
   isVerifiable?: boolean;
   useArchive?: boolean;
   archiveVals?: Store;
+  onRemove?: () => void;
+  onVerify?: () => void;
 }> = ({
   name = '',
   queryParams = '',
@@ -30,6 +32,8 @@ const EditorView: React.FunctionComponent<{
   isVerifiable = true,
   useArchive = false,
   archiveVals = null,
+  onRemove = () => {},
+  onVerify = () => {},
 }) => {
   const history = useHistory();
   const { state } = useParams<{ state: string }>();
@@ -46,13 +50,14 @@ const EditorView: React.FunctionComponent<{
   const [isVerifyModalVisible, showVerifyModal] = useState(false);
   const [isShowingHistory, showHistory] = useState(false);
   const modify = useMemo(() => state === 'create' || state === 'edit', [state]);
-  const onRemove = useCallback(() => {
+  const onRemoveAction = useCallback(() => {
     showModal(true);
   }, []);
 
   const onRemoveApprove = useCallback(() => {
+    onRemove();
     history.goBack();
-  }, [history]);
+  }, [history, onRemove]);
 
   const onRemoveCancel = useCallback(() => {
     showModal(false);
@@ -62,19 +67,14 @@ const EditorView: React.FunctionComponent<{
     history.push(`/${name}/edit${queryParams}`);
   }, [history, name, queryParams]);
 
-  const onVerify = useCallback(() => {
+  const onVerifyAction = useCallback(() => {
     showVerifyModal(true);
   }, []);
 
-  const onVerifyApprove = useCallback(
-    () => {
-      showVerifyModal(false);
-      // history.goBack();
-    },
-    [
-      /* history */
-    ]
-  );
+  const onVerifyApprove = useCallback(() => {
+    showVerifyModal(false);
+    onVerify();
+  }, [onVerify]);
 
   const onVerifyCancel = useCallback(
     () => {
@@ -123,7 +123,7 @@ const EditorView: React.FunctionComponent<{
           <Button
             className="controlls-button"
             type="primary"
-            onClick={onVerify}
+            onClick={onVerifyAction}
             disabled={isVerified}
           >
             Weryfikuj
@@ -150,7 +150,7 @@ const EditorView: React.FunctionComponent<{
         ) : null}
 
         {state === 'view' ? (
-          <Button className="remove-button" onClick={onRemove}>
+          <Button className="remove-button" onClick={onRemoveAction}>
             Usuń
           </Button>
         ) : null}

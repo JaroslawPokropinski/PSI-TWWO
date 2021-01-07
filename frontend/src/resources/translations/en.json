@@ -1,7 +1,9 @@
 {
   "app.title": "Studies program creator PWR",
+  "logout": "Logout",
   "efects": "Studies efects",
   "cards": "Subject cards",
   "programs": "Studies programs",
-  "plans": "Studies plans"
+  "plans": "Studies plans",
+  "effects.filter": "Filter effects"
 }

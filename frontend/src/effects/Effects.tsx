@@ -1,73 +1,105 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Button, Input, List } from 'antd';
 import { useHistory } from 'react-router-dom';
+import { FormattedMessage } from 'react-intl';
 import Header from '../shared/Header';
 
 import './Effects.css';
 import { getSurrogateAvatar } from '../shared/AvatarUtils';
+import axios from '../configuration/axios';
 
-const pageSize = 6;
-const mockData = [
-  {
-    code: 'PEK_W01',
-    description:
-      'Zna podstawy dotyczące architektury systemu Linux i jego eksploatacji jako serwera lub stacji roboczej użytkownika w systemach informatycznych opartych o platformę Linux',
-  },
-  {
-    code: 'PEK_W02',
-    description:
-      'Posiada wiedzę na temat podstaw funkcjonowania systemu Lunux w sieci komputerowej i wykorzystania platformy Linux w budowie infrastruktury sieciowej i usług sieciowych',
-  },
-  {
-    code: 'PEK_W03',
-    description:
-      'Posiada podstawową wiedzę na temat konfiguracji systemu Linux zuwzględnieniem aspektów bezpieczeństwa.',
-  },
-  {
-    code: 'PEK_U01',
-    description:
-      'Potrafi wykonać podstawowe czynności administracyjne związane z instalacją',
-  },
-  {
-    code: 'PEK_U02',
-    description:
-      'Potrafi skonfigurować podstawowe elementy podsystemu sieciowego platformy Linux oraz uruchamiać na niej usługi sieciowe',
-  },
-  {
-    code: 'PEK_U03',
-    description:
-      'Potrafi, w podstawowym zakresie, zabezpieczyć system operacyjny Linux.',
-  },
-  {
-    code: 'PEK_K01',
-    description: 'Umie zespołowo pracować nad rozwiązaniem problemów.',
-  },
-];
+import handleHttpError from '../shared/handleHttpError';
+import AuthContext from '../context/AuthContext';
+import { PAGE_SIZE } from '../configuration/constants';
+import { PagedResult } from '../shared/PagedResult';
+import { Effect } from '../dto/Effect';
+import { LangContext } from '../context/LangContext';
 
 function Effects(): JSX.Element {
   const history = useHistory();
-  const [listData, setListData] = useState(mockData.slice(0, pageSize));
+  const auth = useContext(AuthContext);
+  const lang = useContext(LangContext);
+
+  const [pageState, setPageState] = useState<PagedResult<Effect> | null>(null);
+
   const onClick = useCallback(
-    (effect: string | null) => {
+    (effect: Effect | null) => {
       if (effect == null) {
         history.push('/effects/edit');
         return;
       }
-      history.push(`/effects/view?state=update&code=${effect}`);
+      history.push(`/effects/view?state=update&id=${effect.id}`);
     },
     [history]
   );
+
+  const [filterText, setFilterText] = useState('');
+
+  const changePage = useCallback(
+    (page: number) => {
+      axios
+        .get(
+          `/api/educational-effects/search?page=${
+            page - 1
+          }&size=${PAGE_SIZE}&query=${encodeURIComponent(
+            `code=ke="${filterText}" or description=ke="${filterText}"`
+          )}`,
+          {
+            headers: { Authorization: auth.token },
+          }
+        )
+        .then((res) => {
+          setPageState(res.data);
+        })
+        .catch((err) => handleHttpError(err, history));
+    },
+    [filterText, auth, history]
+  );
+
+  useEffect(() => {
+    axios
+      .get(
+        `/api/educational-effects/search?page=0&size=${PAGE_SIZE}&query=${encodeURIComponent(
+          `code=ke="" or description=ke=""`
+        )}`,
+        {
+          headers: { Authorization: auth.token },
+        }
+      )
+      .then((res) => {
+        setPageState(res.data);
+      })
+      .catch((err) => handleHttpError(err, history));
+  }, [auth, history]);
+
+  const onFilterTextChange = useCallback(
+    (v: React.ChangeEvent<HTMLInputElement>) => {
+      setFilterText(v.currentTarget.value);
+    },
+    [setFilterText]
+  );
+
+  const onFilter = useCallback(() => {
+    const p = pageState?.pageNumber ?? 0;
+    changePage(p + 1);
+  }, [changePage, pageState]);
+
   return (
     <div className="Effects">
-      <Header title="Efekty kształcenia" />
+      <Header title={lang.getMessage('Studies effects')} />
       <div>
-        <Input className="effects-filter" placeholder="Filtruj efekty" />
+        <Input
+          className="effects-filter"
+          placeholder={lang.getMessage('Filter effects')}
+          value={filterText}
+          onChange={onFilterTextChange}
+        />
         <Button
           type="primary"
           className="effects-filter-button"
-          onClick={() => onClick(null)}
+          onClick={onFilter}
         >
-          filtruj
+          <FormattedMessage id="Filter" />
         </Button>
       </div>
 
@@ -76,7 +108,7 @@ function Effects(): JSX.Element {
         className="effects-add"
         onClick={() => onClick(null)}
       >
-        Dodaj
+        <FormattedMessage id="Add" />
       </Button>
 
       <List
@@ -86,19 +118,19 @@ function Effects(): JSX.Element {
         pagination={{
           position: 'top',
           onChange: (page) => {
-            setListData(
-              mockData.slice(page * pageSize - pageSize, page * pageSize)
-            );
+            changePage(page);
           },
-          pageSize,
-          total: mockData.length,
+          pageSize: pageState?.pageSize ?? 0,
+          total: pageState?.totalSize ?? 0,
         }}
-        dataSource={listData}
+        dataSource={
+          pageState?.results.filter((r) => r.objectState !== 'REMOVED') ?? []
+        }
         renderItem={(item) => (
           <List.Item
             className="effects-item"
             key={item.code}
-            onClick={() => onClick(item.code)}
+            onClick={() => onClick(item)}
           >
             <List.Item.Meta
               avatar={getSurrogateAvatar(item.code.substring(4, 5), 30, 20)}

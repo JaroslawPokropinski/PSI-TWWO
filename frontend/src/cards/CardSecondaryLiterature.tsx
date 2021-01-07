@@ -2,18 +2,18 @@ import React from 'react';
 import { Button, Card, Divider, Form, Input } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-const CardLiterature: React.FunctionComponent<{ modify: boolean }> = ({
+const CardSecondaryLiterature: React.FunctionComponent<{ modify: boolean }> = ({
   modify = false,
 }) => {
   return (
-    <Card title="Literatura">
-      <Form.List name="primaryLiterature">
+    <Card title="Literatura dodatkowa">
+      <Form.List name="secondaryLiterature">
         {(fields, { add, remove }) => (
           <>
             {fields.map((field) => (
               <>
                 <Form.Item
-                  label="Pozycja literaturowa"
+                  label="Dodatkowa pozycja literaturowa"
                   labelAlign="left"
                   name={field.name}
                   fieldKey={field.fieldKey}
@@ -53,4 +53,4 @@ const CardLiterature: React.FunctionComponent<{ modify: boolean }> = ({
   );
 };
 
-export default CardLiterature;
+export default CardSecondaryLiterature;
