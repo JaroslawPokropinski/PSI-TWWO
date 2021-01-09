@@ -69,11 +69,11 @@ public class SubjectCardService {
     }
 
     private void validateSubjectCodeUniqueness(Collection<SubjectCard> subjectCards) {
-        validateIfThereAreNoSubjectCodeDuplicatesAmongSubmittedEducationalEffects(subjectCards);
-        validateIfThereAreNoSubjectCodeDuplicatesAmongExistingEducationalEffects(subjectCards);
+        validateIfThereAreNoSubjectCodeDuplicatesAmongSubmittedSubjectCards(subjectCards);
+        validateIfThereAreNoSubjectCodeDuplicatesAmongExistingSubjectCards(subjectCards);
     }
 
-    private void validateIfThereAreNoSubjectCodeDuplicatesAmongSubmittedEducationalEffects(Collection<SubjectCard> subjectCards) {
+    private void validateIfThereAreNoSubjectCodeDuplicatesAmongSubmittedSubjectCards(Collection<SubjectCard> subjectCards) {
         List<String> subjectCodes = getCodes(subjectCards);
         if (subjectCodes.size() != new HashSet<>(subjectCodes).size()) {
             throw new IllegalArgumentAppException("Subject cards to create have non-unique subject codes!");
@@ -86,7 +86,7 @@ public class SubjectCardService {
                 .collect(Collectors.toList());
     }
 
-    private void validateIfThereAreNoSubjectCodeDuplicatesAmongExistingEducationalEffects(Collection<SubjectCard> subjectCards) {
+    private void validateIfThereAreNoSubjectCodeDuplicatesAmongExistingSubjectCards(Collection<SubjectCard> subjectCards) {
         List<SubjectCard> foundDuplicates = findDuplicatedCodes(subjectCards);
         if (!foundDuplicates.isEmpty()) {
             throw new IllegalArgumentAppException(MessageFormat.format("There are existing subject cards with given subject codes {0}", getCodes(foundDuplicates)));
