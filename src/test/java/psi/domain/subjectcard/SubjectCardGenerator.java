@@ -17,7 +17,7 @@ import psi.domain.subjectcard.entity.SubjectClasses;
 import psi.domain.subjectcard.entity.SubjectClassesType;
 import psi.domain.subjectcard.entity.SubjectType;
 import psi.domain.user.entity.User;
-import psi.domain.common.SequenceIdGenerator;
+import psi.domain.common.IdGenerator;
 import psi.domain.common.UuidGenerator;
 
 import java.util.EnumSet;
@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class SubjectCardGenerator {
 
-    private final SequenceIdGenerator idGenerator;
+    private final IdGenerator idGenerator;
     private final UuidGenerator uuidGenerator;
     private final EducationalEffectGenerator educationalEffectGenerator;
     private final OrganizationalUnitGenerator organizationalUnitGenerator;

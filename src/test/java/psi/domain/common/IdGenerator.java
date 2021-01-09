@@ -5,11 +5,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
-public class SequenceIdGenerator {
+public class IdGenerator {
 
     private final AtomicLong currentId;
 
-    public SequenceIdGenerator(Long initialValue) {
+    public IdGenerator(Long initialValue) {
         this.currentId = new AtomicLong(initialValue);
     }
 

@@ -14,7 +14,7 @@ import psi.domain.subjectcard.control.SubjectCardRepository;
 import psi.domain.subjectcard.control.SubjectCardService;
 import psi.domain.subjectcard.entity.SubjectCard;
 import psi.infrastructure.collection.CollectionUtils;
-import psi.domain.common.SequenceIdGenerator;
+import psi.domain.common.IdGenerator;
 import psi.domain.common.UuidGenerator;
 import psi.infrastructure.exception.ExceptionUtils;
 import psi.infrastructure.exception.IllegalArgumentAppException;
@@ -41,7 +41,7 @@ public class SubjectCardTests {
     @InjectMocks
     private SubjectCardService subjectCardService;
 
-    private final SequenceIdGenerator idGenerator = new SequenceIdGenerator(1L);
+    private final IdGenerator idGenerator = new IdGenerator(1L);
     private final UuidGenerator uuidGenerator = new UuidGenerator();
     private final EducationalEffectGenerator educationalEffectGenerator = new EducationalEffectGenerator(idGenerator, uuidGenerator);
     private final OrganizationalUnitGenerator organizationalUnitGenerator = new OrganizationalUnitGenerator(idGenerator, uuidGenerator);
@@ -71,7 +71,7 @@ public class SubjectCardTests {
     }
 
     @Test
-    @DisplayName("Exception is thrown when subject code is not unique within list of submitted subject cards to create/edit")
+    @DisplayName("Exception is thrown when subject code is not unique within list of submitted subject cards to create")
     public void testIfExceptionIsThrownWhenSubjectCodeIsNotUniqueWithinListOfSubjectCardsToCreate() {
         SubjectCard dummySubjectCard = subjectCardGenerator.generate();
         List<SubjectCard> subjectCardsToCreate = List.of(

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.domain.educationaleffect.entity.EducationalEffectCategory;
 import psi.domain.educationaleffect.entity.EducationalEffectType;
-import psi.domain.common.SequenceIdGenerator;
+import psi.domain.common.IdGenerator;
 import psi.domain.common.UuidGenerator;
 
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class EducationalEffectGenerator {
 
-    private final SequenceIdGenerator idGenerator;
+    private final IdGenerator idGenerator;
     private final UuidGenerator uuidGenerator;
 
     public EducationalEffect generate(EducationalEffectCategory category) {
