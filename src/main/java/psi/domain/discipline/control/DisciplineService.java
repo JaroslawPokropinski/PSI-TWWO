@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import psi.domain.discipline.entity.Discipline;
-import psi.domain.subjectcard.entity.SubjectCard;
 import psi.infrastructure.exception.ExceptionUtils;
 
 import java.util.Collection;
