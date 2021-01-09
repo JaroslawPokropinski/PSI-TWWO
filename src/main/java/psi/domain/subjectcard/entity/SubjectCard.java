@@ -56,7 +56,7 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Getter
 @Setter
 @Audited
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @Loader(namedQuery = "findSubjectCardById")
 @NamedQuery(name = "findSubjectCardById", query = "SELECT s FROM SubjectCard s WHERE s.id = ?1 AND s.objectState <> psi.domain.auditedobject.entity.ObjectState.REMOVED")

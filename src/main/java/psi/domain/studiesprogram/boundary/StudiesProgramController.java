@@ -12,10 +12,8 @@ import psi.api.common.ResourceDTO;
 import psi.api.common.ResponseDTO;
 import psi.api.revision.RevisionDTO;
 import psi.api.studiesprogram.StudiesProgramDTO;
-import psi.api.subjectcard.SubjectCardDetailsDTO;
 import psi.domain.studiesprogram.control.StudiesProgramService;
 import psi.domain.studiesprogram.entity.StudiesProgram;
-import psi.domain.subjectcard.entity.SubjectCard;
 import psi.infrastructure.mediatype.MediaTypeResolver;
 import psi.infrastructure.security.UserInfo;
 import psi.infrastructure.security.annotation.LoggedUser;
@@ -83,6 +81,5 @@ public class StudiesProgramController {
         Page<Revision<Integer, StudiesProgram>> subjectCardHistoryPage = studiesProgramService.getStudiesProgramHistory(id, pageable);
         return studiesProgramMapper.mapToRevisionDTOs(subjectCardHistoryPage);
     }
-
 
 }
