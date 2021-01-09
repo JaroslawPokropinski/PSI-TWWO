@@ -204,7 +204,7 @@ public class SubjectCardService {
     }
 
     public Page<Revision<Integer, SubjectCard>> getSubjectCardHistory(Long id, Pageable pageable) {
-        return  subjectCardRepository.findRevisions(id, pageable);
+        return subjectCardRepository.findRevisions(id, pageable);
     }
 
 }

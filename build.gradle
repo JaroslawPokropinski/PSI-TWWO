@@ -34,6 +34,7 @@ dependencies {
 	implementation 'commons-io:commons-io:2.7'
 	implementation 'io.github.perplexhub:rsql-jpa-spring-boot-starter:5.0.6'
 	implementation 'com.itextpdf:itextpdf:5.5.13.2'
+	implementation 'org.apache.commons:commons-collections4:4.4'
 	annotationProcessor('org.hibernate:hibernate-jpamodelgen:5.4.23.Final')
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

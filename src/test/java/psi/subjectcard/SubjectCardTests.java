@@ -1,11 +1,13 @@
 package psi.subjectcard;
 
+import org.apache.commons.collections4.SetUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.domain.educationaleffect.entity.EducationalEffectCategory;
 import psi.domain.educationaleffect.entity.EducationalEffectType;
@@ -25,6 +27,7 @@ import psi.domain.subjectcard.entity.SubjectClasses;
 import psi.domain.subjectcard.entity.SubjectClassesType;
 import psi.domain.subjectcard.entity.SubjectType;
 import psi.domain.user.entity.User;
+import psi.infrastructure.collection.CollectionUtils;
 import psi.infrastructure.datageneration.DataGenerator;
 import psi.infrastructure.datageneration.SequenceIdGenerator;
 import psi.infrastructure.datageneration.UuidGenerator;
@@ -139,9 +142,7 @@ public class SubjectCardTests {
     }
 
     private Set<Literature> getDummyLiterature(int count) {
-        return Stream.of(getDummyLiterature(count, this::getDummyPrimaryLiterature), getDummyLiterature(count, this::getDummySecondaryLiterature))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
+        return SetUtils.union(getDummyLiterature(count, this::getDummyPrimaryLiterature), getDummyLiterature(count, this::getDummySecondaryLiterature));
     }
 
     private Set<Literature> getDummyLiterature(int count, Function<Integer, Literature> literatureGenerator) {
@@ -248,7 +249,7 @@ public class SubjectCardTests {
 
     @Test
     @DisplayName("Exception is thrown when field of study and faculty are inconsistent on create")
-    public void testIfExceptionIsThrownWhenFieldOfStudyAndFacultyAreInconsistent() {
+    public void testIfExceptionIsThrownWhenFieldOfStudyAndFacultyAreInconsistentOnCreate() {
         SubjectCard subjectCardToCreate = getSubjectCardWithFieldOfStudyFromDifferentFaculty();
         IllegalArgumentAppException exception = assertThrows(IllegalArgumentAppException.class, () -> subjectCardService.createSubjectCards(List.of(subjectCardToCreate)), "Wrong faculty for field of study was not detected! Exception was not thrown!");
         assertEquals("Some subject cards have different organisational unit than faculty of specified field of study.", exception.getMessage());
@@ -262,7 +263,16 @@ public class SubjectCardTests {
     }
 
     @Test
-    @DisplayName("Exception is thrown when subject card to be updated does not exist")
+    @DisplayName("Exception is thrown when field of study and faculty are inconsistent on update")
+    public void testIfExceptionIsThrownWhenFieldOfStudyAndFacultyAreInconsistentOnUpdate() {
+        SubjectCard subjectCardToUpdate = getSubjectCardWithFieldOfStudyFromDifferentFaculty();
+        when(subjectCardRepository.findAllById(any())).thenReturn(List.of(subjectCardToUpdate));
+        IllegalArgumentAppException exception = assertThrows(IllegalArgumentAppException.class, () -> subjectCardService.updateSubjectCards(List.of(subjectCardToUpdate), 1L), "Wrong faculty for field of study was not detected! Exception was not thrown!");
+        assertEquals("Some subject cards have different organisational unit than faculty of specified field of study.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Exception is thrown when tried to update non-existing subject card")
     public void testIfExceptionIsThrownWhenSubjectCardToBeUpdatedNotExist() {
         List<SubjectCard> existingSubjectCards = generateDummySubjectCards(5);
         List<SubjectCard> subjectCardsToUpdate = generateDummySubjectCards(1);
@@ -275,6 +285,39 @@ public class SubjectCardTests {
         return subjectCards.stream()
                 .map(SubjectCard::getId)
                 .collect(Collectors.toSet());
+    }
+
+    @Test
+    @DisplayName("Exception is thrown when not all subject card to update have unique ids")
+    public void testIfExceptionIsThrownWhenAllSubjectCardsOnUpdateDontHaveUniqueIds() {
+        List<SubjectCard> existingSubjectCards = generateDummySubjectCards(5);
+        List<SubjectCard> subjectCardsToUpdateWithDuplicates =
+                CollectionUtils.union(existingSubjectCards, generateDummySubjectCards(3), existingSubjectCards);
+        IllegalArgumentAppException exception = assertThrows(IllegalArgumentAppException.class, () -> subjectCardService.updateSubjectCards(subjectCardsToUpdateWithDuplicates, 1L));
+        assertEquals("There are some subject cards without id or ids are not unique!", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Subject cards state is changed to removed after deletion")
+    public void testIfSubjectCardsStateIsChangedToRemovedAfterDelete() {
+        List<SubjectCard> subjectCardsToDelete = generateDummySubjectCards(5);
+        List<SubjectCard> allExistingSubjectCards = CollectionUtils.union(subjectCardsToDelete, generateDummySubjectCards(10));
+        Set<Long> idsOfSubjectCardsToDelete = getIds(subjectCardsToDelete);
+        when(subjectCardRepository.findAllById(idsOfSubjectCardsToDelete)).thenReturn(subjectCardsToDelete);
+        subjectCardService.deleteSubjectCards(idsOfSubjectCardsToDelete, 1L);
+        subjectCardsToDelete.forEach(subjectCard -> assertEquals(ObjectState.REMOVED, subjectCard.getObjectState()));
+    }
+
+    @Test
+    @DisplayName("Exception is thrown when tried to delete non-existing subject card")
+    public void testIfExceptionIsThrownWhenTriedToRemoveNonExistingCard() {
+        List<SubjectCard> existingSubjectCardsToDelete = generateDummySubjectCards(5);
+        List<SubjectCard> nonExistingSubjectCardsToDelete = generateDummySubjectCards(5);
+        List<SubjectCard> allSubjectCardsToDelete = CollectionUtils.union(existingSubjectCardsToDelete, nonExistingSubjectCardsToDelete);
+        Set<Long> idsOfSubjectCardsToDelete = getIds(allSubjectCardsToDelete);
+        when(subjectCardRepository.findAllById(idsOfSubjectCardsToDelete)).thenReturn(existingSubjectCardsToDelete);
+        IllegalArgumentAppException exception = assertThrows(IllegalArgumentAppException.class, () -> subjectCardService.deleteSubjectCards(idsOfSubjectCardsToDelete, 1L));
+        assertEquals(ExceptionUtils.getObjectNotFoundException(SubjectCard.class, getIds(nonExistingSubjectCardsToDelete)).getMessage(), exception.getMessage());
     }
 
 }
