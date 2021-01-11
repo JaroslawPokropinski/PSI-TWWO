@@ -33,12 +33,12 @@ import static psi.infrastructure.rest.ResourcePaths.IDS_PATH;
 @RequiredArgsConstructor
 public class StudiesProgramMapper {
 
-    private FieldOfStudyService fieldOfStudyService;
-    private DisciplineService disciplineService;
+    private final FieldOfStudyService fieldOfStudyService;
+    private final DisciplineService disciplineService;
 
-    private FieldOfStudyMapper fieldOfStudyMapper;
-    private DisciplineMapper disciplineMapper;
-    private SimpleAttributeMapper simpleAttributeMapper;
+    private final FieldOfStudyMapper fieldOfStudyMapper;
+    private final DisciplineMapper disciplineMapper;
+    private final SimpleAttributeMapper simpleAttributeMapper;
 
     public List<StudiesProgramDTO> mapToStudiesProgramsDTOs(Collection<StudiesProgram> studiesPrograms){
         return studiesPrograms.stream()

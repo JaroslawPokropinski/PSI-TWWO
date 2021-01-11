@@ -15,5 +15,6 @@ public interface StudiesPlanRepository extends JpaRepository<StudiesPlan, Long>,
         JpaSpecificationExecutor<StudiesPlan>, RevisionRepository<StudiesPlan, Long, Integer> {
 
     List<StudiesPlan> findAllByCodeIn(Collection<String> code);
+    List<StudiesPlan> findAllByCodeInAndIdNotIn(Collection<String> studiesPlansCodes, Collection<Long> ids);
 
 }
