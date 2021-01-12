@@ -1,31 +1,36 @@
 package psi.domain.studiesplan.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+import net.bytebuddy.implementation.bind.annotation.Super;
 import org.hibernate.annotations.Loader;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Where;
+import org.hibernate.envers.Audited;
 import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.studiesprogram.entity.StudiesProgram;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 @Getter
+@Setter
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
 @Loader(namedQuery = "findStudiesPlanById")
 @NamedQuery(name = "findStudiesPlanById", query = "SELECT s FROM StudiesPlan s WHERE s.id = ?1 AND s.objectState <> psi.domain.auditedobject.entity.ObjectState.REMOVED")
 @Where(clause = AuditedObject.IS_NOT_REMOVED_OBJECT)
+@Table(name = "STUDIES_PLAN")
 public class StudiesPlan extends AuditedObject {
 
     @Id
@@ -38,10 +43,10 @@ public class StudiesPlan extends AuditedObject {
     private String code;
 
     @NotNull
-    private Date decreeDate;
+    private LocalDate decreeDate;
 
     @NotNull
-    private Date inEffectSince;
+    private LocalDate inEffectSince;
 
     @NotNull
     @ManyToOne

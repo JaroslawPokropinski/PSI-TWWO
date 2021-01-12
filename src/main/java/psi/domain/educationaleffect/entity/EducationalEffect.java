@@ -29,7 +29,7 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Getter
 @Setter
 @Audited
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @Loader(namedQuery = "findEducationalEffectById")
 @NamedQuery(name = "findEducationalEffectById", query = "SELECT e FROM EducationalEffect e WHERE e.id = ?1 AND e.objectState <> psi.domain.auditedobject.entity.ObjectState.REMOVED")

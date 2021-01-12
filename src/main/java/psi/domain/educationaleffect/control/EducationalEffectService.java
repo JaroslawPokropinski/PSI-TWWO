@@ -69,7 +69,7 @@ public class EducationalEffectService {
     private void validateIfThereAreNoCodeDuplicatesAmongSubmittedEducationalEffects(Collection<EducationalEffect> educationalEffects) {
         List<String> effectCodes = getCodes(educationalEffects);
         if (effectCodes.size() != new HashSet<>(effectCodes).size()) {
-            throw new IllegalArgumentAppException("Educational effects to create have non-unique codes!");
+            throw new IllegalArgumentAppException("Educational effects have non-unique codes!");
         }
     }
 
