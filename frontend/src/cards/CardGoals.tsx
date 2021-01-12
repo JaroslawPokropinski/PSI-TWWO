@@ -21,6 +21,7 @@ const CardGoals: React.FunctionComponent<{ modify: boolean }> = ({
                   labelAlign="left"
                   name={field.name}
                   fieldKey={field.fieldKey}
+                  key={field.key}
                   rules={[{ required: true, message: 'Podaj cel!' }]}
                 >
                   <Input

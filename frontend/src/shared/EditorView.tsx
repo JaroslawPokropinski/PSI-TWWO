@@ -21,6 +21,7 @@ const EditorView: React.FunctionComponent<{
   archiveVals?: Store;
   onRemove?: () => void;
   onVerify?: () => void;
+  onDownload?: () => void | null;
 }> = ({
   name = '',
   queryParams = '',
@@ -34,11 +35,11 @@ const EditorView: React.FunctionComponent<{
   archiveVals = null,
   onRemove = () => {},
   onVerify = () => {},
+  onDownload = null,
 }) => {
   const history = useHistory();
   const { state } = useParams<{ state: string }>();
-  // eslint-disable-next-line react/prop-types
-  // const { name, queryParams, onFinish, initialVals, children, header } = props;
+
   const handleFinish = useCallback(
     (results) => {
       history.goBack();
@@ -137,6 +138,15 @@ const EditorView: React.FunctionComponent<{
         >
           Historia
         </Button>
+        {onDownload == null ? null : (
+          <Button
+            className="controlls-button"
+            type="primary"
+            onClick={() => onDownload()}
+          >
+            Pobierz
+          </Button>
+        )}
 
         {isShowingHistory ? (
           <>

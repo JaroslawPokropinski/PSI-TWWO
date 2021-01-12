@@ -11,13 +11,14 @@ import handleHttpError from '../shared/handleHttpError';
 
 const CardEffects: React.FunctionComponent<{
   modify: boolean;
-}> = ({ modify = false }) => {
+  initEffects?: Effect[];
+}> = ({ modify = false, initEffects = [] }) => {
   const auth = useContext(AuthContext);
   // const lang = useContext(LangContext);
 
   const history = useHistory();
 
-  const [chosen, setChosen] = useState<Effect[]>([]);
+  const [chosen, setChosen] = useState<Effect[]>(initEffects);
 
   const [effects, setEffects] = useState<Effect[] | null>();
   const [value, setValue] = useState('');
