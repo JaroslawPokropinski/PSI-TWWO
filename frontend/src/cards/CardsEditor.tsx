@@ -7,6 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import fileDownload from 'js-file-download';
 
 import './CardsEditor.css';
 import useQueryParam from '../shared/useQueryParam';
@@ -303,6 +304,38 @@ function CardsEditor(): JSX.Element {
     [axiosOpts, history, card, isNew]
   );
 
+  const onDownload = useCallback(() => {
+    if (id == null) return;
+
+    axios
+      .get(`/api/subject-card/download/${id}`, {
+        ...axiosOpts,
+        responseType: 'blob',
+      })
+
+      .then((res) => {
+        const headerLine: string | undefined =
+          res.data.headers?.['content-disposition'];
+        let filename = `${id}.pdf`;
+
+        if (headerLine != null) {
+          const startFileNameIndex = headerLine.indexOf('"') + 1;
+          const endFileNameIndex = headerLine.lastIndexOf('"');
+          filename = headerLine?.substring(
+            startFileNameIndex,
+            endFileNameIndex
+          );
+        }
+        fileDownload(res.data, filename);
+      })
+      .catch((e) => handleHttpError(e));
+  }, [id, axiosOpts]);
+
+  const onDownloadOpt = useMemo(() => (id == null ? undefined : onDownload), [
+    id,
+    onDownload,
+  ]);
+
   useEffect(() => {
     if (isNew) return;
     axios
@@ -335,6 +368,7 @@ function CardsEditor(): JSX.Element {
           isVerified={false}
           useArchive
           archiveVals={null ?? {}}
+          onDownload={onDownloadOpt}
         >
           <CardsEditorContent effects={card.educationalEffects} />
           <CardsEditorContent isArchive />

@@ -15,14 +15,6 @@ import axios from '../configuration/axios';
 
 import handleHttpError from '../shared/handleHttpError';
 
-const mockData = [
-  { name: 'Bazy danych', code: 'INZ005234' },
-  { name: 'Technologie wsp.wytw.oprogr', code: 'INZ005234' },
-  { name: 'Projektowanie sys. informat', code: 'INZ005734' },
-  { name: 'Podstawy biz. i ochr.wł.intel', code: 'INZ009204' },
-  { name: 'Bezpieczeństwo sys.web.i mob', code: 'INZ002231' },
-];
-
 function Cards(): JSX.Element {
   const auth = useContext(AuthContext);
   const lang = useContext(LangContext);
@@ -94,7 +86,7 @@ function Cards(): JSX.Element {
       <div>
         <Input
           className="cards-filter"
-          placeholder={lang.getMessage('Filter programs')}
+          placeholder={lang.getMessage('Filter cards')}
           value={filterText}
           onChange={onFilterTextChange}
         />
@@ -125,7 +117,7 @@ function Cards(): JSX.Element {
             changePage(page - 1, filterText);
           },
           pageSize: PAGE_SIZE,
-          total: mockData.length,
+          total: pageState?.totalSize ?? 0,
         }}
         dataSource={pageState?.results ?? []}
         renderItem={(item) => (
