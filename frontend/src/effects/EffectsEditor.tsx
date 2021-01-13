@@ -1,50 +1,75 @@
 import { Checkbox, Form, Input, InputNumber, Select } from 'antd';
-import React, { useCallback, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { FormattedMessage } from 'react-intl';
+import { useHistory, useParams } from 'react-router-dom';
+import axios from '../configuration/axios';
+import AuthContext from '../context/AuthContext';
+import { LangContext } from '../context/LangContext';
+import { Effect } from '../dto/Effect';
 import EditorView from '../shared/EditorView';
+import handleHttpError from '../shared/handleHttpError';
+import { PagedResult } from '../shared/PagedResult';
 import useQueryParam from '../shared/useQueryParam';
+import { Versioned } from '../shared/Versioned';
+import { VersionHistory } from '../shared/versionHistory';
 import EffectMappings from './EffectMappings';
 
 import './EffectsEditor.css';
 
 const EffectsEditorContent = ({ isArchive = false }) => {
+  const lang = useContext(LangContext);
+
   const { state } = useParams<{ state: string }>();
   const modify = useMemo(
     () => (state === 'create' || state === 'edit') && !isArchive,
     [state, isArchive]
   );
-  const [code] = useQueryParam('code');
+  const [id] = useQueryParam('id');
 
   return (
     <>
       <Form.Item
         className="effects-form-item"
-        label="Kod"
+        label={lang.getMessage('Code')}
         labelAlign="left"
         name="code"
         rules={[{ required: true, message: 'Wprowadź kod efektu!' }]}
       >
-        <Input disabled={!(state === 'edit' && code === '')} />
+        <Input disabled={!(state === 'edit' && id === '')} />
       </Form.Item>
 
       <Form.Item
         className="form-item"
-        label="Typ efektu"
+        label={lang.getMessage('Effect type')}
         labelAlign="left"
         name="type"
         rules={[{ required: true, message: 'Wprowadź typ efektu!' }]}
       >
         <Select disabled={!modify}>
-          <Select.Option value="minist">Ministerialny</Select.Option>
-          <Select.Option value="kier">Kierunkowy</Select.Option>
-          <Select.Option value="special">Specjalnościowy</Select.Option>
-          <Select.Option value="przedm">Przedmiotowy</Select.Option>
+          <Select.Option value="MINISTERIAL">
+            <FormattedMessage id="Ministerial" />
+          </Select.Option>
+          <Select.Option value="FIELD_OF_STUDY">
+            <FormattedMessage id="Field of study" />
+          </Select.Option>
+          <Select.Option value="SPECIALISATION">
+            <FormattedMessage id="Specialisation" />
+          </Select.Option>
+          <Select.Option value="SUBJECT">
+            <FormattedMessage id="Subject" />
+          </Select.Option>
         </Select>
       </Form.Item>
 
       <Form.Item
         className="effects-form-item"
-        label="Opis"
+        label={lang.getMessage('Description')}
         labelAlign="left"
         name="description"
         rules={[{ required: true, message: 'Wprowadź opis efektu!' }]}
@@ -54,23 +79,29 @@ const EffectsEditorContent = ({ isArchive = false }) => {
 
       <Form.Item
         name="category"
-        label="Kategoria"
+        label={lang.getMessage('Category')}
         labelAlign="left"
         hasFeedback
         rules={[{ required: true, message: 'Wybierz kategorie efektu!' }]}
       >
         <Select placeholder="Wybierz kategorie efektu" disabled={!modify}>
-          <Select.Option value="knowledge">Wiedza</Select.Option>
-          <Select.Option value="skills">Umiejętności</Select.Option>
-          <Select.Option value="social">Kompetencje społeczne</Select.Option>
+          <Select.Option value="KNOWLEDGE">
+            <FormattedMessage id="Knowledge" />
+          </Select.Option>
+          <Select.Option value="SKILLS">
+            <FormattedMessage id="Skills" />
+          </Select.Option>
+          <Select.Option value="SOCIAL_COMPETENCES">
+            <FormattedMessage id="Social competences" />
+          </Select.Option>
         </Select>
       </Form.Item>
 
       <Form.Item
         className="effects-form-item"
-        label="Poziom PRK"
+        label={lang.getMessage('PRK level')}
         labelAlign="left"
-        name="prk"
+        name="prkLevel"
         rules={[{ required: true, message: 'Wprowadź poziom PRK efektu!' }]}
       >
         <InputNumber min={1} max={8} disabled={!modify} />
@@ -78,65 +109,143 @@ const EffectsEditorContent = ({ isArchive = false }) => {
 
       <Form.Item
         className="effects-form-item"
-        name="bachelor"
+        name="isEngineerEffect"
         valuePropName="checked"
       >
-        <Checkbox disabled={!modify}>Umożliwia inżnyniera</Checkbox>
+        <Checkbox disabled={!modify}>
+          <FormattedMessage id="Allows engeener" />
+        </Checkbox>
       </Form.Item>
 
       <Form.Item
         className="effects-form-item"
-        name="language"
+        name="isLingualEffect"
         valuePropName="checked"
       >
-        <Checkbox disabled={!modify}>Językowy</Checkbox>
+        <Checkbox disabled={!modify}>
+          <FormattedMessage id="Lingual" />
+        </Checkbox>
       </Form.Item>
-      <EffectMappings modify={modify} />
+      {/* <EffectMappings modify={modify} /> */}
     </>
   );
 };
 
 function EffectsEditor(): JSX.Element {
-  const [code] = useQueryParam('code');
+  const auth = useContext(AuthContext);
+  const lang = useContext(LangContext);
+
+  const history = useHistory();
+
+  const [id] = useQueryParam('id');
+  const isNew = useMemo(() => id === '', [id]);
+  const [effect, setEffect] = useState<Effect | null>(null);
+
   const onFinish = useCallback(
-    (/* results */) => {
-      // history.goBack();
+    (results) => {
+      if (isNew) {
+        axios
+          .post(`/api/educational-effects`, [results], {
+            headers: { Authorization: auth.token },
+          })
+          .then((res) => {
+            setEffect(res.data[0]);
+            history.goBack();
+          })
+          .catch((err) => handleHttpError(err, history));
+        return;
+      }
+      if (effect == null) return;
+
+      axios
+        .put(`/api/educational-effects`, [{ ...effect, ...results }], {
+          headers: { Authorization: auth.token },
+        })
+        .then((res) => {
+          setEffect(res.data[0]);
+          history.goBack();
+        })
+        .catch((err) => handleHttpError(err, history));
     },
-    []
+    [isNew, effect, history, auth]
   );
+
+  const onRemove = useCallback(() => {
+    if (effect?.id == null) return;
+
+    axios
+      .delete(`/api/educational-effects/${effect.id}`, {
+        headers: { Authorization: auth.token },
+      })
+      .then(() => {})
+      .catch((err) => handleHttpError(err, history));
+  }, [effect, history, auth]);
+
+  const onVerify = useCallback(() => {
+    if (effect?.id == null) return;
+
+    axios
+      .put(
+        `/api/educational-effects`,
+        [{ ...effect, objectState: 'Verified' }],
+        {
+          headers: { Authorization: auth.token },
+        }
+      )
+      .then(() => {})
+      .catch((err) => handleHttpError(err, history));
+  }, [effect, history, auth]);
+
+  useEffect(() => {
+    if (isNew) return;
+
+    axios
+      .get<Effect[]>(`/api/educational-effects/${id}`, {
+        headers: { Authorization: auth.token },
+      })
+      .then((res) => {
+        setEffect(res.data[0]);
+      })
+      .catch((err) => handleHttpError(err, history));
+  }, [id, isNew, history, auth]);
+
+  const [archiveVals, setArchiveVals] = useState<VersionHistory<Effect> | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (isNew) return;
+
+    const versionHistory = new VersionHistory<Effect>(
+      '/api/educational-effects/history',
+      id,
+      { headers: { Authorization: auth.token } }
+    );
+    versionHistory
+      .init()
+      .then(() => {
+        setArchiveVals(versionHistory);
+      })
+      .catch((e) => handleHttpError(e, history));
+  }, [isNew, id, auth, history]);
 
   return (
     <div className="effects-editor">
-      <EditorView
-        header="Efekt kształcenia"
-        initialVals={{
-          code,
-          description: code
-            ? 'zna podstawy dotyczące architektury systemu Linux i jego eksploatacji jako serwera lub stacji roboczej użytkownika w systemach informatycznych opartych o platformę Linux'
-            : '',
-          category: 'knowledge',
-          prk: '6',
-          bachelor: true,
-          type: 'minist',
-        }}
-        useArchive
-        archiveVals={{
-          code,
-          description: code
-            ? 'zna podstawy dotyczące architektury systemu Linux i jego eksploatacji jako serwera lub stacji roboczej użytkownika w systemach informatycznych opartych o platformę Linux'
-            : '',
-          category: 'knowledge',
-          prk: '6',
-          bachelor: true,
-          type: 'minist',
-        }}
-        name="effects"
-        onFinish={onFinish}
-        queryParams=""
-      >
-        <EffectsEditorContent />
-        <EffectsEditorContent isArchive />
-      </EditorView>
+      {effect == null && !isNew ? null : (
+        <EditorView
+          header={lang.getMessage('Studies effect')}
+          initialVals={effect ?? {}}
+          useArchive
+          versionHistory={archiveVals}
+          name="effects"
+          onFinish={onFinish}
+          queryParams=""
+          onRemove={onRemove}
+        >
+          <EffectsEditorContent />
+          <EffectsEditorContent isArchive />
+        </EditorView>
+      )}
     </div>
   );
 }

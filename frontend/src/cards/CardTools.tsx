@@ -6,7 +6,7 @@ const CardTools: React.FunctionComponent<{ modify: boolean }> = ({
   modify = false,
 }) => {
   return (
-    <Form.List name="tools">
+    <Form.List name="usedTeachingTools">
       {(fields, { add, remove }) => (
         <>
           {fields.map((field) => (
@@ -14,8 +14,8 @@ const CardTools: React.FunctionComponent<{ modify: boolean }> = ({
               <Form.Item
                 label="Narzędzie dydaktyczne"
                 labelAlign="left"
-                name={[field.name, 'tool']}
-                fieldKey={[field.fieldKey, 'tool']}
+                name={field.name}
+                fieldKey={field.fieldKey}
                 rules={[
                   { required: true, message: 'Podaj narzędzie dydaktyczne!' },
                 ]}

@@ -265,9 +265,9 @@ function ProgramsEditor(): JSX.Element {
       queryParams={`?code=${code}`}
       header="Programy studiów"
       useArchive
-      archiveVals={{
-        code,
-      }}
+      // archiveVals={{
+      //   code,
+      // }}
     >
       <ProgramsEditorContent />
       <ProgramsEditorContent isArchive />

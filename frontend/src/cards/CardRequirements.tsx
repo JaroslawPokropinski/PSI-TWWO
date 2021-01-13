@@ -6,7 +6,7 @@ const CardRequirements: React.FunctionComponent<{ modify: boolean }> = ({
   modify = false,
 }) => {
   return (
-    <Form.List name="requirements">
+    <Form.List name="prerequisites">
       {(fields, { add, remove }) => (
         <>
           {fields.map((field) => (
@@ -14,13 +14,16 @@ const CardRequirements: React.FunctionComponent<{ modify: boolean }> = ({
               <Form.Item
                 label="Wymaganie wstępne"
                 labelAlign="left"
-                name={[field.name, 'desc']}
-                fieldKey={[field.fieldKey, 'desc']}
+                name={field.name}
+                fieldKey={field.fieldKey}
                 rules={[
                   { required: true, message: 'Podaj wymaganie wstępne!' },
                 ]}
               >
-                <Input placeholder="Podaj wymaganie wstępne" />
+                <Input
+                  placeholder="Podaj wymaganie wstępne"
+                  disabled={!modify}
+                />
               </Form.Item>
 
               {modify ? (
