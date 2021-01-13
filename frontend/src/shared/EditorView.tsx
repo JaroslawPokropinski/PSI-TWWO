@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button, Form } from 'antd';
 import { Store } from 'antd/lib/form/interface';
@@ -8,6 +8,8 @@ import Header from './Header';
 
 import './EditorView.less';
 import VerifyModal from './VerifyModal';
+import { VersionHistory } from './versionHistory';
+import { Versioned } from './Versioned';
 
 const EditorView: React.FunctionComponent<{
   name: string;
@@ -18,10 +20,11 @@ const EditorView: React.FunctionComponent<{
   isVerified?: boolean;
   isVerifiable?: boolean;
   useArchive?: boolean;
-  archiveVals?: Store;
+  versionHistory?: VersionHistory<Store> | null;
   onRemove?: () => void;
   onVerify?: () => void;
   onDownload?: () => void | null;
+  mapper?: (store: any) => Store;
 }> = ({
   name = '',
   queryParams = '',
@@ -32,20 +35,22 @@ const EditorView: React.FunctionComponent<{
   isVerified = false,
   isVerifiable = true,
   useArchive = false,
-  archiveVals = null,
+  versionHistory = null,
   onRemove = () => {},
   onVerify = () => {},
   onDownload = null,
+  mapper = (a) => a,
 }) => {
   const history = useHistory();
   const { state } = useParams<{ state: string }>();
+  const mappedVals = useMemo(() => mapper(initialVals), [initialVals, mapper]);
 
   const handleFinish = useCallback(
     (results) => {
-      history.goBack();
+      // history.goBack();
       onFinish(results);
     },
-    [history, onFinish]
+    [onFinish]
   );
   const [isModalVisible, showModal] = useState(false);
   const [isVerifyModalVisible, showVerifyModal] = useState(false);
@@ -86,6 +91,22 @@ const EditorView: React.FunctionComponent<{
       /* history */
     ]
   );
+
+  const [archiveVals, setArchiveVals] = useState<Versioned<Store> | null>(null);
+  const [hasPrevVer, setHasPrevVer] = useState(false);
+  const [hasNextVer, setHasNextVer] = useState(false);
+
+  useEffect(() => {
+    if (versionHistory == null) return;
+    setArchiveVals(versionHistory.getCurrent());
+  }, [versionHistory, mapper]);
+
+  useEffect(() => {
+    if (versionHistory == null) return;
+
+    setHasPrevVer(!versionHistory.isFirst());
+    setHasNextVer(!versionHistory.isLast());
+  }, [versionHistory, archiveVals]);
 
   return (
     <div className="editor">
@@ -138,6 +159,42 @@ const EditorView: React.FunctionComponent<{
         >
           Historia
         </Button>
+
+        {isShowingHistory ? (
+          <>
+            <Button
+              className="controlls-button"
+              type="primary"
+              disabled={!hasPrevVer}
+              onClick={() => {
+                if (versionHistory == null) return;
+
+                versionHistory.getPrev().then((prev) => {
+                  setArchiveVals(null);
+                  setArchiveVals(prev);
+                });
+              }}
+            >
+              <CaretLeftOutlined />
+            </Button>
+            <Button
+              className="controlls-button"
+              type="primary"
+              disabled={!hasNextVer}
+              onClick={() => {
+                if (versionHistory == null) return;
+
+                versionHistory.getNext().then((next) => {
+                  setArchiveVals(null);
+                  setArchiveVals(next);
+                });
+              }}
+            >
+              <CaretRightOutlined />
+            </Button>
+          </>
+        ) : null}
+
         {onDownload == null ? null : (
           <Button
             className="controlls-button"
@@ -147,17 +204,6 @@ const EditorView: React.FunctionComponent<{
             Pobierz
           </Button>
         )}
-
-        {isShowingHistory ? (
-          <>
-            <Button className="controlls-button" type="primary">
-              <CaretLeftOutlined />
-            </Button>
-            <Button className="controlls-button" type="primary">
-              <CaretRightOutlined />
-            </Button>
-          </>
-        ) : null}
 
         {state === 'view' ? (
           <Button className="remove-button" onClick={onRemoveAction}>
@@ -169,7 +215,7 @@ const EditorView: React.FunctionComponent<{
         <Form
           className="form"
           name="basic"
-          initialValues={initialVals}
+          initialValues={mappedVals}
           onFinish={handleFinish}
         >
           {React.Children.map(children, (child, i) => {
@@ -189,7 +235,7 @@ const EditorView: React.FunctionComponent<{
           <Form
             className="form"
             name="basic"
-            initialValues={archiveVals}
+            initialValues={mapper(archiveVals.entity)}
             onFinish={handleFinish}
           >
             {React.Children.map(children, (child, i) => {

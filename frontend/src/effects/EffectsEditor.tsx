@@ -14,7 +14,10 @@ import { LangContext } from '../context/LangContext';
 import { Effect } from '../dto/Effect';
 import EditorView from '../shared/EditorView';
 import handleHttpError from '../shared/handleHttpError';
+import { PagedResult } from '../shared/PagedResult';
 import useQueryParam from '../shared/useQueryParam';
+import { Versioned } from '../shared/Versioned';
+import { VersionHistory } from '../shared/versionHistory';
 import EffectMappings from './EffectMappings';
 
 import './EffectsEditor.css';
@@ -123,7 +126,7 @@ const EffectsEditorContent = ({ isArchive = false }) => {
           <FormattedMessage id="Lingual" />
         </Checkbox>
       </Form.Item>
-      <EffectMappings modify={modify} />
+      {/* <EffectMappings modify={modify} /> */}
     </>
   );
 };
@@ -147,6 +150,7 @@ function EffectsEditor(): JSX.Element {
           })
           .then((res) => {
             setEffect(res.data[0]);
+            history.goBack();
           })
           .catch((err) => handleHttpError(err, history));
         return;
@@ -159,6 +163,7 @@ function EffectsEditor(): JSX.Element {
         })
         .then((res) => {
           setEffect(res.data[0]);
+          history.goBack();
         })
         .catch((err) => handleHttpError(err, history));
     },
@@ -193,6 +198,7 @@ function EffectsEditor(): JSX.Element {
 
   useEffect(() => {
     if (isNew) return;
+
     axios
       .get<Effect[]>(`/api/educational-effects/${id}`, {
         headers: { Authorization: auth.token },
@@ -203,6 +209,26 @@ function EffectsEditor(): JSX.Element {
       .catch((err) => handleHttpError(err, history));
   }, [id, isNew, history, auth]);
 
+  const [archiveVals, setArchiveVals] = useState<VersionHistory<Effect> | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (isNew) return;
+
+    const versionHistory = new VersionHistory<Effect>(
+      '/api/educational-effects/history',
+      id,
+      { headers: { Authorization: auth.token } }
+    );
+    versionHistory
+      .init()
+      .then(() => {
+        setArchiveVals(versionHistory);
+      })
+      .catch((e) => handleHttpError(e, history));
+  }, [isNew, id, auth, history]);
+
   return (
     <div className="effects-editor">
       {effect == null && !isNew ? null : (
@@ -210,7 +236,7 @@ function EffectsEditor(): JSX.Element {
           header={lang.getMessage('Studies effect')}
           initialVals={effect ?? {}}
           useArchive
-          archiveVals={effect ?? {}}
+          versionHistory={archiveVals}
           name="effects"
           onFinish={onFinish}
           queryParams=""

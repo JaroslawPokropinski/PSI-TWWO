@@ -25,6 +25,7 @@ import { LangContext } from '../context/LangContext';
 import axios from '../configuration/axios';
 import handleHttpError from '../shared/handleHttpError';
 import { Effect } from '../dto/Effect';
+import { VersionHistory } from '../shared/versionHistory';
 
 type FieldOfStudy = { id: number; name: string; faculty: number };
 type OrganisationalUnit = { id: number; name: string; type: string };
@@ -298,6 +299,7 @@ function CardsEditor(): JSX.Element {
         )
         .then((res) => {
           setCard(res.data[0]);
+          history.goBack();
         })
         .catch((err) => handleHttpError(err, history));
     },
@@ -346,6 +348,26 @@ function CardsEditor(): JSX.Element {
       .catch((err) => handleHttpError(err, history));
   }, [id, isNew, history, axiosOpts]);
 
+  const [archiveVals, setArchiveVals] = useState<VersionHistory<Card> | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (isNew) return;
+
+    const versionHistory = new VersionHistory<Card>(
+      '/api/subject-card/history',
+      id,
+      { headers: { Authorization: auth.token } }
+    );
+    versionHistory
+      .init()
+      .then(() => {
+        setArchiveVals(versionHistory);
+      })
+      .catch((e) => handleHttpError(e, history));
+  }, [isNew, id, auth, history]);
+
   const mapCard = useCallback((c: Card) => {
     return {
       ...c,
@@ -357,20 +379,21 @@ function CardsEditor(): JSX.Element {
 
   return (
     <div className="cards-editor">
-      {card == null ? null : (
+      {card == null && !isNew ? null : (
         <EditorView
           name="cards"
-          initialVals={mapCard(card) ?? {}}
+          mapper={mapCard}
+          initialVals={card == null ? {} : mapCard(card)}
           onFinish={onFinish}
           queryParams=""
           header={lang.getMessage('Subject card')}
           isVerifiable
           isVerified={false}
           useArchive
-          archiveVals={null ?? {}}
+          versionHistory={archiveVals}
           onDownload={onDownloadOpt}
         >
-          <CardsEditorContent effects={card.educationalEffects} />
+          <CardsEditorContent effects={card?.educationalEffects} />
           <CardsEditorContent isArchive />
         </EditorView>
       )}
