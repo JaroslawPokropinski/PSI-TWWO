@@ -10,10 +10,8 @@ import psi.api.common.PaginatedResultsDTO;
 import psi.api.common.ResourceDTO;
 import psi.api.revision.RevisionDTO;
 import psi.api.studiesprogram.StudiesProgramDTO;
-import psi.domain.discipline.boundary.DisciplineMapper;
 import psi.domain.discipline.control.DisciplineService;
 import psi.domain.discipline.entity.Discipline;
-import psi.domain.fieldofstudy.boundary.FieldOfStudyMapper;
 import psi.domain.fieldofstudy.control.FieldOfStudyService;
 import psi.domain.simpleattribute.boundary.SimpleAttributeMapper;
 import psi.domain.studiesprogram.entity.StudiesProgram;
@@ -24,7 +22,6 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static psi.infrastructure.rest.ResourcePaths.IDS_PATH;
@@ -35,9 +32,6 @@ public class StudiesProgramMapper {
 
     private final FieldOfStudyService fieldOfStudyService;
     private final DisciplineService disciplineService;
-
-    private final FieldOfStudyMapper fieldOfStudyMapper;
-    private final DisciplineMapper disciplineMapper;
     private final SimpleAttributeMapper simpleAttributeMapper;
 
     public List<StudiesProgramDTO> mapToStudiesProgramsDTOs(Collection<StudiesProgram> studiesPrograms){

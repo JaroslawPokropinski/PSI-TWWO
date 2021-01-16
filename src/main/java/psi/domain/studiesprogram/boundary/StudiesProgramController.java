@@ -14,7 +14,6 @@ import psi.api.revision.RevisionDTO;
 import psi.api.studiesprogram.StudiesProgramDTO;
 import psi.domain.studiesprogram.control.StudiesProgramService;
 import psi.domain.studiesprogram.entity.StudiesProgram;
-import psi.infrastructure.mediatype.MediaTypeResolver;
 import psi.infrastructure.security.UserInfo;
 import psi.infrastructure.security.annotation.LoggedUser;
 import springfox.documentation.annotations.ApiIgnore;
@@ -36,7 +35,6 @@ public class StudiesProgramController {
 
     private final StudiesProgramService studiesProgramService;
     private final StudiesProgramMapper studiesProgramMapper;
-    private final MediaTypeResolver mediaTypeResolver;
 
     @ApiOperation(value = "${api.studies-program.getStudiesPrograms.value}", notes = "${api.studies-program.getStudiesPrograms.notes}")
     @GetMapping(IDS_PATH)
