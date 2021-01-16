@@ -7,7 +7,7 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
   modify = false,
 }) => {
   return (
-    <Form.List name="classes">
+    <Form.List name="subjectClasses">
       {(fields, { add, remove }) => (
         <>
           <Divider />
@@ -16,20 +16,22 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
               <Form.Item
                 label="typ"
                 labelAlign="left"
-                name={[field.name, 'class']}
+                name={[field.name, 'subjectClassesType']}
+                fieldKey={[field.fieldKey, 'subjectClassesType']}
                 rules={[{ required: true, message: 'Wybierz forme zajęć!' }]}
               >
                 <Select placeholder="Wybierz forme zajęć" disabled={!modify}>
-                  <Select.Option value="lecture">Wykład</Select.Option>
-                  <Select.Option value="exercise">Ćwiczenia</Select.Option>
-                  <Select.Option value="project">Projekt</Select.Option>
-                  <Select.Option value="seminary">Seminarium</Select.Option>
-                  <Select.Option value="laboratory">Laboratoria</Select.Option>
+                  <Select.Option value="LECTURE">Wykład</Select.Option>
+                  <Select.Option value="CLASSES">Ćwiczenia</Select.Option>
+                  <Select.Option value="PROJECT">Projekt</Select.Option>
+                  <Select.Option value="SEMINAR">Seminarium</Select.Option>
+                  <Select.Option value="LABORATORY">Laboratoria</Select.Option>
                 </Select>
               </Form.Item>
 
               <Form.Item
-                name={[field.name, 'form']}
+                name={[field.name, 'creditingForm']}
+                fieldKey={[field.fieldKey, 'creditingForm']}
                 label="Forma zaliczenia"
                 labelAlign="left"
                 hasFeedback
@@ -41,14 +43,17 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
                   placeholder="Wybierz forme zaliczenia"
                   disabled={!modify}
                 >
-                  <Select.Option value="exam">Egzamin</Select.Option>
-                  <Select.Option value="mark">Ocena</Select.Option>
-                  <Select.Option value="none">Nie dotyczy</Select.Option>
+                  <Select.Option value="EXAMINATION">Egzamin</Select.Option>
+                  <Select.Option value="CREDITING_WITH_GRADE">
+                    Ocena
+                  </Select.Option>
+                  {/* <Select.Option value="null">Nie dotyczy</Select.Option> */}
                 </Select>
               </Form.Item>
               <Form.Item
                 className="form-item"
-                name={[field.name, 'ects']}
+                name={[field.name, 'ectsPoints']}
+                fieldKey={[field.fieldKey, 'ectsPoints']}
                 label="Punkty ECTS"
                 labelAlign="left"
                 hasFeedback
@@ -58,7 +63,8 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
               </Form.Item>
               <Form.Item
                 className="form-item"
-                name={[field.name, 'zzu']}
+                name={[field.name, 'zzuHours']}
+                fieldKey={[field.fieldKey, 'zzuHours']}
                 label="Godziny ZZU"
                 labelAlign="left"
                 hasFeedback
@@ -69,7 +75,8 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
 
               <Form.Item
                 className="form-item"
-                name={[field.name, 'cnps']}
+                name={[field.name, 'cnpsHours']}
+                fieldKey={[field.fieldKey, 'cnpsHours']}
                 label="Godziny CNPS"
                 labelAlign="left"
                 hasFeedback
@@ -80,7 +87,8 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
 
               <Form.Item
                 className="form-item"
-                name={[field.name, 'ending']}
+                name={[field.name, 'isFinalCourse']}
+                fieldKey={[field.fieldKey, 'isFinalCourse']}
                 valuePropName="checked"
               >
                 <Checkbox disabled={!modify}>
@@ -90,7 +98,8 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
 
               <Form.Item
                 className="form-item"
-                name={[field.name, 'p']}
+                name={[field.name, 'practicalEctsPoints']}
+                fieldKey={[field.fieldKey, 'practicalEctsPoints']}
                 label="Punkty odp. zajęcią praktycznym"
                 labelAlign="left"
                 hasFeedback
@@ -106,7 +115,8 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
 
               <Form.Item
                 className="form-item"
-                name={[field.name, 'bk']}
+                name={[field.name, 'buEctsPoints']}
+                fieldKey={[field.fieldKey, 'buEctsPoints']}
                 label="Punkty odp. zajęcią wymagającym bezpośredniego kontaktu"
                 labelAlign="left"
                 hasFeedback
@@ -122,7 +132,8 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
               </Form.Item>
               <ProgramContent
                 modify={modify}
-                name={[field.name, 'programContent']}
+                name={[field.name, 'program']}
+                // fieldKey={[field.fieldKey, 'program']}
               />
 
               {modify ? (

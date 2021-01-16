@@ -1,10 +1,25 @@
-import React, { useCallback, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { Button, Input, List } from 'antd';
 import { useHistory } from 'react-router-dom';
+import { AxiosRequestConfig } from 'axios';
+import { FormattedMessage } from 'react-intl';
 import Header from '../shared/Header';
 
 import './Programs.css';
 import { getSurrogateAvatar } from '../shared/AvatarUtils';
+import { PagedResult } from '../shared/PagedResult';
+import AuthContext from '../context/AuthContext';
+import { LangContext } from '../context/LangContext';
+import { Program } from '../dto/Program';
+import axios from '../configuration/axios';
+import handleHttpError from '../shared/handleHttpError';
+import { PAGE_SIZE } from '../configuration/constants';
 
 const pageSize = 6;
 const mockData = [
@@ -12,30 +27,84 @@ const mockData = [
   { code: 'PO-W08-ZZZ-PIP--ST-IIM-WRO-/2020', name: 'Zarządzanie' },
 ];
 
+const getPage = (page: number, filter: string, opt: AxiosRequestConfig) =>
+  axios.get(
+    `/api/studies-program/search?page=${page}&size=${PAGE_SIZE}&query=${encodeURIComponent(
+      `subjectCode=ke="${filter}" or subjectName=ke="${filter}" or subjectNameInEnglish=ke="${filter}"`
+    )}`,
+    opt
+  );
+
 function Programs(): JSX.Element {
+  const auth = useContext(AuthContext);
+  const lang = useContext(LangContext);
+
   const history = useHistory();
-  const [listData, setListData] = useState(mockData.slice(0, pageSize));
+  const [filterText, setFilterText] = useState('');
+  const [pageState, setPageState] = useState<PagedResult<Program> | null>(null);
+  const axiosOpts = useMemo(
+    () => ({ headers: { Authorization: auth.token } }),
+    [auth]
+  );
+
   const onClick = useCallback(
-    (effect: string | null) => {
-      if (effect == null) {
+    (program: Program | null) => {
+      if (program == null) {
         history.push('/programs/edit');
         return;
       }
-      history.push(`/programs/view?state=update&code=${effect}`);
+      history.push(`/programs/view?state=update&id=${program.id}`);
     },
     [history]
   );
+
+  const changePage = useCallback(
+    (page: number, filter: string) => {
+      getPage(page, filter, axiosOpts)
+        .then((res) => {
+          setPageState(res.data);
+        })
+        .catch((err) => handleHttpError(err, history));
+    },
+    [axiosOpts, history]
+  );
+
+  useEffect(() => {
+    getPage(0, '', axiosOpts)
+      .then((res) => {
+        setPageState(res.data);
+      })
+      .catch((err) => handleHttpError(err, history));
+  }, [axiosOpts, history]);
+
+  const onFilterTextChange = useCallback(
+    (v: React.ChangeEvent<HTMLInputElement>) => {
+      setFilterText(v.currentTarget.value);
+    },
+    [setFilterText]
+  );
+
+  const onFilter = useCallback(() => {
+    const p = pageState?.pageNumber ?? 0;
+    changePage(p, filterText);
+  }, [filterText, changePage, pageState]);
+
   return (
     <div className="programs">
       <Header title="Programy studiów" />
       <div>
-        <Input className="programs-filter" placeholder="Filtruj programy" />
+        <Input
+          className="cards-filter"
+          placeholder={lang.getMessage('Filter programs')}
+          value={filterText}
+          onChange={onFilterTextChange}
+        />
         <Button
           type="primary"
           className="programs-filter-button"
-          onClick={() => onClick(null)}
+          onClick={onFilter}
         >
-          filtruj
+          <FormattedMessage id="Filter" />
         </Button>
       </div>
 
@@ -54,24 +123,22 @@ function Programs(): JSX.Element {
         pagination={{
           position: 'top',
           onChange: (page) => {
-            setListData(
-              mockData.slice(page * pageSize - pageSize, page * pageSize)
-            );
+            changePage(page - 1, filterText);
           },
-          pageSize,
-          total: mockData.length,
+          pageSize: PAGE_SIZE,
+          total: pageState?.totalSize ?? 0,
         }}
-        dataSource={listData}
+        dataSource={pageState?.results ?? []}
         renderItem={(item) => (
           <List.Item
             className="programs-item"
-            key={item.code}
-            onClick={() => onClick(item.code)}
+            key={item.id}
+            onClick={() => onClick(item)}
           >
             <List.Item.Meta
-              avatar={getSurrogateAvatar(item.name, 30, 20)}
+              avatar={getSurrogateAvatar(item.code, 30, 20)}
               title={item.code}
-              description={item.name}
+              description={item.code}
             />
           </List.Item>
         )}

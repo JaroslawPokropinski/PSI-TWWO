@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { Button, Form } from 'antd';
 import { Store } from 'antd/lib/form/interface';
@@ -8,6 +8,8 @@ import Header from './Header';
 
 import './EditorView.less';
 import VerifyModal from './VerifyModal';
+import { VersionHistory } from './versionHistory';
+import { Versioned } from './Versioned';
 
 const EditorView: React.FunctionComponent<{
   name: string;
@@ -18,7 +20,11 @@ const EditorView: React.FunctionComponent<{
   isVerified?: boolean;
   isVerifiable?: boolean;
   useArchive?: boolean;
-  archiveVals?: Store;
+  versionHistory?: VersionHistory<Store> | null;
+  onRemove?: () => void;
+  onVerify?: () => void;
+  onDownload?: () => void | null;
+  mapper?: (store: any) => Store;
 }> = ({
   name = '',
   queryParams = '',
@@ -29,30 +35,35 @@ const EditorView: React.FunctionComponent<{
   isVerified = false,
   isVerifiable = true,
   useArchive = false,
-  archiveVals = null,
+  versionHistory = null,
+  onRemove = () => {},
+  onVerify = () => {},
+  onDownload = null,
+  mapper = (a) => a,
 }) => {
   const history = useHistory();
   const { state } = useParams<{ state: string }>();
-  // eslint-disable-next-line react/prop-types
-  // const { name, queryParams, onFinish, initialVals, children, header } = props;
+  const mappedVals = useMemo(() => mapper(initialVals), [initialVals, mapper]);
+
   const handleFinish = useCallback(
     (results) => {
-      history.goBack();
+      // history.goBack();
       onFinish(results);
     },
-    [history, onFinish]
+    [onFinish]
   );
   const [isModalVisible, showModal] = useState(false);
   const [isVerifyModalVisible, showVerifyModal] = useState(false);
   const [isShowingHistory, showHistory] = useState(false);
   const modify = useMemo(() => state === 'create' || state === 'edit', [state]);
-  const onRemove = useCallback(() => {
+  const onRemoveAction = useCallback(() => {
     showModal(true);
   }, []);
 
   const onRemoveApprove = useCallback(() => {
+    onRemove();
     history.goBack();
-  }, [history]);
+  }, [history, onRemove]);
 
   const onRemoveCancel = useCallback(() => {
     showModal(false);
@@ -62,19 +73,14 @@ const EditorView: React.FunctionComponent<{
     history.push(`/${name}/edit${queryParams}`);
   }, [history, name, queryParams]);
 
-  const onVerify = useCallback(() => {
+  const onVerifyAction = useCallback(() => {
     showVerifyModal(true);
   }, []);
 
-  const onVerifyApprove = useCallback(
-    () => {
-      showVerifyModal(false);
-      // history.goBack();
-    },
-    [
-      /* history */
-    ]
-  );
+  const onVerifyApprove = useCallback(() => {
+    showVerifyModal(false);
+    onVerify();
+  }, [onVerify]);
 
   const onVerifyCancel = useCallback(
     () => {
@@ -85,6 +91,22 @@ const EditorView: React.FunctionComponent<{
       /* history */
     ]
   );
+
+  const [archiveVals, setArchiveVals] = useState<Versioned<Store> | null>(null);
+  const [hasPrevVer, setHasPrevVer] = useState(false);
+  const [hasNextVer, setHasNextVer] = useState(false);
+
+  useEffect(() => {
+    if (versionHistory == null) return;
+    setArchiveVals(versionHistory.getCurrent());
+  }, [versionHistory, mapper]);
+
+  useEffect(() => {
+    if (versionHistory == null) return;
+
+    setHasPrevVer(!versionHistory.isFirst());
+    setHasNextVer(!versionHistory.isLast());
+  }, [versionHistory, archiveVals]);
 
   return (
     <div className="editor">
@@ -123,7 +145,7 @@ const EditorView: React.FunctionComponent<{
           <Button
             className="controlls-button"
             type="primary"
-            onClick={onVerify}
+            onClick={onVerifyAction}
             disabled={isVerified}
           >
             Weryfikuj
@@ -140,17 +162,51 @@ const EditorView: React.FunctionComponent<{
 
         {isShowingHistory ? (
           <>
-            <Button className="controlls-button" type="primary">
+            <Button
+              className="controlls-button"
+              type="primary"
+              disabled={!hasPrevVer}
+              onClick={() => {
+                if (versionHistory == null) return;
+
+                versionHistory.getPrev().then((prev) => {
+                  setArchiveVals(null);
+                  setArchiveVals(prev);
+                });
+              }}
+            >
               <CaretLeftOutlined />
             </Button>
-            <Button className="controlls-button" type="primary">
+            <Button
+              className="controlls-button"
+              type="primary"
+              disabled={!hasNextVer}
+              onClick={() => {
+                if (versionHistory == null) return;
+
+                versionHistory.getNext().then((next) => {
+                  setArchiveVals(null);
+                  setArchiveVals(next);
+                });
+              }}
+            >
               <CaretRightOutlined />
             </Button>
           </>
         ) : null}
 
+        {onDownload == null ? null : (
+          <Button
+            className="controlls-button"
+            type="primary"
+            onClick={() => onDownload()}
+          >
+            Pobierz
+          </Button>
+        )}
+
         {state === 'view' ? (
-          <Button className="remove-button" onClick={onRemove}>
+          <Button className="remove-button" onClick={onRemoveAction}>
             Usuń
           </Button>
         ) : null}
@@ -159,7 +215,7 @@ const EditorView: React.FunctionComponent<{
         <Form
           className="form"
           name="basic"
-          initialValues={initialVals}
+          initialValues={mappedVals}
           onFinish={handleFinish}
         >
           {React.Children.map(children, (child, i) => {
@@ -179,7 +235,7 @@ const EditorView: React.FunctionComponent<{
           <Form
             className="form"
             name="basic"
-            initialValues={archiveVals}
+            initialValues={mapper(archiveVals.entity)}
             onFinish={handleFinish}
           >
             {React.Children.map(children, (child, i) => {
