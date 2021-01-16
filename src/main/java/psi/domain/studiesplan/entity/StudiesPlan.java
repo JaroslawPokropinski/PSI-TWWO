@@ -25,6 +25,7 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Entity
 @Getter
 @Setter
+@Audited
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @Loader(namedQuery = "findStudiesPlanById")

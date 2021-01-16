@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Loader;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Where;
+import org.hibernate.envers.Audited;
 import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.discipline.entity.Discipline;
 import psi.domain.fieldofstudy.entity.FieldOfStudy;
@@ -28,6 +29,7 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Entity
 @Getter
 @Setter
+@Audited
 @SuperBuilder
 @NoArgsConstructor
 @Loader(namedQuery = "findStudiesProgramById")

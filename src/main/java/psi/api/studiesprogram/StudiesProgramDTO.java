@@ -2,10 +2,6 @@ package psi.api.studiesprogram;
 
 import lombok.Builder;
 import lombok.Data;
-import psi.api.discipline.DisciplineDTO;
-import psi.api.fieldofstudy.FieldOfStudyDTO;
-import psi.domain.discipline.entity.Discipline;
-import psi.domain.simpleattribute.entity.SimpleAttribute;
 import psi.domain.studiesprogram.entity.DegreeTitle;
 import psi.domain.studiesprogram.entity.StudiesForm;
 import psi.domain.studiesprogram.entity.StudiesLevel;
@@ -14,7 +10,6 @@ import psi.domain.studiesprogram.entity.StudiesProfile;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 
 @Data

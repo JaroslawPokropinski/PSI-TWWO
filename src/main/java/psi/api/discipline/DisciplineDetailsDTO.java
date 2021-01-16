@@ -2,13 +2,14 @@ package psi.api.discipline;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import psi.domain.disciplinetype.entity.DisciplineType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
-public class DisciplineDTO {
+public class DisciplineDetailsDTO {
 
     @NotNull
     private Long id;
@@ -17,6 +18,6 @@ public class DisciplineDTO {
     private String name;
 
     @NotNull
-    private Long disciplineType;
+    private DisciplineType disciplineType;
 
 }
