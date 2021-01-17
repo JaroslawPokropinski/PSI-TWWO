@@ -207,4 +207,15 @@ public class SubjectCardService {
         return subjectCardRepository.findRevisions(id, pageable);
     }
 
+    public void changeSubjectCardState(Collection<Long> ids, ObjectState newState, Long userId) {
+        List<SubjectCard> foundSubjectCards = getSubjectCardsByIds(ids);
+        validateBeforeStateChange(ids, foundSubjectCards, userId);
+        foundSubjectCards.forEach(subjectCard -> subjectCard.setObjectState(newState));
+    }
+
+    private void validateBeforeStateChange(Collection<Long> ids, Collection<SubjectCard> subjectCards, Long userId) {
+        validateIfAllSubjectCardsExists(ids, subjectCards);
+        validatePermissions(subjectCards, userId);
+    }
+
 }

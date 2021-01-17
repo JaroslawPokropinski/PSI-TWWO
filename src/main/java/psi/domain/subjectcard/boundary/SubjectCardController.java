@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 import psi.api.common.ResourceDTO;
 import psi.api.common.ResponseDTO;
 import psi.api.common.PaginatedResultsDTO;
+import psi.api.common.StatusDTO;
 import psi.api.revision.RevisionDTO;
 import psi.api.subjectcard.SubjectCardDTO;
 import psi.api.subjectcard.SubjectCardDetailsDTO;
+import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.document.Document;
 import psi.domain.document.DocumentGenerator;
 import psi.domain.subjectcard.entity.SubjectCard;
@@ -34,6 +37,7 @@ import psi.infrastructure.security.annotation.LoggedUser;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 
 import static psi.infrastructure.rest.ResourcePaths.ID;
@@ -50,6 +54,7 @@ public class SubjectCardController {
     public static final String SUBJECT_CARD_RESOURCE = "/api/subject-card";
     public static final String SEARCH_RESOURCE = "/search";
     public static final String HISTORY = "/history";
+    public static final String STATUS = "/status";
 
     private final SubjectCardService subjectCardService;
     private final SubjectCardMapper subjectCardMapper;
@@ -109,6 +114,13 @@ public class SubjectCardController {
     public PaginatedResultsDTO<RevisionDTO<SubjectCardDetailsDTO>> getSubjectCardHistory(@PathVariable(ID) Long id, Pageable pageable) {
         Page<Revision<Integer, SubjectCard>> subjectCardHistoryPage = subjectCardService.getSubjectCardHistory(id, pageable);
         return subjectCardMapper.mapToRevisionDTOs(subjectCardHistoryPage);
+    }
+
+    @ApiOperation(value = "${api.subject-cards.changeStatus.value}", notes = "${api.subject-cards.changeStatus.notes}")
+    @PatchMapping(STATUS)
+    public ResponseDTO<Boolean> changeStatus(@PathVariable(ID) Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo) {
+        subjectCardService.changeSubjectCardState(ids, ObjectState.valueOf(statusDTO.getStatus().name()), userInfo.getId());
+        return new ResponseDTO<>(true, "Status changed successfully");
     }
 
 }

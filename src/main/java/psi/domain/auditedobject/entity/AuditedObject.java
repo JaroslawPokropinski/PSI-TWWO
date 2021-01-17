@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import psi.domain.user.entity.User;
+import psi.infrastructure.exception.IllegalArgumentAppException;
 
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
@@ -20,6 +21,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
+import java.text.MessageFormat;
 import java.time.Instant;
 
 @MappedSuperclass
@@ -52,5 +54,76 @@ public class AuditedObject {
 
     @Enumerated(EnumType.STRING)
     private ObjectState objectState;
+
+    public void setObjectState(ObjectState objectState) {
+        validateStateTransition(objectState);
+        this.objectState = objectState;
+    }
+
+    private void validateStateTransition(ObjectState newObjectState) {
+        if (!isStateTransitionAllowed(newObjectState)) {
+            throw new IllegalArgumentAppException(getValidationMessage(newObjectState));
+        }
+    }
+
+    private boolean isStateTransitionAllowed(ObjectState newState) {
+        return isStateTransitionAllowed(this.objectState, newState);
+    }
+
+    public static boolean isStateTransitionAllowed(ObjectState oldState, ObjectState newState) {
+        if (oldState == null) {
+            switch (newState) {
+                case UNVERIFIED:
+                case ACTIVE:
+                    return true;
+                default:
+                    return false;
+            }
+        } else {
+            switch (oldState) {
+                case UNVERIFIED:
+                    switch (newState) {
+                        case VERIFIED:
+                        case REMOVED:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case VERIFIED:
+                    switch (newState) {
+                        case INACTIVE:
+                        case REMOVED:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case ACTIVE:
+                    switch (newState) {
+                        case INACTIVE:
+                            return true;
+                        default:
+                            return false;
+                    }
+                case INACTIVE:
+                    switch (newState) {
+                        case ACTIVE:
+                        case UNVERIFIED:
+                        case REMOVED:
+                            return true;
+                        default:
+                            return false;
+                    }
+                default:
+                    return false;
+            }
+        }
+    }
+
+    private String getValidationMessage(ObjectState newObjectState) {
+        if (this.objectState != null) {
+            return MessageFormat.format("Cannot change state from {0} to {1}", this.objectState, newObjectState);
+        }
+        return MessageFormat.format("Cannot create object with state {0}", newObjectState);
+    }
 
 }
