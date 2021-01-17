@@ -190,6 +190,7 @@ public class SubjectCardService {
         existingSubjectCard.setSupervisor(updatedSubjectCard.getSupervisor());
         existingSubjectCard.setSubjectClasses(updatedSubjectCard.getSubjectClasses());
         existingSubjectCard.setEducationalEffects(updatedSubjectCard.getEducationalEffects());
+        existingSubjectCard.setObjectState(ObjectState.UNVERIFIED);
     }
 
     public void deleteSubjectCards(Collection<Long> ids, Long userId) {
