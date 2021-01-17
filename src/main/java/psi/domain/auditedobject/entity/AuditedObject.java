@@ -72,13 +72,7 @@ public class AuditedObject {
 
     public static boolean isStateTransitionAllowed(ObjectState oldState, ObjectState newState) {
         if (oldState == null) {
-            switch (newState) {
-                case UNVERIFIED:
-                case ACTIVE:
-                    return true;
-                default:
-                    return false;
-            }
+            return true;
         } else {
             switch (oldState) {
                 case UNVERIFIED:

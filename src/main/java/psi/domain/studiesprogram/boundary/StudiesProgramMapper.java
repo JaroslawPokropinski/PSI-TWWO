@@ -86,7 +86,7 @@ public class StudiesProgramMapper {
                 .possibilityOfContinuingStudies(studiesProgramDTO.getPossibilityOfContinuingStudies())
                 .connectionWithMissionAndDevelopmentStrategy(studiesProgramDTO.getConnectionWithMissionAndDevelopmentStrategy())
                 .mainDiscipline(disciplineService.getDisciplineById(studiesProgramDTO.getMainDisciplineId()))
-                .disciplines(new HashSet<Discipline>(disciplineService.getDisciplinesByIds(studiesProgramDTO.getDisciplinesIds())))
+                .disciplines(new HashSet<>(disciplineService.getDisciplinesByIds(studiesProgramDTO.getDisciplinesIds())))
                 .build();
     }
 

@@ -10,7 +10,6 @@ import psi.api.common.PaginatedResultsDTO;
 import psi.api.common.ResourceDTO;
 import psi.api.revision.RevisionDTO;
 import psi.api.studiesplan.StudiesPlanDTO;
-import psi.api.subjectcard.SubjectCardDetailsDTO;
 import psi.domain.studiesplan.entity.StudiesPlan;
 import psi.domain.studiesprogram.boundary.StudiesProgramMapper;
 import psi.domain.studiesprogram.control.StudiesProgramService;

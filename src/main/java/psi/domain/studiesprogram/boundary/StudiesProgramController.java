@@ -22,7 +22,6 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static psi.infrastructure.rest.ResourcePaths.*;
-import static psi.infrastructure.rest.ResourcePaths.ID;
 
 @Api(tags = "Studies Program")
 @RestController

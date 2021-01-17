@@ -2,7 +2,6 @@ package psi.domain.disciplinetype.control;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.disciplinetype.entity.DisciplineType;
 import psi.infrastructure.exception.IllegalArgumentAppException;
 
@@ -40,7 +39,6 @@ public class DisciplineTypeService {
 
     private void prepareBeforeCreate(DisciplineType disciplineType){
         disciplineType.setId(null);
-        disciplineType.setObjectState(ObjectState.UNVERIFIED);
     }
 
     private void validateBeforeCreate(Collection<DisciplineType> disciplineTypes){

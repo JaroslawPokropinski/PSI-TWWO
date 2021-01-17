@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.envers.Audited;
-import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.disciplinetype.entity.DisciplineType;
 
 import javax.persistence.Entity;
@@ -23,7 +22,7 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Audited
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class Discipline extends AuditedObject {
+public class Discipline {
 
     @Id
     @GeneratedValue(generator = ID_GENERATOR)

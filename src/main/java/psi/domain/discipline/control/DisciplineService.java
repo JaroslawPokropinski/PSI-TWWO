@@ -3,7 +3,6 @@ package psi.domain.discipline.control;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.discipline.entity.Discipline;
 import psi.domain.disciplinetype.control.DisciplineTypeRepository;
 import psi.domain.disciplinetype.entity.DisciplineType;
@@ -92,7 +91,6 @@ public class DisciplineService {
 
     private void prepareBeforeCreate(Discipline discipline){
         discipline.setId(null);
-        discipline.setObjectState(ObjectState.UNVERIFIED);
     }
 
     private void ensureDisciplineTypesExist(Collection<Discipline> disciplines){

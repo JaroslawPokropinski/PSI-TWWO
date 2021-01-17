@@ -3,7 +3,6 @@ package psi.domain.disciplinetype.entity;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.envers.Audited;
-import psi.domain.auditedobject.entity.AuditedObject;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,7 +15,7 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Getter
 @Setter
 @Audited
-public class DisciplineType extends AuditedObject {
+public class DisciplineType {
 
     @Id
     @GeneratedValue(generator = ID_GENERATOR)

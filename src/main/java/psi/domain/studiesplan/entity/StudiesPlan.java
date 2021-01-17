@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import net.bytebuddy.implementation.bind.annotation.Super;
 import org.hibernate.annotations.Loader;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Where;
@@ -16,7 +15,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.Objects;
 

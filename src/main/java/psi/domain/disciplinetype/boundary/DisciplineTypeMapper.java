@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import psi.api.common.ResourceDTO;
-import psi.domain.disciplinetype.control.DisciplineTypeService;
 import psi.domain.disciplinetype.entity.DisciplineType;
 
 import java.net.URI;

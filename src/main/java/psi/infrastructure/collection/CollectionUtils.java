@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 @UtilityClass
 public class CollectionUtils {
 
+    @SafeVarargs
     public <T> List<T> union(List<T>... lists) {
         return Stream.of(lists)
                 .flatMap(Collection::stream)
