@@ -19,6 +19,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -98,7 +99,7 @@ public class StudiesProgram extends AuditedObject {
     private String connectionWithMissionAndDevelopmentStrategy;
 
     @NotNull
-    private LocalDate inEffectSince;
+    private Instant inEffectSince;
 
     @NotNull
     @ManyToOne

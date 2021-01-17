@@ -14,7 +14,6 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 @Entity
 @Getter
 @Setter
-@Audited
 public class DisciplineType {
 
     @Id

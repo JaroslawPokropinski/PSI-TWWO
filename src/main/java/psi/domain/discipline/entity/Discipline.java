@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import psi.domain.disciplinetype.entity.DisciplineType;
 
 import javax.persistence.Entity;
@@ -32,6 +33,7 @@ public class Discipline {
     private String name;
 
     @NotNull
+    @NotAudited
     @ManyToOne
     private DisciplineType disciplineType;
 

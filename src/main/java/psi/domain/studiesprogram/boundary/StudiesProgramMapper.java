@@ -81,6 +81,7 @@ public class StudiesProgramMapper {
                 .totalNumberOfHours(studiesProgramDTO.getTotalNumberOfHours())
                 .prerequisites(simpleAttributeMapper.mapToSimpleAttributes(studiesProgramDTO.getPrerequisites()))
                 .degreeTitle(studiesProgramDTO.getDegreeTitle())
+                .inEffectSince(studiesProgramDTO.getInEffectSince())
                 .languageOfStudies(studiesProgramDTO.getLanguageOfStudies())
                 .graduateProfile(studiesProgramDTO.getGraduateProfile())
                 .possibilityOfContinuingStudies(studiesProgramDTO.getPossibilityOfContinuingStudies())
