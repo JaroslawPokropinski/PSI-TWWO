@@ -1,6 +1,7 @@
 package psi.domain.studiesplan.control;
 
 import com.google.common.collect.Sets;
+import io.github.perplexhub.rsql.RSQLJPASupport;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.history.Revision;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import psi.domain.auditedobject.entity.ObjectState;
+import psi.domain.studiesplan.boundary.StudiesPlanRSQLMapping;
 import psi.domain.studiesplan.entity.StudiesPlan;
 import psi.domain.subjectcard.entity.SubjectCard;
 import psi.infrastructure.exception.ExceptionUtils;
@@ -25,6 +27,10 @@ import java.util.stream.Collectors;
 public class StudiesPlanService {
 
     private final StudiesPlanRepository studiesPlanRepository;
+
+    public Page<StudiesPlan> searchStudiesPlansByRSQL(String query, Pageable pageable){
+        return studiesPlanRepository.findAll(RSQLJPASupport.toSpecification(query, StudiesPlanRSQLMapping.RSQL_TO_JPA_ATTRIBUTE_MAPPING), pageable);
+    }
 
     public List<StudiesPlan> getAllStudiesPlans(){
         return studiesPlanRepository.findAll();

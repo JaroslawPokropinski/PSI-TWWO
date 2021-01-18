@@ -1,6 +1,7 @@
 package psi.domain.studiesprogram.control;
 
 import com.google.common.collect.Sets;
+import io.github.perplexhub.rsql.RSQLJPASupport;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.history.Revision;
 import org.springframework.stereotype.Service;
 import psi.domain.auditedobject.entity.ObjectState;
+import psi.domain.studiesprogram.boundary.StudiesProgramRSQLMapping;
 import psi.domain.studiesprogram.entity.StudiesProgram;
 import psi.infrastructure.exception.ExceptionUtils;
 import psi.infrastructure.exception.IllegalArgumentAppException;
@@ -24,6 +26,10 @@ import java.util.stream.Collectors;
 public class StudiesProgramService {
 
     private final StudiesProgramRepository studiesProgramRepository;
+
+    public Page<StudiesProgram> searchStudiesProgramsByRSQL(String query, Pageable pageable){
+        return studiesProgramRepository.findAll(RSQLJPASupport.toSpecification(query, StudiesProgramRSQLMapping.RSQL_TO_JPA_ATTRIBUTE_MAPPING), pageable);
+    }
 
     public List<StudiesProgram> getAllStudiesPrograms(){
         return studiesProgramRepository.findAll();

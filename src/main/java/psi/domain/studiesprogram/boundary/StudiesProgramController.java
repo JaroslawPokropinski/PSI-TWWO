@@ -31,9 +31,17 @@ public class StudiesProgramController {
 
     public static final String STUDIES_PROGRAM_RESOURCE = "/api/studies-program";
     public static final String HISTORY = "/history";
+    public static final String SEARCH_RESOURCE = "/search";
 
     private final StudiesProgramService studiesProgramService;
     private final StudiesProgramMapper studiesProgramMapper;
+
+    @ApiOperation(value = "${api.studies-program.searchStudiesProgram.value}", notes = "${api.studies-program.searchStudiesProgram.notes}")
+    @GetMapping(STUDIES_PROGRAM_RESOURCE)
+    public PaginatedResultsDTO<StudiesProgramDTO> searchStudiesPrograms(@RequestParam String query, @Valid Pageable pageable){
+        Page<StudiesProgram> studiesProgramPage = studiesProgramService.searchStudiesProgramsByRSQL(query, pageable);
+        return studiesProgramMapper.mapToSearchResultDTO(studiesProgramPage, query);
+    }
 
     @ApiOperation(value = "${api.studies-program.getStudiesPrograms.value}", notes = "${api.studies-program.getStudiesPrograms.notes}")
     @GetMapping(IDS_PATH)

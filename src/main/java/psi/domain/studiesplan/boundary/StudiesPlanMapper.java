@@ -31,6 +31,26 @@ public class StudiesPlanMapper {
 
     private final StudiesProgramMapper studiesProgramMapper;
 
+    public PaginatedResultsDTO<StudiesPlanDTO> mapToSearchResultDTO(Page<StudiesPlan> studiesPlanPage, String query){
+        return PaginatedResultsDTO.<StudiesPlanDTO>builder()
+                .results(mapToStudiesPlansDTOs(studiesPlanPage.getContent()))
+                .totalSize(studiesPlanPage.getTotalElements())
+                .pageSize(studiesPlanPage.getSize())
+                .pageNumber(studiesPlanPage.getNumber())
+                .nextPage(PageUri.generatePageUri(getSearchResourceUri(query), studiesPlanPage.nextOrLastPageable()))
+                .previousPage(PageUri.generatePageUri(getSearchResourceUri(query), studiesPlanPage.previousOrFirstPageable()))
+                .firstPage(PageUri.generatePageUri(getSearchResourceUri(query), studiesPlanPage.getPageable().first()))
+                .lastPage(PageUri.generatePageUri(getSearchResourceUri(query), PageUri.getLastPageable(studiesPlanPage)))
+                .build();
+    }
+
+    private UriComponentsBuilder getSearchResourceUri(String query){
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(StudiesPlanController.STUDIES_PLAN_RESOURCE)
+                .path(StudiesPlanController.SEARCH_RESOURCE)
+                .queryParam("query", query);
+    }
+
     public List<StudiesPlanDTO> mapToStudiesPlansDTOs(Collection<StudiesPlan> studiesPlans){
         return studiesPlans.stream()
                 .map(this::mapToStudiesPlanDTO)
@@ -44,8 +64,8 @@ public class StudiesPlanMapper {
         return StudiesPlanDTO.builder()
                 .id(studiesPlan.getId())
                 .code(studiesPlan.getCode())
-                .decreeDate(studiesPlan.getDecreeDate().toString())
-                .inEffectSince(studiesPlan.getInEffectSince().toString())
+                .decreeDate(studiesPlan.getDecreeDate())
+                .inEffectSince(studiesPlan.getInEffectSince())
                 .studiesProgramId(studiesPlan.getStudiesProgram().getId())
                 .build();
     }
@@ -63,8 +83,8 @@ public class StudiesPlanMapper {
         return StudiesPlan.builder()
                 .id(studiesPlanDTO.getId())
                 .code(studiesPlanDTO.getCode())
-                .decreeDate(LocalDate.parse(studiesPlanDTO.getDecreeDate()))
-                .inEffectSince(LocalDate.parse(studiesPlanDTO.getInEffectSince()))
+                .decreeDate(LocalDate.parse(studiesPlanDTO.getDecreeDate().toString()))
+                .inEffectSince(LocalDate.parse(studiesPlanDTO.getInEffectSince().toString()))
                 .studiesProgram(studiesProgramService.getStudiesProgramById(studiesPlanDTO.getStudiesProgramId()))
                 .build();
     }

@@ -34,6 +34,26 @@ public class StudiesProgramMapper {
     private final DisciplineService disciplineService;
     private final SimpleAttributeMapper simpleAttributeMapper;
 
+    public PaginatedResultsDTO<StudiesProgramDTO> mapToSearchResultDTO(Page<StudiesProgram> studiesProgramPage, String query ){
+        return PaginatedResultsDTO.<StudiesProgramDTO>builder()
+                .results(mapToStudiesProgramsDTOs(studiesProgramPage.getContent()))
+                .totalSize(studiesProgramPage.getTotalElements())
+                .pageSize(studiesProgramPage.getSize())
+                .pageNumber(studiesProgramPage.getNumber())
+                .nextPage(PageUri.generatePageUri(getSearchResourceUri(query), studiesProgramPage.nextOrLastPageable()))
+                .previousPage(PageUri.generatePageUri(getSearchResourceUri(query), studiesProgramPage.previousOrFirstPageable()))
+                .firstPage(PageUri.generatePageUri(getSearchResourceUri(query), studiesProgramPage.getPageable().first()))
+                .lastPage(PageUri.generatePageUri(getSearchResourceUri(query), PageUri.getLastPageable(studiesProgramPage)))
+                .build();
+    }
+
+    private UriComponentsBuilder getSearchResourceUri(String query){
+        return ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(StudiesProgramController.STUDIES_PROGRAM_RESOURCE)
+                .path(StudiesProgramController.SEARCH_RESOURCE)
+                .queryParam("query", query);
+    }
+
     public List<StudiesProgramDTO> mapToStudiesProgramsDTOs(Collection<StudiesProgram> studiesPrograms){
         return studiesPrograms.stream()
         .map(this::mapToStudiesProgramsDTO)
