@@ -21,16 +21,15 @@ import axios from '../configuration/axios';
 import handleHttpError from '../shared/handleHttpError';
 import { PAGE_SIZE } from '../configuration/constants';
 
-const pageSize = 6;
-const mockData = [
-  { code: 'PO-W08-ISTAN-CE--ST-IIM-WRO-/2020', name: 'Informatyka stosowana' },
-  { code: 'PO-W08-ZZZ-PIP--ST-IIM-WRO-/2020', name: 'Zarządzanie' },
-];
+// const mockData = [
+//   { code: 'PO-W08-ISTAN-CE--ST-IIM-WRO-/2020', name: 'Informatyka stosowana' },
+//   { code: 'PO-W08-ZZZ-PIP--ST-IIM-WRO-/2020', name: 'Zarządzanie' },
+// ];
 
 const getPage = (page: number, filter: string, opt: AxiosRequestConfig) =>
   axios.get(
-    `/api/studies-program/search?page=${page}&size=${PAGE_SIZE}&query=${encodeURIComponent(
-      `subjectCode=ke="${filter}" or subjectName=ke="${filter}" or subjectNameInEnglish=ke="${filter}"`
+    `/api/studies-program/api/studies-program?page=${page}&size=${PAGE_SIZE}&query=${encodeURIComponent(
+      `code=ke="${filter}"`
     )}`,
     opt
   );

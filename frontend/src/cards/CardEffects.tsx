@@ -8,6 +8,7 @@ import { PagedResult } from '../shared/PagedResult';
 import { Effect } from '../dto/Effect';
 import AuthContext from '../context/AuthContext';
 import handleHttpError from '../shared/handleHttpError';
+import PagedPickTable from '../shared/PagedPickTable';
 
 const CardEffects: React.FunctionComponent<{
   modify: boolean;
@@ -59,10 +60,41 @@ const CardEffects: React.FunctionComponent<{
     [effects, chosen, value]
   );
 
+  const [pages, setPages] = useState<PagedResult<Effect> | null>(null);
+  const changePage = useCallback(
+    (filter) => {
+      axios
+        .get<PagedResult<Effect>>(
+          `/api/educational-effects/search?page=0&size=${PAGE_SIZE}&query=${encodeURIComponent(
+            `code=ke="${filter}" or description=ke="${filter}"`
+          )}`,
+          {
+            headers: { Authorization: auth.token },
+          }
+        )
+        .then((res) => {
+          setPages(res.data);
+        })
+        .catch((err) => handleHttpError(err, history));
+    },
+    [auth, history]
+  );
+
+  useEffect(() => {
+    changePage(0);
+  }, [changePage]);
+
   return (
     <>
       {effects == null ? null : (
         <Card title="Efekty kształcenia">
+          {/* <PagedPickTable
+            dataSource={(pages?.results ?? []).map((r) => ({
+              id: r.id,
+              value: r.description,
+            }))}
+            changePage={changePage}
+          /> */}
           <Form.List name="educationalEffects">
             {(fields, { add }) => (
               <>
