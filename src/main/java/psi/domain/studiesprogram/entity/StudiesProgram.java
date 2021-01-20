@@ -99,7 +99,7 @@ public class StudiesProgram extends AuditedObject {
     private String connectionWithMissionAndDevelopmentStrategy;
 
     @NotNull
-    private Instant inEffectSince;
+    private LocalDate inEffectSince;
 
     @NotNull
     @ManyToOne
