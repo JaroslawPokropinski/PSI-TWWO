@@ -18,6 +18,13 @@ pipeline {
                 sh './gradlew test'
             }
         }
+        stage('Test frontend') {
+            steps {
+                dir('PSI-TWWO/frontend') {
+                // sh 'npm run test'
+                }
+            }
+        }
         stage('Build image') {
             steps {
                 script {
