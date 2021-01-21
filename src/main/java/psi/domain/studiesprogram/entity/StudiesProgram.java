@@ -10,6 +10,7 @@ import org.hibernate.annotations.Where;
 import org.hibernate.envers.Audited;
 import psi.domain.auditedobject.entity.AuditedObject;
 import psi.domain.discipline.entity.Discipline;
+import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.domain.fieldofstudy.entity.FieldOfStudy;
 import psi.domain.simpleattribute.entity.SimpleAttribute;
 import psi.domain.simpleattribute.entity.SimpleAttribute_;
@@ -106,10 +107,16 @@ public class StudiesProgram extends AuditedObject {
     private Discipline mainDiscipline;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "STUDIES_PROGRAM_X_EDUCATIONAL_EFFECT",
+    @JoinTable(name = "STUDIES_PROGRAM_X_DISCIPLINE",
             joinColumns = @JoinColumn(name = "STUDIES_PROGRAM_ID"),
             inverseJoinColumns = @JoinColumn(name = "DISCIPLINE_ID"))
     private Set<Discipline> disciplines = new LinkedHashSet<>();
+
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "STUDIES_PROGRAM_X_EDUCATIONAL_EFFECT",
+            joinColumns = @JoinColumn(name = "STUDIES_PROGRAM_ID"),
+            inverseJoinColumns = @JoinColumn(name = "EDUCATIONAL_EFFECT_ID"))
+    private Set<EducationalEffect> educationalEffects = new LinkedHashSet<>();
 
     @Override
     public boolean equals(Object o) {

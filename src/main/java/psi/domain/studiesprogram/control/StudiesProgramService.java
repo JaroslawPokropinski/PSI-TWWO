@@ -157,4 +157,15 @@ public class StudiesProgramService {
         return Collections.emptyList();
     }
 
+    public void changeStudiesProgramState(Collection<Long> ids, ObjectState newState, Long userId){
+        List<StudiesProgram> foundStudiesProgram = getStudiesProgramByIds(ids);
+        validateBeforeStateChange(ids, foundStudiesProgram, userId);
+        foundStudiesProgram.forEach(studiesProgram -> studiesProgram.setObjectState(newState));
+    }
+
+    private void validateBeforeStateChange(Collection<Long> ids, Collection<StudiesProgram> studiesPrograms, Long userId){
+        validateIfAllStudiesProgramExists(ids, studiesPrograms);
+        validatePermissions(studiesPrograms, userId);
+    }
+
 }

@@ -6,21 +6,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.history.Revision;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import psi.api.common.ResourceDTO;
 import psi.api.common.ResponseDTO;
 import psi.api.common.PaginatedResultsDTO;
+import psi.api.common.StatusDTO;
 import psi.api.educationaleffect.EducationalEffectDTO;
 import psi.api.educationaleffect.EducationalEffectDetailsDTO;
 import psi.api.revision.RevisionDTO;
+import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.educationaleffect.control.EducationalEffectService;
 import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.infrastructure.security.UserInfo;
@@ -28,6 +22,7 @@ import psi.infrastructure.security.annotation.LoggedUser;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 
 import static psi.infrastructure.rest.ResourcePaths.ID;
@@ -44,6 +39,7 @@ public class EducationalEffectController {
     public static final String EDUCATIONAL_EFFECT_RESOURCE = "/api/educational-effects";
     public static final String SEARCH_RESOURCE = "/search";
     public static final String HISTORY = "/history";
+    public static final String STATUS = "/status";
 
     private final EducationalEffectMapper educationalEffectMapper;
     private final EducationalEffectService educationalEffectService;
@@ -90,6 +86,13 @@ public class EducationalEffectController {
     public PaginatedResultsDTO<RevisionDTO<EducationalEffectDetailsDTO>> getEducationalEffectHistory(@PathVariable(ID) Long id, Pageable pageable) {
         Page<Revision<Integer, EducationalEffect>> educationalEffectPage = educationalEffectService.getEducationalEffectHistory(id, pageable);
         return educationalEffectMapper.mapToRevisionDTOs(educationalEffectPage);
+    }
+
+    @ApiOperation(value = "${api.educational-effects.changeStatus.value}", notes = "${api.educational-effects.changeStatus.notes}")
+    @PatchMapping(STATUS)
+    public ResponseDTO<Boolean> changeStatus(@PathVariable(ID)Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo){
+        educationalEffectService.changeEducationalEffect(ids, ObjectState.valueOf(statusDTO.getStatus().name()), userInfo.getId());
+        return new ResponseDTO<>(true, "Status changed successfully");
     }
 
 }

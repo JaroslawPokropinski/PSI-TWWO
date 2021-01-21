@@ -170,4 +170,15 @@ public class StudiesPlanService {
         return studiesPlanRepository.findRevisions(id, pageable);
     }
 
+    public void changeStudiesPlanState(Collection<Long> ids, ObjectState newState, Long userId){
+        List<StudiesPlan> foundStudiesPlans = getStudiesPlansByIds(ids);
+        validateBeforeStateChange(ids, foundStudiesPlans, userId);
+        foundStudiesPlans.forEach(studiesPlan -> studiesPlan.setObjectState(newState));
+    }
+
+    private void validateBeforeStateChange(Collection<Long> ids, Collection<StudiesPlan> studiesPlans, Long userId){
+        validateIfAllStudiesPlansExists(ids, studiesPlans);
+        validatePermissions(studiesPlans, userId);
+    }
+
 }

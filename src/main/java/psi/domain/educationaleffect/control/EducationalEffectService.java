@@ -175,4 +175,15 @@ public class EducationalEffectService {
         return educationalEffectRepository.findRevisions(id, pageable);
     }
 
+    public void changeEducationalEffect(Collection<Long> ids, ObjectState newState, Long userId){
+        List<EducationalEffect> foundEducationalEffects = getEducationalEffectsByIds(ids);
+        validateBeforeStateChange(ids, foundEducationalEffects, userId);
+        foundEducationalEffects.forEach(educationalEffect -> educationalEffect.setObjectState(newState));
+    }
+
+    private void validateBeforeStateChange(Collection<Long> ids, Collection<EducationalEffect> educationalEffects, Long userId){
+        validateIfAllEducationalEffectsExists(ids, educationalEffects);
+        validatePermissions(educationalEffects, userId);
+    }
+
 }
