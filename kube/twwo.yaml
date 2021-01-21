@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twwo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: twwo
+  template:
+    metadata:
+      labels:
+        app: twwo
+    spec:
+      containers:
+        - name: app
+          image: jaroslawpokropinski/twwo
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATABASE_HOST
+              value: maria
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: path
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: password
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: user
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: twwo
+spec:
+  selector:
+    app: twwo
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer
