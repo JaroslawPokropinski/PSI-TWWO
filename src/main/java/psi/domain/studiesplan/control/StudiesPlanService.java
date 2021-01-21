@@ -153,6 +153,7 @@ public class StudiesPlanService {
         existingStudiesPlan.setDecreeDate(updatedStudiesPlan.getDecreeDate());
         existingStudiesPlan.setInEffectSince(updatedStudiesPlan.getInEffectSince());
         existingStudiesPlan.setStudiesProgram(updatedStudiesPlan.getStudiesProgram());
+        existingStudiesPlan.setCode(updatedStudiesPlan.getCode());
     }
 
     public void deleteStudiesPlans(Collection<Long> ids, Long userId){

@@ -15,13 +15,7 @@ import psi.infrastructure.exception.ExceptionUtils;
 import psi.infrastructure.exception.IllegalArgumentAppException;
 
 import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -39,7 +33,10 @@ public class EducationalEffectService {
     }
 
     public List<EducationalEffect> getEducationalEffectsByIds(Collection<Long> ids) {
-        return educationalEffectRepository.findAllById(ids);
+        if ( ids != null && !ids.isEmpty())
+            return educationalEffectRepository.findAllById(ids);
+        else
+            return new ArrayList<>();
     }
 
     public List<EducationalEffect> createEducationalEffects(Collection<EducationalEffect> educationalEffects) {

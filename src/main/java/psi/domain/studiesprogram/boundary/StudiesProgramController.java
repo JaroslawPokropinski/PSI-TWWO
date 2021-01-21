@@ -92,8 +92,8 @@ public class StudiesProgramController {
     }
 
     @ApiOperation(value = "${api.studies-program.changeStatus.value}", notes = "${api.studies-program.changeStatus.notes}")
-    @PatchMapping(STATUS)
-    public ResponseDTO<Boolean> changeStatus(@PathVariable(ID) Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo){
+    @PatchMapping(STATUS + IDS_PATH)
+    public ResponseDTO<Boolean> changeStatus(@PathVariable(IDS) Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo){
         studiesProgramService.changeStudiesProgramState(ids, ObjectState.valueOf(statusDTO.getStatus().name()), userInfo.getId());
         return new ResponseDTO<>(true, "Status changed successfully");
     }

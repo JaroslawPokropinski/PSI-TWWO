@@ -2,6 +2,7 @@ package psi.api.studiesprogram;
 
 import lombok.Builder;
 import lombok.Data;
+import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.studiesprogram.entity.DegreeTitle;
 import psi.domain.studiesprogram.entity.StudiesForm;
 import psi.domain.studiesprogram.entity.StudiesLevel;
@@ -66,6 +67,11 @@ public class StudiesProgramDTO {
     @NotNull
     private Long mainDisciplineId;
 
+    @NotNull
+    private ObjectState objectState;
+
     private List<Long> disciplinesIds;
+
+    private List<Long> educationalEffects;
 
 }

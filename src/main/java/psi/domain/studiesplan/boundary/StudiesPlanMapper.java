@@ -67,6 +67,7 @@ public class StudiesPlanMapper {
                 .decreeDate(studiesPlan.getDecreeDate())
                 .inEffectSince(studiesPlan.getInEffectSince())
                 .studiesProgramId(studiesPlan.getStudiesProgram().getId())
+                .objectState(studiesPlan.getObjectState())
                 .build();
     }
 

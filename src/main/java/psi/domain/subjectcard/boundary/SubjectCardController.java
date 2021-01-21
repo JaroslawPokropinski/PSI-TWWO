@@ -117,8 +117,8 @@ public class SubjectCardController {
     }
 
     @ApiOperation(value = "${api.subject-cards.changeStatus.value}", notes = "${api.subject-cards.changeStatus.notes}")
-    @PatchMapping(STATUS)
-    public ResponseDTO<Boolean> changeStatus(@PathVariable(ID) Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo) {
+    @PatchMapping(STATUS + IDS_PATH)
+    public ResponseDTO<Boolean> changeStatus(@PathVariable(IDS) Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo) {
         subjectCardService.changeSubjectCardState(ids, ObjectState.valueOf(statusDTO.getStatus().name()), userInfo.getId());
         return new ResponseDTO<>(true, "Status changed successfully");
     }
