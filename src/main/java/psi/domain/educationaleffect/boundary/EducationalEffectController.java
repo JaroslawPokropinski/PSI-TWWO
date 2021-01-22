@@ -88,7 +88,7 @@ public class EducationalEffectController {
         return educationalEffectMapper.mapToRevisionDTOs(educationalEffectPage);
     }
 
-    @ApiOperation(value = "${api.educational-effects.changeStatus.value}", notes = "${api.educational-effects.changeStatus.notes}")
+    @ApiOperation(value = "${api.educational-effects.changeStatus.values}", notes = "${api.educational-effects.changeStatus.notes}")
     @PatchMapping(STATUS)
     public ResponseDTO<Boolean> changeStatus(@PathVariable(ID)Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo){
         educationalEffectService.changeEducationalEffect(ids, ObjectState.valueOf(statusDTO.getStatus().name()), userInfo.getId());

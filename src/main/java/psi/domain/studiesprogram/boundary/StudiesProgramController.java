@@ -91,7 +91,7 @@ public class StudiesProgramController {
         return studiesProgramMapper.mapToRevisionDTOs(subjectCardHistoryPage);
     }
 
-    @ApiOperation(value = "${api.studies-program.changeStatus.value}", notes = "${api.studies-program.changeStatus.notes}")
+    @ApiOperation(value = "${api.studies-program.changeStatus.values}", notes = "${api.studies-program.changeStatus.notes}")
     @PatchMapping(STATUS + IDS_PATH)
     public ResponseDTO<Boolean> changeStatus(@PathVariable(IDS) Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo){
         studiesProgramService.changeStudiesProgramState(ids, ObjectState.valueOf(statusDTO.getStatus().name()), userInfo.getId());
