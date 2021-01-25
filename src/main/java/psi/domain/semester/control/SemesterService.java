@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import psi.api.semester.SemesterDTO;
 import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.semester.entity.Semester;
+import psi.domain.studiesplan.entity.StudiesPlan;
 import psi.infrastructure.exception.ExceptionUtils;
 import psi.infrastructure.exception.IllegalArgumentAppException;
 
@@ -73,7 +74,24 @@ public class SemesterService {
     }
 
     private void validateIfThereAreNoSemesterNumberDuplicatesAmongStudiesPlan(Collection<Semester> semesters){
+        semesters.forEach(semester -> validateIfThereAreNoSemesterNumberDuplicatesAmongStudiesPlan(semester));
+    }
 
+    private void validateIfThereAreNoSemesterNumberDuplicatesAmongStudiesPlan(Semester semester){
+        List<Long> studiesPlans = Arrays.asList(semester.getStudiesPlan().getId());
+        List<Semester> foundSemestersForStudiesPlan = semesterRepository.findAllByStudiesPlanIdIn(studiesPlans);
+        if (!foundSemestersForStudiesPlan.isEmpty()){
+            foundSemestersForStudiesPlan.forEach(newSemester -> compareSemesterNumber(newSemester, semester));
+        }
+    }
+
+    private void compareSemesterNumber(Semester semOne, Semester semTwo){
+        if (semOne.getNumber() > semTwo.getStudiesPlan().getStudiesProgram().getNumberOfSemesters()){
+            throw new IllegalArgumentAppException(MessageFormat.format("Semesters number is greater than planed for connected studies plan {0}", StringUtils.join(semOne)));
+        }
+        else if (!semOne.getId().equals(semTwo.getId()) && semOne.getNumber().equals(semTwo.getNumber())){
+            throw new IllegalArgumentAppException(MessageFormat.format("Semesters numbers are duplicating in studies plan for semester {0}", StringUtils.join(semOne)));
+        }
     }
 
     private void validatePermissions(Collection<Semester> semesters, Long userId){
@@ -86,6 +104,7 @@ public class SemesterService {
     private void validateBeforeUpdate(Collection<Semester> existingSemesters, Collection<Semester> updatedSemesters, Long userId){
         validateIfAllSemestersHaveUniqueId(updatedSemesters);
         validateIfAllSemestersExists(getNonNullUniqueIds(updatedSemesters), existingSemesters);
+        validateSemesterUniqueness(updatedSemesters);
         validatePermissions(existingSemesters, userId);
     }
 
@@ -123,13 +142,6 @@ public class SemesterService {
         return Collections.emptyList();
     }
 
-    private void validateIfAllSemesterExists(Collection<Long> ids, Collection<Semester> foundSemesters){
-        Set<Long> idsOfNonExistingSemesters = getIdsOfNonExistingSemesters(ids, foundSemesters);
-        if(!idsOfNonExistingSemesters.isEmpty()){
-            throw ExceptionUtils.getObjectNotFoundException(Semester.class, idsOfNonExistingSemesters);
-        }
-    }
-
     private Set<Long> getIdsOfNonExistingSemesters(Collection<Long> ids, Collection<Semester> foundSemesters){
         return Sets.difference(new HashSet<>(ids), getNonNullUniqueIds(foundSemesters));
     }
@@ -142,7 +154,7 @@ public class SemesterService {
     }
 
     private void validateBeforeDelete(Collection<Long> ids, Collection<Semester> semesters, Long userId ){
-        validateIfAllSemesterExists(ids, semesters);
+        validateIfAllSemestersExists(ids, semesters);
         validatePermissions(semesters, userId);
     }
 
