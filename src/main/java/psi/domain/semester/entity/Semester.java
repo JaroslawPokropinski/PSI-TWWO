@@ -1,17 +1,13 @@
-package psi.domain.semester;
+package psi.domain.semester.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import psi.domain.studiesplan.entity.StudiesPlan;
 import psi.domain.subjectcard.entity.SubjectCard;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -23,6 +19,10 @@ import static psi.infrastructure.jpa.PersistenceConstants.ID_GENERATOR;
 
 @Entity
 @Getter
+@Setter
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
+@Table(name = "SEMESTER")
 public class Semester {
 
     @Id

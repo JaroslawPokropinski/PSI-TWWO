@@ -10,6 +10,7 @@ import org.springframework.data.history.Revision;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import psi.domain.auditedobject.entity.ObjectState;
+import psi.domain.semester.entity.Semester;
 import psi.domain.studiesplan.boundary.StudiesPlanRSQLMapping;
 import psi.domain.studiesplan.entity.StudiesPlan;
 import psi.domain.subjectcard.entity.SubjectCard;
@@ -38,6 +39,15 @@ public class StudiesPlanService {
 
     public List<StudiesPlan> getStudiesPlansByIds(Collection<Long> ids){
         return studiesPlanRepository.findAllById(ids);
+    }
+
+    public StudiesPlan getStudiesPlan(Long id){
+        var studiesPlanO = studiesPlanRepository.findById(id);
+        if ( studiesPlanO.isPresent())
+            return studiesPlanO.get();
+        else {
+            throw ExceptionUtils.getObjectNotFoundException(Semester.class, id);
+        }
     }
 
     public List<StudiesPlan> createStudiesPlans(Collection<StudiesPlan> studiesPlans){
