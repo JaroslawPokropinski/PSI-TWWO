@@ -8,6 +8,7 @@ import psi.api.semester.SemesterDTO;
 import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.semester.entity.Semester;
 import psi.domain.studiesplan.entity.StudiesPlan;
+import psi.domain.subjectcard.entity.SubjectCard;
 import psi.infrastructure.exception.ExceptionUtils;
 import psi.infrastructure.exception.IllegalArgumentAppException;
 
@@ -67,6 +68,7 @@ public class SemesterService {
 
     private void validateBeforeCreate(Collection<Semester> semesters){
         validateSemesterUniqueness(semesters);
+        validateThatSemesterContainUniqueSubjectCardsAmongStudiesPlan(semesters);
     }
 
     private void validateSemesterUniqueness(Collection<Semester> semesters){
@@ -86,7 +88,7 @@ public class SemesterService {
     }
 
     private void compareSemesterNumber(Semester semOne, Semester semTwo){
-        if (semOne.getNumber() > semTwo.getStudiesPlan().getStudiesProgram().getNumberOfSemesters()){
+        if (semTwo.getNumber() > semTwo.getStudiesPlan().getStudiesProgram().getNumberOfSemesters()){
             throw new IllegalArgumentAppException(MessageFormat.format("Semesters number is greater than planed for connected studies plan {0}", StringUtils.join(semOne)));
         }
         else if (!semOne.getId().equals(semTwo.getId()) && semOne.getNumber().equals(semTwo.getNumber())){
@@ -105,6 +107,7 @@ public class SemesterService {
         validateIfAllSemestersHaveUniqueId(updatedSemesters);
         validateIfAllSemestersExists(getNonNullUniqueIds(updatedSemesters), existingSemesters);
         validateSemesterUniqueness(updatedSemesters);
+        validateThatSemesterContainUniqueSubjectCardsAmongStudiesPlan(updatedSemesters);
         validatePermissions(existingSemesters, userId);
     }
 
@@ -156,6 +159,30 @@ public class SemesterService {
     private void validateBeforeDelete(Collection<Long> ids, Collection<Semester> semesters, Long userId ){
         validateIfAllSemestersExists(ids, semesters);
         validatePermissions(semesters, userId);
+    }
+
+    private void validateThatSemesterContainUniqueSubjectCardsAmongStudiesPlan(Collection<Semester> semesters){
+        semesters.forEach(semester -> validateThatSemesterContainUniqueSubjectCardsAmongStudiesPlan(semester));
+    }
+
+    private void validateThatSemesterContainUniqueSubjectCardsAmongStudiesPlan(Semester semester){
+        List<Long> studiesPlans = Arrays.asList(semester.getStudiesPlan().getId());
+        List<Semester> foundSemestersForStudiesPlan = semesterRepository.findAllByStudiesPlanIdIn(studiesPlans);
+        List<SubjectCard> subjectCards = new ArrayList<>();
+        //semester.getSubjectCards().forEach( card -> subjectCards.add(card));
+        if (!foundSemestersForStudiesPlan.isEmpty()){
+            foundSemestersForStudiesPlan.forEach(newSemester -> {
+                if (newSemester.getId().equals(semester.getId())){
+                    newSemester = semester;
+                }
+                var containingCards = newSemester.getSubjectCards();
+                containingCards.forEach( card -> subjectCards.add(card));
+            });
+        }
+        Set<SubjectCard> cardsWithoutDoubles = new HashSet<>(subjectCards);
+        if (cardsWithoutDoubles.size() != subjectCards.size()){
+            throw new IllegalArgumentAppException("There are some subject cards repeating among studies plan");
+        }
     }
 
 
