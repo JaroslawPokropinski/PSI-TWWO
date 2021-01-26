@@ -64,7 +64,7 @@ export class VersionHistory<T> {
       const prevPage = this.page.pageNumber - 1;
       this.page = (
         await axios.get<PagedResult<Versioned<T>>>(
-          `${this.url}/${this.id}?page=${prevPage}&size=${PAGE_SIZE}`,
+          `${this.url}/${this.id}?page=${prevPage}&size=${PAGE_SIZE}&sort=__revisionNumber__,desc`,
           this.axiosOpts
         )
       ).data;

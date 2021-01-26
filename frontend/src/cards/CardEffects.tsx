@@ -8,6 +8,7 @@ import { PagedResult } from '../shared/PagedResult';
 import { Effect } from '../dto/Effect';
 import AuthContext from '../context/AuthContext';
 import handleHttpError from '../shared/handleHttpError';
+import PagedPickTable from '../shared/PagedPickTable';
 
 const CardEffects: React.FunctionComponent<{
   modify: boolean;
@@ -40,78 +41,67 @@ const CardEffects: React.FunctionComponent<{
       .catch((err) => handleHttpError(err, history));
   }, [auth, history, value]);
 
-  useEffect(() => {
-    if (effects == null) return;
-    setDisabled(effects.find((e) => e.description === value) == null);
-  }, [effects, value]);
+  // useEffect(() => {
+  //   if (effects == null) return;
+  //   setDisabled(effects.find((e) => e.description === value) == null);
+  // }, [effects, value]);
 
-  const onAdd = useCallback(
-    (add: (e: number) => void) => {
-      if (effects == null) return;
+  // const onAdd = useCallback(
+  //   (add: (e: number) => void) => {
+  //     if (effects == null) return;
 
-      const newElem = effects.find((e) => e.description === value);
-      if (newElem == null) return;
+  //     const newElem = effects.find((e) => e.description === value);
+  //     if (newElem == null) return;
 
-      add(newElem.id);
+  //     add(newElem.id);
 
-      setChosen([...chosen, newElem]);
+  //     setChosen([...chosen, newElem]);
+  //   },
+  //   [effects, chosen, value]
+  // );
+
+  const [pages, setPages] = useState<PagedResult<Effect> | null>(null);
+  const changePage = useCallback(
+    (filter) => {
+      axios
+        .get<PagedResult<Effect>>(
+          `/api/educational-effects/search?page=0&size=${PAGE_SIZE}&query=${encodeURIComponent(
+            `code=ke="${filter}" or description=ke="${filter}"`
+          )}`,
+          {
+            headers: { Authorization: auth.token },
+          }
+        )
+        .then((res) => {
+          setPages(res.data);
+        })
+        .catch((err) => handleHttpError(err, history));
     },
-    [effects, chosen, value]
+    [auth, history]
   );
+
+  useEffect(() => {
+    changePage(0);
+  }, [changePage]);
 
   return (
     <>
       {effects == null ? null : (
-        <Card title="Efekty kształcenia">
-          <Form.List name="educationalEffects">
-            {(fields, { add }) => (
-              <>
-                {modify ? (
-                  <Form.Item>
-                    <AutoComplete
-                      options={effects.map((c) => ({
-                        value: c.description,
-                        key: c.code,
-                      }))}
-                      placeholder="Znajdź efekt kształcenia"
-                      onChange={(data) => setValue(data)}
-                      filterOption={(inputValue, option) => {
-                        if (option == null) return true;
-                        return (
-                          option.value
-                            .toUpperCase()
-                            .indexOf(inputValue.toUpperCase()) !== -1
-                        );
-                      }}
-                    />
-                    <Button
-                      icon={<PlusOutlined />}
-                      disabled={disabled}
-                      onClick={() => onAdd(add)}
-                    >
-                      Dodaj efekt kształcenia
-                    </Button>
-                  </Form.Item>
-                ) : null}
-                {fields.map((field) => (
-                  <Form.Item
-                    name={field.name}
-                    fieldKey={field.fieldKey}
-                    key={field.key}
-                  >
-                    <Select disabled>
-                      {chosen.map((e) => (
-                        <Select.Option key={e.id} value={e.id}>
-                          {e.description}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                ))}
-              </>
-            )}
-          </Form.List>
-        </Card>
+        <Form.Item name="educationalEffects">
+          <PagedPickTable
+            changePage={changePage}
+            dataSource={effects.map((e) => ({
+              id: e.id,
+              value: e.description,
+            }))}
+            modify={modify}
+            initVals={initEffects.map((e) => ({
+              id: e.id,
+              value: e.description,
+            }))}
+            onSearch={(f) => setValue(f)}
+          />
+        </Form.Item>
       )}
     </>
   );

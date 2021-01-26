@@ -5,6 +5,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
 import Effects from '../effects/Effects';
 import EffectsEditor from '../effects/EffectsEditor';
 import Home from '../home/Home';
@@ -24,45 +25,47 @@ function App(): JSX.Element {
   return (
     <div className="App">
       <Router basename={process.env.PUBLIC_URL}>
-        <LangContainer>
-          <AuthContext.Provider value={{ token: null }}>
-            <Switch>
-              <Route path="/plans/:state">
-                <PlanView />
-              </Route>
-              <Route path="/plans">
-                <Plans />
-              </Route>
-              <Route path="/cards/:state">
-                <CardsEditor />
-              </Route>
-              <Route path="/cards">
-                <Cards />
-              </Route>
-              <Route path="/programs/:state">
-                <ProgramsEditor />
-              </Route>
-              <Route path="/programs">
-                <Programs />
-              </Route>
-              <Route path="/effects/:state">
-                <EffectsEditor />
-              </Route>
-              <Route path="/effects">
-                <Effects />
-              </Route>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <Route path="/home">
-                <Home />
-              </Route>
-              <Route path="/">
-                <Redirect to="/login" />
-              </Route>
-            </Switch>
-          </AuthContext.Provider>
-        </LangContainer>
+        <CookiesProvider>
+          <LangContainer>
+            <AuthContext.Provider value={{ token: null }}>
+              <Switch>
+                <Route path="/plans/:state">
+                  <PlanView />
+                </Route>
+                <Route path="/plans">
+                  <Plans />
+                </Route>
+                <Route path="/cards/:state">
+                  <CardsEditor />
+                </Route>
+                <Route path="/cards">
+                  <Cards />
+                </Route>
+                <Route path="/programs/:state">
+                  <ProgramsEditor />
+                </Route>
+                <Route path="/programs">
+                  <Programs />
+                </Route>
+                <Route path="/effects/:state">
+                  <EffectsEditor />
+                </Route>
+                <Route path="/effects">
+                  <Effects />
+                </Route>
+                <Route path="/login">
+                  <Login />
+                </Route>
+                <Route path="/home">
+                  <Home />
+                </Route>
+                <Route path="/">
+                  <Redirect to="/login" />
+                </Route>
+              </Switch>
+            </AuthContext.Provider>
+          </LangContainer>
+        </CookiesProvider>
       </Router>
     </div>
   );
