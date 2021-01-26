@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import psi.api.common.PaginatedResultsDTO;
 import psi.api.common.ResourceDTO;
 import psi.api.common.ResponseDTO;
+import psi.api.common.StatusDTO;
 import psi.api.revision.RevisionDTO;
 import psi.api.studiesprogram.StudiesProgramDTO;
+import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.studiesprogram.control.StudiesProgramService;
 import psi.domain.studiesprogram.entity.StudiesProgram;
 import psi.infrastructure.security.UserInfo;
@@ -19,6 +21,7 @@ import psi.infrastructure.security.annotation.LoggedUser;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 
 import static psi.infrastructure.rest.ResourcePaths.*;
@@ -32,6 +35,7 @@ public class StudiesProgramController {
     public static final String STUDIES_PROGRAM_RESOURCE = "/api/studies-program";
     public static final String HISTORY = "/history";
     public static final String SEARCH_RESOURCE = "/search";
+    public static final String STATUS = "/status";
 
     private final StudiesProgramService studiesProgramService;
     private final StudiesProgramMapper studiesProgramMapper;
@@ -85,6 +89,13 @@ public class StudiesProgramController {
     public PaginatedResultsDTO<RevisionDTO<StudiesProgramDTO>> getSubjectCardHistory(@PathVariable(ID) Long id, Pageable pageable) {
         Page<Revision<Integer, StudiesProgram>> subjectCardHistoryPage = studiesProgramService.getStudiesProgramHistory(id, pageable);
         return studiesProgramMapper.mapToRevisionDTOs(subjectCardHistoryPage);
+    }
+
+    @ApiOperation(value = "${api.studies-program.changeStatus.values}", notes = "${api.studies-program.changeStatus.notes}")
+    @PatchMapping(STATUS + IDS_PATH)
+    public ResponseDTO<Boolean> changeStatus(@PathVariable(IDS) Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo){
+        studiesProgramService.changeStudiesProgramState(ids, ObjectState.valueOf(statusDTO.getStatus().name()), userInfo.getId());
+        return new ResponseDTO<>(true, "Status changed successfully");
     }
 
 }

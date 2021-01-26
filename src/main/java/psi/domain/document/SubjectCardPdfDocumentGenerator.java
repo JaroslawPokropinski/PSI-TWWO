@@ -6,6 +6,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
+import com.itextpdf.text.ListItem;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
@@ -341,10 +342,16 @@ public class SubjectCardPdfDocumentGenerator implements DocumentGenerator<Subjec
         return getSubjectClassesProperty(subjectClasses, SubjectClasses::getBuEctsPoints);
     }
 
-    private void addList(List<String> elements, Document document) throws DocumentException {
+    private void addList(Collection<String> elements, Document document) throws DocumentException {
         com.itextpdf.text.List list = new com.itextpdf.text.List(true);
-        elements.forEach(list::add);
+        addElementsToList(list, elements);
         document.add(list);
+    }
+
+    private void addElementsToList(com.itextpdf.text.List list, Collection<String> elements) {
+        elements.stream()
+                .map(text -> new ListItem(text, valueFont))
+                .forEach(list::add);
     }
 
     private void addProgramContentTable(SubjectCard subjectCard, Document document) {

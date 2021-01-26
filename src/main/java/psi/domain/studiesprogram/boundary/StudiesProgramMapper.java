@@ -12,6 +12,9 @@ import psi.api.revision.RevisionDTO;
 import psi.api.studiesprogram.StudiesProgramDTO;
 import psi.domain.discipline.control.DisciplineService;
 import psi.domain.discipline.entity.Discipline;
+import psi.domain.educationaleffect.boundary.EducationalEffectMapper;
+import psi.domain.educationaleffect.control.EducationalEffectService;
+import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.domain.fieldofstudy.control.FieldOfStudyService;
 import psi.domain.simpleattribute.boundary.SimpleAttributeMapper;
 import psi.domain.studiesprogram.entity.StudiesProgram;
@@ -32,7 +35,9 @@ public class StudiesProgramMapper {
 
     private final FieldOfStudyService fieldOfStudyService;
     private final DisciplineService disciplineService;
+    private final EducationalEffectService educationalEffectService;
     private final SimpleAttributeMapper simpleAttributeMapper;
+    private final EducationalEffectMapper educationalEffectMapper;
 
     public PaginatedResultsDTO<StudiesProgramDTO> mapToSearchResultDTO(Page<StudiesProgram> studiesProgramPage, String query ){
         return PaginatedResultsDTO.<StudiesProgramDTO>builder()
@@ -108,6 +113,7 @@ public class StudiesProgramMapper {
                 .connectionWithMissionAndDevelopmentStrategy(studiesProgramDTO.getConnectionWithMissionAndDevelopmentStrategy())
                 .mainDiscipline(disciplineService.getDisciplineById(studiesProgramDTO.getMainDisciplineId()))
                 .disciplines(new HashSet<>(disciplineService.getDisciplinesByIds(studiesProgramDTO.getDisciplinesIds())))
+                .educationalEffects(new HashSet<>(educationalEffectService.getEducationalEffectsByIds(studiesProgramDTO.getEducationalEffects())))
                 .build();
     }
 
@@ -133,12 +139,21 @@ public class StudiesProgramMapper {
                 .connectionWithMissionAndDevelopmentStrategy(studiesProgram.getConnectionWithMissionAndDevelopmentStrategy())
                 .mainDisciplineId(studiesProgram.getMainDiscipline().getId())
                 .disciplinesIds(getDisciplinesIds(studiesProgram.getDisciplines()))
+                .objectState(studiesProgram.getObjectState())
+                .inEffectSince(studiesProgram.getInEffectSince())
+                .educationalEffects(getEducationalEffectsIds(studiesProgram.getEducationalEffects()))
                 .build();
     }
 
     private List<Long> getDisciplinesIds(Collection<Discipline> studiesPrograms) {
         return studiesPrograms.stream()
                 .map(Discipline::getId)
+                .collect(Collectors.toList());
+    }
+
+    private List<Long> getEducationalEffectsIds(Collection<EducationalEffect> studiesPrograms) {
+        return studiesPrograms.stream()
+                .map(EducationalEffect::getId)
                 .collect(Collectors.toList());
     }
 

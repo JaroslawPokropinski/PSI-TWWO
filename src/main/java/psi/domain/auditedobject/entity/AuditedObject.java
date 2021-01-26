@@ -77,6 +77,7 @@ public class AuditedObject {
             switch (oldState) {
                 case UNVERIFIED:
                     switch (newState) {
+                        case UNVERIFIED:
                         case VERIFIED:
                         case REMOVED:
                             return true;
@@ -85,6 +86,7 @@ public class AuditedObject {
                     }
                 case VERIFIED:
                     switch (newState) {
+                        case UNVERIFIED:
                         case INACTIVE:
                         case REMOVED:
                             return true;

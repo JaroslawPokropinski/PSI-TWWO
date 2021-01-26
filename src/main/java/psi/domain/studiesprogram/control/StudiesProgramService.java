@@ -112,6 +112,23 @@ public class StudiesProgramService {
     private void updateStudiesProgram(StudiesProgram existingStudiesProgram, StudiesProgram updatedStudiesProgram){
         existingStudiesProgram.setFieldOfStudy(updatedStudiesProgram.getFieldOfStudy());
         existingStudiesProgram.setStudiesLevel(updatedStudiesProgram.getStudiesLevel());
+        existingStudiesProgram.setConnectionWithMissionAndDevelopmentStrategy(updatedStudiesProgram.getConnectionWithMissionAndDevelopmentStrategy());
+        existingStudiesProgram.setCode(updatedStudiesProgram.getCode());
+        existingStudiesProgram.setDegreeTitle(updatedStudiesProgram.getDegreeTitle());
+        existingStudiesProgram.setDisciplines(updatedStudiesProgram.getDisciplines());
+        existingStudiesProgram.setEducationalEffects(updatedStudiesProgram.getEducationalEffects());
+        existingStudiesProgram.setGraduateProfile(updatedStudiesProgram.getGraduateProfile());
+        existingStudiesProgram.setInEffectSince(updatedStudiesProgram.getInEffectSince());
+        existingStudiesProgram.setLanguageOfStudies(updatedStudiesProgram.getLanguageOfStudies());
+        existingStudiesProgram.setMainDiscipline(updatedStudiesProgram.getMainDiscipline());
+        existingStudiesProgram.setTotalNumberOfEctsPoints(updatedStudiesProgram.getTotalNumberOfEctsPoints());
+        existingStudiesProgram.setTotalNumberOfHours(updatedStudiesProgram.getTotalNumberOfHours());
+        existingStudiesProgram.setNumberOfSemesters(updatedStudiesProgram.getNumberOfSemesters());
+        existingStudiesProgram.setPossibilityOfContinuingStudies(updatedStudiesProgram.getPossibilityOfContinuingStudies());
+        existingStudiesProgram.setPrerequisites(updatedStudiesProgram.getPrerequisites());
+        existingStudiesProgram.setStudiesLevel(updatedStudiesProgram.getStudiesLevel());
+        existingStudiesProgram.setStudiesProfile(updatedStudiesProgram.getStudiesProfile());
+        existingStudiesProgram.setStudiesForm(updatedStudiesProgram.getStudiesForm());
     }
 
     private void validateBeforeUpdate(Collection<StudiesProgram> existingStudiesPrograms, Collection<StudiesProgram> updatedStudiesPrograms, long userId ){
@@ -155,6 +172,17 @@ public class StudiesProgramService {
 
     private List<Long> getStudiesProgramsWithoutPermissions(Collection<StudiesProgram> studiesPrograms, Long userId) {
         return Collections.emptyList();
+    }
+
+    public void changeStudiesProgramState(Collection<Long> ids, ObjectState newState, Long userId){
+        List<StudiesProgram> foundStudiesProgram = getStudiesProgramByIds(ids);
+        validateBeforeStateChange(ids, foundStudiesProgram, userId);
+        foundStudiesProgram.forEach(studiesProgram -> studiesProgram.setObjectState(newState));
+    }
+
+    private void validateBeforeStateChange(Collection<Long> ids, Collection<StudiesProgram> studiesPrograms, Long userId){
+        validateIfAllStudiesProgramExists(ids, studiesPrograms);
+        validatePermissions(studiesPrograms, userId);
     }
 
 }

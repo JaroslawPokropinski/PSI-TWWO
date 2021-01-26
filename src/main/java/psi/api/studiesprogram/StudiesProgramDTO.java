@@ -2,6 +2,7 @@ package psi.api.studiesprogram;
 
 import lombok.Builder;
 import lombok.Data;
+import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.studiesprogram.entity.DegreeTitle;
 import psi.domain.studiesprogram.entity.StudiesForm;
 import psi.domain.studiesprogram.entity.StudiesLevel;
@@ -10,6 +11,7 @@ import psi.domain.studiesprogram.entity.StudiesProfile;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -60,11 +62,16 @@ public class StudiesProgramDTO {
     private String connectionWithMissionAndDevelopmentStrategy;
 
     @NotNull
-    private Instant inEffectSince;
+    private LocalDate inEffectSince;
 
     @NotNull
     private Long mainDisciplineId;
 
+    @NotNull
+    private ObjectState objectState;
+
     private List<Long> disciplinesIds;
+
+    private List<Long> educationalEffects;
 
 }

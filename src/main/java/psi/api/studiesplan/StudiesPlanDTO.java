@@ -2,6 +2,7 @@ package psi.api.studiesplan;
 
 import lombok.Builder;
 import lombok.Data;
+import psi.domain.auditedobject.entity.ObjectState;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -25,5 +26,8 @@ public class StudiesPlanDTO {
 
     @NotBlank
     private Long studiesProgramId;
+
+    @NotNull
+    private ObjectState objectState;
 
 }

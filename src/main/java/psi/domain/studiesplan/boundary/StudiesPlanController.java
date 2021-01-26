@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import psi.api.common.PaginatedResultsDTO;
 import psi.api.common.ResourceDTO;
 import psi.api.common.ResponseDTO;
+import psi.api.common.StatusDTO;
 import psi.api.revision.RevisionDTO;
 import psi.api.studiesplan.StudiesPlanDTO;
+import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.studiesplan.control.StudiesPlanService;
 import psi.domain.studiesplan.entity.StudiesPlan;
 import psi.infrastructure.security.UserInfo;
@@ -19,6 +21,7 @@ import psi.infrastructure.security.annotation.LoggedUser;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 
 import static psi.infrastructure.rest.ResourcePaths.*;
@@ -32,6 +35,7 @@ public class StudiesPlanController {
     public static final String STUDIES_PLAN_RESOURCE = "/api/studies-plan";
     public static final String SEARCH_RESOURCE = "/search";
     public static final String HISTORY = "/history";
+    public static final String STATUS = "/status";
 
     private final StudiesPlanService studiesPlanService;
     private final StudiesPlanMapper studiesPlanMapper;
@@ -87,5 +91,11 @@ public class StudiesPlanController {
         return studiesPlanMapper.mapToRevisionDTOs(studiesPlanHistoryPage);
     }
 
+    @ApiOperation(value = "${api.studies-plan.changeStatus.values}", notes = "${api.studies-plan.changeStatus.notes}")
+    @PatchMapping(STATUS + IDS_PATH)
+    public ResponseDTO<Boolean> changeStatus(@PathVariable(IDS) Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo){
+        studiesPlanService.changeStudiesPlanState(ids, ObjectState.valueOf(statusDTO.getStatus().name()), userInfo.getId());
+        return new ResponseDTO<>(true, "Status changed successfully");
+    }
 
 }
