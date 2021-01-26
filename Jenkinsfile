@@ -10,9 +10,6 @@ pipeline {
             }
         }
         stage('Test backend') {
-            tools {
-                jdk 'openjdk-11'
-            }
             steps {
                 sh 'chmod u+x gradlew'
                 sh './gradlew test'
@@ -39,6 +36,14 @@ pipeline {
                         dockerImage.push("${env.BUILD_NUMBER}")
                         dockerImage.push('latest')
                     }
+                }
+            }
+        }
+
+        stage('Deploy to kubernetes') {
+            steps {
+                script {
+                    sh 'kubectl rollout restart deployment.apps/twwo'
                 }
             }
         }
