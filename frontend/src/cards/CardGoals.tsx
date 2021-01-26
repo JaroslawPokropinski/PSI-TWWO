@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Button, Card, Divider, Form, Input } from 'antd';
+import { Button, Card, Divider, Form, Input, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'react-intl';
 import { LangContext } from '../context/LangContext';
@@ -15,13 +15,12 @@ const CardGoals: React.FunctionComponent<{ modify: boolean }> = ({
         {(fields, { add, remove }) => (
           <>
             {fields.map((field) => (
-              <>
+              <Space key={field.key}>
                 <Form.Item
                   label={lang.getMessage('Subject objective')}
                   labelAlign="left"
                   name={field.name}
                   fieldKey={field.fieldKey}
-                  key={field.key}
                   rules={[{ required: true, message: 'Podaj cel!' }]}
                 >
                   <Input
@@ -40,7 +39,7 @@ const CardGoals: React.FunctionComponent<{ modify: boolean }> = ({
                   </Button>
                 ) : null}
                 <Divider />
-              </>
+              </Space>
             ))}
             {modify ? (
               <Form.Item>

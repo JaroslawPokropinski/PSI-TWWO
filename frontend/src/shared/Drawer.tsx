@@ -3,6 +3,7 @@ import { Drawer, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 
+import { useCookies } from 'react-cookie';
 import plIcon from '../resources/pl.png';
 import enIcon from '../resources/en.png';
 import { LangContext } from '../context/LangContext';
@@ -18,6 +19,7 @@ export default function AppDrawer({
   const langContext = useContext(LangContext);
   const auth = useContext(AuthContext);
   const history = useHistory();
+  const [, setCookie] = useCookies(['token']);
 
   const onEffects = useCallback(() => {
     history.push('/effects');
@@ -37,8 +39,9 @@ export default function AppDrawer({
 
   const onLogout = useCallback(() => {
     auth.token = null;
+    setCookie('token', null, { path: '/' });
     history.push('/login');
-  }, [auth, history]);
+  }, [auth, history, setCookie]);
 
   return (
     <Drawer

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Divider, Form, Input, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
-const CardRequirements: React.FunctionComponent<{ modify: boolean }> = ({
+const ProgramRequirements: React.FunctionComponent<{ modify: boolean }> = ({
   modify = false,
 }) => {
   return (
@@ -56,4 +56,4 @@ const CardRequirements: React.FunctionComponent<{ modify: boolean }> = ({
   );
 };
 
-export default CardRequirements;
+export default ProgramRequirements;

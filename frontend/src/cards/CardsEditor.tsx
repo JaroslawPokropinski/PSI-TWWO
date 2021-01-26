@@ -243,7 +243,9 @@ const CardsEditorContent = ({
           {/* Adding descriptions */}
           <CardGoals modify={modify} />
           {/* Adding effects */}
-          <CardEffects modify={modify} initEffects={effects} />
+          <AntCard title={lang.getMessage('Studies effects')}>
+            <CardEffects modify={modify} initEffects={effects} />
+          </AntCard>
           {/* wymaganieWstępne */}
           <AntCard title={lang.getMessage('Card requirements')}>
             <CardRequirements modify={modify} />
@@ -369,12 +371,16 @@ function CardsEditor(): JSX.Element {
   }, [isNew, id, auth, history]);
 
   const mapCard = useCallback((c: Card) => {
-    return {
-      ...c,
-      organisationalUnit: c.organisationalUnit.id,
-      fieldOfStudy: c.fieldOfStudy.id,
-      educationalEffects: c.educationalEffects.map((e) => e.id),
-    };
+    try {
+      return {
+        ...c,
+        organisationalUnit: c.organisationalUnit.id,
+        fieldOfStudy: c.fieldOfStudy.id,
+        educationalEffects: c.educationalEffects.map((e) => e.id),
+      };
+    } catch (e) {
+      return {};
+    }
   }, []);
 
   return (
@@ -383,7 +389,7 @@ function CardsEditor(): JSX.Element {
         <EditorView
           name="cards"
           mapper={mapCard}
-          initialVals={card == null ? {} : mapCard(card)}
+          initialVals={card == null ? {} : card}
           onFinish={onFinish}
           queryParams=""
           header={lang.getMessage('Subject card')}
