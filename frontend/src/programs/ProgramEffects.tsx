@@ -1,48 +1,83 @@
-import React from 'react';
-import { AutoComplete, Button, Form, List } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-
-const mockData = [
-  {
-    value:
-      'zna podstawy dotyczące architektury systemu Linux i jego eksploatacji jako serwera lub stacji roboczej użytkownika w systemach informatycznych opartych o platformę Linux',
-  },
-  {
-    value:
-      'posiada wiedzę na temat podstaw funkcjonowania systemu Lunux w sieci komputerowej i wykorzystania platformy Linux w budowie infrastruktury sieciowej i usług sieciowych',
-  },
-];
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { Form } from 'antd';
+import { useHistory } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
+import { Effect } from '../dto/Effect';
+import { PagedResult } from '../shared/PagedResult';
+import { PAGE_SIZE } from '../configuration/constants';
+import axios from '../configuration/axios';
+import handleHttpError from '../shared/handleHttpError';
+import PagedPickTable from '../shared/PagedPickTable';
 
 const ProgramEffects: React.FunctionComponent<{
   modify: boolean;
-}> = ({ modify = false }) => {
+  initEffects?: Effect[];
+}> = ({ modify = false, initEffects = [] }) => {
+  const auth = useContext(AuthContext);
+  const history = useHistory();
+
+  const [effects, setEffects] = useState<Effect[] | null>();
+  const [, setPages] = useState<PagedResult<Effect> | null>(null);
+  const [value, setValue] = useState('');
+
+  useEffect(() => {
+    axios
+      .get<PagedResult<Effect>>(
+        `/api/educational-effects/search?page=0&size=${PAGE_SIZE}&query=${encodeURIComponent(
+          `code=ke="${value}" or description=ke="${value}"`
+        )}`,
+        {
+          headers: { Authorization: auth.token },
+        }
+      )
+      .then((res) => {
+        setEffects(res.data.results);
+      })
+      .catch((err) => handleHttpError(err, history));
+  }, [auth, history, value]);
+
+  const changePage = useCallback(
+    (filter) => {
+      axios
+        .get<PagedResult<Effect>>(
+          `/api/educational-effects/search?page=0&size=${PAGE_SIZE}&query=${encodeURIComponent(
+            `code=ke="${filter}" or description=ke="${filter}"`
+          )}`,
+          {
+            headers: { Authorization: auth.token },
+          }
+        )
+        .then((res) => {
+          setPages(res.data);
+        })
+        .catch((err) => handleHttpError(err, history));
+    },
+    [auth, history]
+  );
+
+  useEffect(() => {
+    changePage(0);
+  }, [changePage]);
+
   return (
     <>
-      Programowe Efekty kształcenia
-      {modify ? (
-        <Form.Item>
-          <AutoComplete
-            style={{ width: 800 }}
-            options={mockData}
-            placeholder="Znajdź efekt kształcenia"
-            filterOption={(inputValue, option) => {
-              if (option == null) return true;
-              return (
-                option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
-                -1
-              );
-            }}
+      {effects == null ? null : (
+        <Form.Item name="educationalEffects">
+          <PagedPickTable
+            changePage={changePage}
+            dataSource={effects.map((e) => ({
+              id: e.id,
+              value: e.description,
+            }))}
+            modify={modify}
+            initVals={initEffects.map((e) => ({
+              id: e.id,
+              value: e.description,
+            }))}
+            onSearch={(f) => setValue(f)}
           />
-          <Button icon={<PlusOutlined />}>Dodaj efekt kształcenia</Button>
         </Form.Item>
-      ) : null}
-      <Form.Item className="cards-form-item">
-        <List
-          bordered
-          dataSource={['zna ...', 'potrafi ...']}
-          renderItem={(item) => <List.Item>{item}</List.Item>}
-        />
-      </Form.Item>
+      )}
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { Form, Input, InputNumber, Select } from 'antd';
+import { Card as AntCard, Form, Input, InputNumber, Select } from 'antd';
 import React, {
   useCallback,
   useContext,
@@ -55,39 +55,43 @@ const ProgramsEditorContent = ({ isArchive = false }) => {
 
   return (
     <>
-      <Form.Item
-        className="form-item"
-        label="Kod"
-        labelAlign="left"
-        name="code"
-        rules={[{ required: true, message: 'Wprowadź kod programu uczenia!' }]}
-      >
-        <Input disabled={!(state === 'edit')} />
-      </Form.Item>
-      {/* JednostkaOrganizacyjna */}
-      <Form.Item
-        className="cards-form-item"
-        label="Jednostka organizacyjna"
-        labelAlign="left"
-        name="fieldOfStudyId"
-        rules={[
-          {
-            required: true,
-            message: 'Wprowadź jednostkę organizacyjną (wydział)!',
-          },
-        ]}
-      >
-        <Select
-          placeholder="Wprowadź jednostkę organizacyjną (wydział)"
-          disabled={!modify}
+      <AntCard>
+        <Form.Item
+          className="form-item"
+          label="Kod"
+          labelAlign="left"
+          name="code"
+          rules={[
+            { required: true, message: 'Wprowadź kod programu uczenia!' },
+          ]}
         >
-          {fields.map((u) => (
-            <Select.Option key={u.id} value={u.id}>
-              {u.name}
-            </Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+          <Input disabled={!(state === 'edit')} />
+        </Form.Item>
+        {/* JednostkaOrganizacyjna */}
+        <Form.Item
+          className="cards-form-item"
+          label="Jednostka organizacyjna"
+          labelAlign="left"
+          name="fieldOfStudyId"
+          rules={[
+            {
+              required: true,
+              message: 'Wprowadź jednostkę organizacyjną (wydział)!',
+            },
+          ]}
+        >
+          <Select
+            placeholder="Wprowadź jednostkę organizacyjną (wydział)"
+            disabled={!modify}
+          >
+            {fields.map((u) => (
+              <Select.Option key={u.id} value={u.id}>
+                {u.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+      </AntCard>
 
       {/* <Form.Item
         className="form-item"
@@ -98,115 +102,119 @@ const ProgramsEditorContent = ({ isArchive = false }) => {
       >
         <Input placeholder="Wprowadź nazwe kierunku" disabled={!modify} />
       </Form.Item> */}
-
-      <Form.Item
-        name="studiesProfile"
-        label="Profil studiów"
-        labelAlign="left"
-        hasFeedback
-        rules={[{ required: true, message: 'Wybierz profil studiów!' }]}
-      >
-        <Select placeholder="Wybierz profil studiów" disabled={!modify}>
-          <Select.Option value="PRACTICAL">Praktyczny</Select.Option>
-          <Select.Option value="GENERAL_ACADEMIC">
-            Ogólnoakademicki
-          </Select.Option>
-        </Select>
-      </Form.Item>
-      {/* poziomStudiów */}
-      <Form.Item
-        name="studiesLevel"
-        label="Poziom studiów"
-        labelAlign="left"
-        hasFeedback
-        rules={[{ required: true, message: 'Wybierz poziom studiów!' }]}
-      >
-        <Select placeholder="Wybierz poziom studiów" disabled={!modify}>
-          <Select.Option value="FIRST">Pierwszego stopnia</Select.Option>
-          <Select.Option value="SECOND">Drugiego stopnia</Select.Option>
-          <Select.Option value="UNIFORM_MAGISTER_STUDIES">
-            Jednolite magisterski
-          </Select.Option>
-        </Select>
-      </Form.Item>
-      {/* formaStudiów */}
-      <Form.Item
-        name="studiesForm"
-        label="Forma studiów"
-        labelAlign="left"
-        hasFeedback
-        rules={[{ required: true, message: 'Wybierz formę studiów!' }]}
-      >
-        <Select placeholder="Wybierz formę studiów" disabled={!modify}>
-          <Select.Option value="FULL_TIME">Studia stacjonarne</Select.Option>
-          <Select.Option value="PART_TIME">Studia niestacjonarne</Select.Option>
-        </Select>
-      </Form.Item>
-
-      <Form.Item
-        name="degreeTitle"
-        label="Tytuł zawodowy"
-        labelAlign="left"
-        hasFeedback
-        rules={[{ required: true, message: 'Wybierz tytuł zawodowy!' }]}
-      >
-        <Select placeholder="Wybierz tytuł zawodowy" disabled={!modify}>
-          <Select.Option value="BACHELOR_OF_SCIENCE">Inżynier</Select.Option>
-          <Select.Option value="MASTER_OF_SCIENCE">Magister</Select.Option>
-          <Select.Option value="BACHELOR_MASTER_OF_SCIENCE">
-            Magister inżynier
-          </Select.Option>
-        </Select>
-      </Form.Item>
-
-      <Form.Item
-        name="languageOfStudies"
-        label="Język prowadzenia"
-        labelAlign="left"
-        hasFeedback
-        rules={[
-          { required: true, message: 'Wybierz język prowadzenia studiów!' },
-        ]}
-      >
-        <Select
-          placeholder="Wybierz język prowadzenia studiów"
-          disabled={!modify}
+      <AntCard>
+        <Form.Item
+          name="studiesProfile"
+          label="Profil studiów"
+          labelAlign="left"
+          hasFeedback
+          rules={[{ required: true, message: 'Wybierz profil studiów!' }]}
         >
-          <Select.Option value="polish">Polski</Select.Option>
-          <Select.Option value="english">Angielski</Select.Option>
-        </Select>
-      </Form.Item>
+          <Select placeholder="Wybierz profil studiów" disabled={!modify}>
+            <Select.Option value="PRACTICAL">Praktyczny</Select.Option>
+            <Select.Option value="GENERAL_ACADEMIC">
+              Ogólnoakademicki
+            </Select.Option>
+          </Select>
+        </Form.Item>
+        {/* poziomStudiów */}
+        <Form.Item
+          name="studiesLevel"
+          label="Poziom studiów"
+          labelAlign="left"
+          hasFeedback
+          rules={[{ required: true, message: 'Wybierz poziom studiów!' }]}
+        >
+          <Select placeholder="Wybierz poziom studiów" disabled={!modify}>
+            <Select.Option value="FIRST">Pierwszego stopnia</Select.Option>
+            <Select.Option value="SECOND">Drugiego stopnia</Select.Option>
+            <Select.Option value="UNIFORM_MAGISTER_STUDIES">
+              Jednolite magisterski
+            </Select.Option>
+          </Select>
+        </Form.Item>
+        {/* formaStudiów */}
+        <Form.Item
+          name="studiesForm"
+          label="Forma studiów"
+          labelAlign="left"
+          hasFeedback
+          rules={[{ required: true, message: 'Wybierz formę studiów!' }]}
+        >
+          <Select placeholder="Wybierz formę studiów" disabled={!modify}>
+            <Select.Option value="FULL_TIME">Studia stacjonarne</Select.Option>
+            <Select.Option value="PART_TIME">
+              Studia niestacjonarne
+            </Select.Option>
+          </Select>
+        </Form.Item>
 
-      <Form.Item
-        className="form-item"
-        label="Liczba semestrów"
-        labelAlign="left"
-        name="numberOfSemesters"
-        rules={[{ required: true, message: 'Wprowadź liczbę semestrów!' }]}
-      >
-        <InputNumber min={1} disabled={!modify} />
-      </Form.Item>
+        <Form.Item
+          name="degreeTitle"
+          label="Tytuł zawodowy"
+          labelAlign="left"
+          hasFeedback
+          rules={[{ required: true, message: 'Wybierz tytuł zawodowy!' }]}
+        >
+          <Select placeholder="Wybierz tytuł zawodowy" disabled={!modify}>
+            <Select.Option value="BACHELOR_OF_SCIENCE">Inżynier</Select.Option>
+            <Select.Option value="MASTER_OF_SCIENCE">Magister</Select.Option>
+            <Select.Option value="BACHELOR_MASTER_OF_SCIENCE">
+              Magister inżynier
+            </Select.Option>
+          </Select>
+        </Form.Item>
 
-      <Form.Item
-        className="form-item"
-        label="Łączna liczba godzin (CNPS)"
-        labelAlign="left"
-        name="totalNumberOfHours"
-        rules={[{ required: true, message: 'Wprowadź łączną liczbe godzin!' }]}
-      >
-        <InputNumber min={1} disabled={!modify} />
-      </Form.Item>
+        <Form.Item
+          name="languageOfStudies"
+          label="Język prowadzenia"
+          labelAlign="left"
+          hasFeedback
+          rules={[
+            { required: true, message: 'Wybierz język prowadzenia studiów!' },
+          ]}
+        >
+          <Select
+            placeholder="Wybierz język prowadzenia studiów"
+            disabled={!modify}
+          >
+            <Select.Option value="polish">Polski</Select.Option>
+            <Select.Option value="english">Angielski</Select.Option>
+          </Select>
+        </Form.Item>
 
-      <Form.Item
-        className="form-item"
-        label="Liczba punktów ECTS"
-        labelAlign="left"
-        name="totalNumberOfEctsPoints"
-        rules={[{ required: true, message: 'Wprowadź liczbę punktów!' }]}
-      >
-        <InputNumber min={1} disabled={!modify} />
-      </Form.Item>
+        <Form.Item
+          className="form-item"
+          label="Liczba semestrów"
+          labelAlign="left"
+          name="numberOfSemesters"
+          rules={[{ required: true, message: 'Wprowadź liczbę semestrów!' }]}
+        >
+          <InputNumber min={1} disabled={!modify} />
+        </Form.Item>
 
+        <Form.Item
+          className="form-item"
+          label="Łączna liczba godzin (CNPS)"
+          labelAlign="left"
+          name="totalNumberOfHours"
+          rules={[
+            { required: true, message: 'Wprowadź łączną liczbe godzin!' },
+          ]}
+        >
+          <InputNumber min={1} disabled={!modify} />
+        </Form.Item>
+
+        <Form.Item
+          className="form-item"
+          label="Liczba punktów ECTS"
+          labelAlign="left"
+          name="totalNumberOfEctsPoints"
+          rules={[{ required: true, message: 'Wprowadź liczbę punktów!' }]}
+        >
+          <InputNumber min={1} disabled={!modify} />
+        </Form.Item>
+      </AntCard>
       {/* wymaganiaWstępne */}
       {/* <Form.Item
         className="form-item"
@@ -217,70 +225,79 @@ const ProgramsEditorContent = ({ isArchive = false }) => {
       >
         <Input disabled={!modify} />
       </Form.Item> */}
-      <ProgramRequirements modify={modify} />
-      {/* sylwetkaAbsolwenta */}
-      <Form.Item
-        className="form-item"
-        label="Sylwetka absolwenta"
-        labelAlign="left"
-        name="graduateProfile"
-        rules={[{ required: true, message: 'Wprowadź sylwetkę absolwenta!' }]}
-      >
-        <Input disabled={!modify} />
-      </Form.Item>
-      {/* możliwośćKontynuacjiStudiów */}
-      <Form.Item
-        className="form-item"
-        label="Możliwość kontynuacji studiów"
-        labelAlign="left"
-        name="possibilityOfContinuingStudies"
-        rules={[
-          {
-            required: true,
-            message: 'Wprowadź możliwość kontynuacji studiów!',
-          },
-        ]}
-      >
-        <Input disabled={!modify} />
-      </Form.Item>
-      {/* związekZMisjąIStrategiąRozwojuUczelni */}
-      <Form.Item
-        className="form-item"
-        label="Związek z misją i strategią rozwoju uczelni"
-        labelAlign="left"
-        name="connectionWithMissionAndDevelopmentStrategy"
-        rules={[
-          {
-            required: true,
-            message: 'Wprowadź związek z misją i strategią rozwoju uczelni!',
-          },
-        ]}
-      >
-        <Input disabled={!modify} />
-      </Form.Item>
-
+      <AntCard title={lang.getMessage('Requirements')}>
+        <ProgramRequirements modify={modify} />
+      </AntCard>
+      <AntCard>
+        {/* sylwetkaAbsolwenta */}
+        <Form.Item
+          className="form-item"
+          label="Sylwetka absolwenta"
+          labelAlign="left"
+          name="graduateProfile"
+          rules={[{ required: true, message: 'Wprowadź sylwetkę absolwenta!' }]}
+        >
+          <Input disabled={!modify} />
+        </Form.Item>
+        {/* możliwośćKontynuacjiStudiów */}
+        <Form.Item
+          className="form-item"
+          label="Możliwość kontynuacji studiów"
+          labelAlign="left"
+          name="possibilityOfContinuingStudies"
+          rules={[
+            {
+              required: true,
+              message: 'Wprowadź możliwość kontynuacji studiów!',
+            },
+          ]}
+        >
+          <Input disabled={!modify} />
+        </Form.Item>
+        {/* związekZMisjąIStrategiąRozwojuUczelni */}
+        <Form.Item
+          className="form-item"
+          label="Związek z misją i strategią rozwoju uczelni"
+          labelAlign="left"
+          name="connectionWithMissionAndDevelopmentStrategy"
+          rules={[
+            {
+              required: true,
+              message: 'Wprowadź związek z misją i strategią rozwoju uczelni!',
+            },
+          ]}
+        >
+          <Input disabled={!modify} />
+        </Form.Item>
+      </AntCard>
       {/* BlokiZajęć */}
       {/* <ProgramBlocks modify={modify} /> */}
       {/* Programowe Efekty Kształcenia */}
-      {/* <ProgramEffects modify={modify} /> */}
+      <AntCard title={lang.getMessage('Effects')}>
+        <ProgramEffects modify={modify} />
+      </AntCard>
       {/* Dyscypliny */}
-      <ProgramDisciplines
-        modify={modify}
-        onChange={(ch) => setSelectedDisciplines(ch)}
-      />
-      <Form.Item
-        name="mainDisciplineId"
-        label="Główna dyscyplina"
-        labelAlign="left"
-        hasFeedback
-        rules={[{ required: true, message: 'Wybierz główną dyscypline!' }]}
-      >
-        <Select placeholder="Wybierz główną dyscypline" disabled={!modify}>
-          {selectedDisciplines.map((d) => (
-            <Select.Option value={d}>{d}</Select.Option>
-          ))}
-        </Select>
-      </Form.Item>
+      <AntCard title={lang.getMessage('Disciplines')}>
+        <ProgramDisciplines
+          modify={modify}
+          onChange={(ch) => setSelectedDisciplines(ch)}
+        />
+        <Form.Item
+          name="mainDisciplineId"
+          label="Główna dyscyplina"
+          labelAlign="left"
+          hasFeedback
+          rules={[{ required: true, message: 'Wybierz główną dyscypline!' }]}
+        >
+          <Select placeholder="Wybierz główną dyscypline" disabled={!modify}>
+            {selectedDisciplines.map((d) => (
+              <Select.Option value={d} key={d}>
+                {d}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+      </AntCard>
     </>
   );
 };

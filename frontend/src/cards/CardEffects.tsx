@@ -41,24 +41,24 @@ const CardEffects: React.FunctionComponent<{
       .catch((err) => handleHttpError(err, history));
   }, [auth, history, value]);
 
-  useEffect(() => {
-    if (effects == null) return;
-    setDisabled(effects.find((e) => e.description === value) == null);
-  }, [effects, value]);
+  // useEffect(() => {
+  //   if (effects == null) return;
+  //   setDisabled(effects.find((e) => e.description === value) == null);
+  // }, [effects, value]);
 
-  const onAdd = useCallback(
-    (add: (e: number) => void) => {
-      if (effects == null) return;
+  // const onAdd = useCallback(
+  //   (add: (e: number) => void) => {
+  //     if (effects == null) return;
 
-      const newElem = effects.find((e) => e.description === value);
-      if (newElem == null) return;
+  //     const newElem = effects.find((e) => e.description === value);
+  //     if (newElem == null) return;
 
-      add(newElem.id);
+  //     add(newElem.id);
 
-      setChosen([...chosen, newElem]);
-    },
-    [effects, chosen, value]
-  );
+  //     setChosen([...chosen, newElem]);
+  //   },
+  //   [effects, chosen, value]
+  // );
 
   const [pages, setPages] = useState<PagedResult<Effect> | null>(null);
   const changePage = useCallback(
@@ -87,63 +87,21 @@ const CardEffects: React.FunctionComponent<{
   return (
     <>
       {effects == null ? null : (
-        <Card title="Efekty kształcenia">
-          {/* <PagedPickTable
-            dataSource={(pages?.results ?? []).map((r) => ({
-              id: r.id,
-              value: r.description,
-            }))}
+        <Form.Item name="educationalEffects">
+          <PagedPickTable
             changePage={changePage}
-          /> */}
-          <Form.List name="educationalEffects">
-            {(fields, { add }) => (
-              <>
-                {modify ? (
-                  <Form.Item>
-                    <AutoComplete
-                      options={effects.map((c) => ({
-                        value: c.description,
-                        key: c.code,
-                      }))}
-                      placeholder="Znajdź efekt kształcenia"
-                      onChange={(data) => setValue(data)}
-                      filterOption={(inputValue, option) => {
-                        if (option == null) return true;
-                        return (
-                          option.value
-                            .toUpperCase()
-                            .indexOf(inputValue.toUpperCase()) !== -1
-                        );
-                      }}
-                    />
-                    <Button
-                      icon={<PlusOutlined />}
-                      disabled={disabled}
-                      onClick={() => onAdd(add)}
-                    >
-                      Dodaj efekt kształcenia
-                    </Button>
-                  </Form.Item>
-                ) : null}
-                {fields.map((field) => (
-                  <Form.Item
-                    name={field.name}
-                    fieldKey={field.fieldKey}
-                    key={field.key}
-                  >
-                    <Select disabled>
-                      {chosen.map((e) => (
-                        <Select.Option key={e.id} value={e.id}>
-                          {e.description}
-                        </Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                ))}
-              </>
-            )}
-          </Form.List>
-        </Card>
+            dataSource={effects.map((e) => ({
+              id: e.id,
+              value: e.description,
+            }))}
+            modify={modify}
+            initVals={initEffects.map((e) => ({
+              id: e.id,
+              value: e.description,
+            }))}
+            onSearch={(f) => setValue(f)}
+          />
+        </Form.Item>
       )}
     </>
   );

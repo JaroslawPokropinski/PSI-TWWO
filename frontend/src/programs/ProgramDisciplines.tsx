@@ -20,7 +20,7 @@ const ProgramDisciplines: React.FunctionComponent<{
     [auth]
   );
 
-  const [disciplines, setDisciplines] = useState<Discipline[]>([]);
+  const [disciplines, setDisciplines] = useState<Discipline[] | null>(null);
 
   useEffect(() => {
     axios
@@ -34,18 +34,20 @@ const ProgramDisciplines: React.FunctionComponent<{
 
   return (
     <>
-      <Form.Item name="disciplinesIds">
-        <PagedPickTable
-          onChange={onChange}
-          initVals={[]}
-          dataSource={disciplines
-            .slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
-            .map((d) => ({ id: d.id, value: d.name }))}
-          modify={modify}
-          changePage={(p) => setPage(p)}
-        />
-      </Form.Item>
-      {/* Dyscypliny
+      {disciplines == null ? null : (
+        <>
+          <Form.Item name="disciplinesIds">
+            <PagedPickTable
+              onChange={onChange}
+              initVals={disciplines.map((d) => ({ id: d.id, value: d.name }))}
+              dataSource={disciplines
+                .slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
+                .map((d) => ({ id: d.id, value: d.name }))}
+              modify={modify}
+              changePage={(p) => setPage(p)}
+            />
+          </Form.Item>
+          {/* Dyscypliny
       {modify ? (
         <Form.Item>
           <AutoComplete
@@ -70,6 +72,8 @@ const ProgramDisciplines: React.FunctionComponent<{
           renderItem={(item) => <List.Item>{item}</List.Item>}
         />
       </Form.Item> */}
+        </>
+      )}
     </>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Table, Input } from 'antd';
+import { Table, Input, List } from 'antd';
+import Search from 'antd/lib/input/Search';
 
 const columns = [
   {
@@ -21,6 +22,7 @@ const PagedPickTable: React.FunctionComponent<{
   value?: number[];
   onChange?: (arg: number[]) => void;
   initVals?: DataSource[];
+  onSearch?: (arg: string) => void;
 }> = ({
   dataSource = [],
   changePage = () => {},
@@ -28,6 +30,7 @@ const PagedPickTable: React.FunctionComponent<{
   value = null,
   onChange = () => {},
   initVals = [],
+  onSearch = null,
 }) => {
   const [filterText] = useState('');
   const [selected, setSelected] = useState<DataSource[]>([]);
@@ -36,14 +39,17 @@ const PagedPickTable: React.FunctionComponent<{
   useEffect(() => {
     if (value == null) return;
 
-    setSelected(
-      value
+    setSelected((old) => [
+      ...old,
+      ...(value
         .map((v) => {
+          if (old.map((o) => o.id).includes(v)) return null;
+
           const idx = initVals.map((iv) => iv.id).indexOf(v);
-          return initVals[idx];
+          return initVals[idx] ?? { id: v, value: '' };
         })
-        .filter((v) => v != null)
-    );
+        .filter((v) => v != null) as DataSource[]),
+    ]);
     setSelectedRowKeys(value);
   }, [value, initVals]);
 
@@ -60,26 +66,39 @@ const PagedPickTable: React.FunctionComponent<{
   return (
     <div>
       {modify ? (
-        <Table
-          rowKey={(record) => record.id}
-          rowSelection={{
-            type: 'checkbox',
-            selectedRowKeys,
-            onChange: onSelChange,
-          }}
-          pagination={{
-            position: ['topRight'],
-            onChange: (page) => {
-              changePage(page - 1, filterText);
-            },
-          }}
-          columns={columns}
-          dataSource={dataSource}
-        />
+        <>
+          {onSearch == null ? null : (
+            <Search
+              placeholder="filter"
+              onSearch={onSearch}
+              style={{ width: 200 }}
+            />
+          )}
+          <Table
+            rowKey={(record) => record.id}
+            rowSelection={{
+              type: 'checkbox',
+              selectedRowKeys,
+              onChange: onSelChange,
+            }}
+            pagination={{
+              position: ['topRight'],
+              onChange: (page) => {
+                changePage(page - 1, filterText);
+              },
+            }}
+            columns={columns}
+            dataSource={dataSource}
+          />
+        </>
       ) : null}
-      {selected.map((sel) => (
-        <Input disabled key={sel.id} value={sel.value} />
-      ))}
+      <List
+        bordered
+        dataSource={selected}
+        renderItem={(sel: DataSource) => (
+          <List.Item key={sel.id}>{sel.value}</List.Item>
+        )}
+      />
     </div>
   );
 };

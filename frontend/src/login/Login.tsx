@@ -1,6 +1,7 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Form, Input, Button, Checkbox } from 'antd';
 import { useHistory } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import axios, { setAuthToken } from '../configuration/axios';
 import AuthContext from '../context/AuthContext';
 
@@ -11,6 +12,11 @@ import handleHttpError from '../shared/handleHttpError';
 function Login(): JSX.Element {
   const history = useHistory();
   const authContext = useContext(AuthContext);
+  const [cookies, setCookie] = useCookies(['token']);
+  const axiosOpts = useMemo(
+    () => ({ headers: { Authorization: cookies.token } }),
+    [cookies]
+  );
   const onFinish = useCallback(
     (results) => {
       axios
@@ -19,13 +25,26 @@ function Login(): JSX.Element {
           password: results.password,
         })
         .then((res) => {
-          authContext.token = `Bearer ${res.data.accessToken}`;
-          history.replace('/home');
+          // authContext.token = `Bearer ${res.data.accessToken}`;
+          // history.replace('/home');
+          setCookie('token', `Bearer ${res.data.accessToken}`, { path: '/' });
         })
         .catch((err) => handleHttpError(err));
     },
-    [history, authContext]
+    [setCookie]
   );
+
+  useEffect(() => {
+    if (cookies.token == null) return;
+
+    axios
+      .get('/api/user/current', axiosOpts)
+      .then(() => {
+        authContext.token = cookies.token;
+        history.replace('/home');
+      })
+      .catch(() => setCookie('token', null, { path: '/' }));
+  }, [cookies, setCookie, authContext, history, axiosOpts]);
 
   return (
     <div className="Login">
