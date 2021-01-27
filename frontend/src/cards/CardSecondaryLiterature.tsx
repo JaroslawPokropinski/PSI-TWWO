@@ -11,7 +11,7 @@ const CardSecondaryLiterature: React.FunctionComponent<{ modify: boolean }> = ({
         {(fields, { add, remove }) => (
           <>
             {fields.map((field) => (
-              <>
+              <div key={field.key}>
                 <Form.Item
                   label="Dodatkowa pozycja literaturowa"
                   labelAlign="left"
@@ -32,7 +32,7 @@ const CardSecondaryLiterature: React.FunctionComponent<{ modify: boolean }> = ({
                   </Button>
                 ) : null}
                 <Divider />
-              </>
+              </div>
             ))}
             {modify ? (
               <Form.Item>

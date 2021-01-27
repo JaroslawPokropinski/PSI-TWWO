@@ -1,6 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { AutoComplete, Button, Card, Form, Select } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Form } from 'antd';
 import { useHistory } from 'react-router-dom';
 import axios from '../configuration/axios';
 import { PAGE_SIZE } from '../configuration/constants';
@@ -15,15 +14,11 @@ const CardEffects: React.FunctionComponent<{
   initEffects?: Effect[];
 }> = ({ modify = false, initEffects = [] }) => {
   const auth = useContext(AuthContext);
-  // const lang = useContext(LangContext);
 
   const history = useHistory();
 
-  const [chosen, setChosen] = useState<Effect[]>(initEffects);
-
   const [effects, setEffects] = useState<Effect[] | null>();
   const [value, setValue] = useState('');
-  const [disabled, setDisabled] = useState(true);
 
   useEffect(() => {
     axios
@@ -41,26 +36,7 @@ const CardEffects: React.FunctionComponent<{
       .catch((err) => handleHttpError(err, history));
   }, [auth, history, value]);
 
-  // useEffect(() => {
-  //   if (effects == null) return;
-  //   setDisabled(effects.find((e) => e.description === value) == null);
-  // }, [effects, value]);
-
-  // const onAdd = useCallback(
-  //   (add: (e: number) => void) => {
-  //     if (effects == null) return;
-
-  //     const newElem = effects.find((e) => e.description === value);
-  //     if (newElem == null) return;
-
-  //     add(newElem.id);
-
-  //     setChosen([...chosen, newElem]);
-  //   },
-  //   [effects, chosen, value]
-  // );
-
-  const [pages, setPages] = useState<PagedResult<Effect> | null>(null);
+  const [, setPages] = useState<PagedResult<Effect> | null>(null);
   const changePage = useCallback(
     (filter) => {
       axios
@@ -91,15 +67,25 @@ const CardEffects: React.FunctionComponent<{
           <PagedPickTable
             changePage={changePage}
             dataSource={effects.map((e) => ({
-              id: e.id,
+              ...e,
               value: e.description,
             }))}
             modify={modify}
             initVals={initEffects.map((e) => ({
-              id: e.id,
+              ...e,
               value: e.description,
             }))}
             onSearch={(f) => setValue(f)}
+            columns={[
+              {
+                title: 'Code',
+                dataIndex: 'code',
+              },
+              {
+                title: 'Description',
+                dataIndex: 'description',
+              },
+            ]}
           />
         </Form.Item>
       )}
