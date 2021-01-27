@@ -17,8 +17,7 @@
     background: whitesmoke;
 }
 
-.Effects, .plans, .programs, .cards, .effects-editor, .editor,
-.cards-editor {
+.Effects, .plans, .programs, .cards, .editor{
     max-width: 1024px;
     margin: 0px auto;
     border: 1px solid brown;
