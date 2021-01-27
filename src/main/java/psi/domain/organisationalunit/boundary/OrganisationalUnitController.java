@@ -13,6 +13,7 @@ import psi.api.common.ResourceDTO;
 import psi.api.organisationalunit.OrganisationalUnitDTO;
 import psi.domain.organisationalunit.entity.OrganisationalUnit;
 import psi.domain.organisationalunit.control.OrganisationalUnitService;
+import psi.infrastructure.security.annotation.HasCommissionMemberRole;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -45,6 +46,7 @@ public class OrganisationalUnitController {
         return organisationalUnitMapper.mapToOrganisationalUnitDTOs(foundOrganisationalUnits);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.organisational-units.createOrganisationalUnits.value}", notes = "${api.organisational-units.createOrganisationalUnits.notes}")
     @PostMapping
     public List<ResourceDTO> createOrganisationalUnits(@Valid @RequestBody List<OrganisationalUnitDTO> organisationalUnitDTOs) {

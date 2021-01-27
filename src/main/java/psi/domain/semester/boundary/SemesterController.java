@@ -10,6 +10,7 @@ import psi.api.semester.SemesterDTO;
 import psi.domain.semester.control.SemesterService;
 import psi.domain.semester.entity.Semester;
 import psi.infrastructure.security.UserInfo;
+import psi.infrastructure.security.annotation.HasCommissionMemberRole;
 import psi.infrastructure.security.annotation.LoggedUser;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -47,6 +48,7 @@ public class SemesterController {
         return semesterMapper.mapToSemesterDTOs(foundSemesters);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value =  "${api.semester.create.value}", notes = "${api.semester.create.notes}")
     @PostMapping
     public List<ResourceDTO> createSemesters(@Valid @RequestBody List<SemesterDTO> semesterDTOs){
@@ -55,6 +57,7 @@ public class SemesterController {
         return semesterMapper.mapToResourceDTOs(createdSemesters);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value =  "${api.semester.update.value}", notes = "${api.semester.update.notes}")
     @PutMapping
     public List<ResourceDTO> updateSemester(@Valid @RequestBody List<SemesterDTO> semesterDTOs, @ApiIgnore @LoggedUser UserInfo userInfo){
@@ -63,6 +66,7 @@ public class SemesterController {
         return semesterMapper.mapToResourceDTOs(semesters);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value =  "${api.semester.delete.value}", notes = "${api.semester.delete.notes}")
     @DeleteMapping(IDS_PATH)
     public ResponseDTO<Boolean> deleteSemesters(@PathVariable(IDS) List<Long> ids, @ApiIgnore @LoggedUser UserInfo userInfo){

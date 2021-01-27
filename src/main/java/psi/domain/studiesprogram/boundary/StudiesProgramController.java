@@ -17,6 +17,7 @@ import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.studiesprogram.control.StudiesProgramService;
 import psi.domain.studiesprogram.entity.StudiesProgram;
 import psi.infrastructure.security.UserInfo;
+import psi.infrastructure.security.annotation.HasCommissionMemberRole;
 import psi.infrastructure.security.annotation.LoggedUser;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -61,6 +62,7 @@ public class StudiesProgramController {
         return studiesProgramMapper.mapToStudiesProgramsDTOs(foundStudiesPrograms);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.studies-program.createStudiesPrograms.value}", notes = "${api.studies-program.createStudiesPrograms.notes}")
     @PostMapping
     public List<ResourceDTO> createStudiesPrograms(@Valid @RequestBody List<StudiesProgramDTO> studiesProgramDTOs){
@@ -69,6 +71,7 @@ public class StudiesProgramController {
         return studiesProgramMapper.mapToResourceDTOs(createdStudiesPrograms);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.studies-program.updateStudiesPrograms.value}", notes = "${api.studies-program.updateStudiesPrograms.notes}")
     @PutMapping
     public List<ResourceDTO> updateStudiesPrograms(@Valid @RequestBody List<StudiesProgramDTO> studiesProgramsDTOs, @ApiIgnore @LoggedUser UserInfo userInfo){
@@ -77,6 +80,7 @@ public class StudiesProgramController {
         return studiesProgramMapper.mapToResourceDTOs(studiesPrograms);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.studies-program.deleteStudiesPrograms.value}", notes = "${api.studies-program.deleteStudiesPrograms.notes}")
     @DeleteMapping(IDS_PATH)
     public ResponseDTO<Boolean> deleteStudiesPrograms(@PathVariable(IDS) List<Long> ids, @ApiIgnore @LoggedUser UserInfo userInfo){
@@ -91,6 +95,7 @@ public class StudiesProgramController {
         return studiesProgramMapper.mapToRevisionDTOs(subjectCardHistoryPage);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.studies-program.changeStatus.values}", notes = "${api.studies-program.changeStatus.notes}")
     @PatchMapping(STATUS + IDS_PATH)
     public ResponseDTO<Boolean> changeStatus(@PathVariable(IDS) Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo){
