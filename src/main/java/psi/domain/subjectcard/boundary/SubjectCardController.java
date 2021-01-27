@@ -33,6 +33,8 @@ import psi.domain.subjectcard.entity.SubjectCard;
 import psi.domain.subjectcard.control.SubjectCardService;
 import psi.infrastructure.mediatype.MediaTypeResolver;
 import psi.infrastructure.security.UserInfo;
+import psi.infrastructure.security.annotation.HasCommissionMemberRole;
+import psi.infrastructure.security.annotation.HasSupervisorOrCommissionMemberRole;
 import psi.infrastructure.security.annotation.LoggedUser;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -75,6 +77,7 @@ public class SubjectCardController {
         return subjectCardMapper.mapToSubjectCardDetailsDTOs(foundSubjectCards);
     }
 
+    @HasSupervisorOrCommissionMemberRole
     @ApiOperation(value = "${api.subject-cards.createSubjectCards.value}", notes = "${api.subject-cards.createSubjectCards.notes}")
     @PostMapping
     public List<ResourceDTO> createSubjectCards(@Valid @RequestBody List<SubjectCardDTO> subjectCardDTOs) {
@@ -83,6 +86,7 @@ public class SubjectCardController {
         return subjectCardMapper.mapToResourceDTOs(createdSubjectCards);
     }
 
+    @HasSupervisorOrCommissionMemberRole
     @ApiOperation(value = "${api.subject-cards.updateSubjectCards.value}", notes = "${api.subject-cards.updateSubjectCards.notes}")
     @PutMapping
     public List<ResourceDTO> updateSubjectCards(@Valid @RequestBody List<SubjectCardDTO> subjectCardDTOs, @ApiIgnore @LoggedUser UserInfo userInfo) {
@@ -91,6 +95,7 @@ public class SubjectCardController {
         return subjectCardMapper.mapToResourceDTOs(subjectCards);
     }
 
+    @HasSupervisorOrCommissionMemberRole
     @ApiOperation(value = "${api.subject-cards.deleteSubjectCards.value}", notes = "${api.subject-cards.deleteSubjectCards.notes}")
     @DeleteMapping(IDS_PATH)
     public ResponseDTO<Boolean> deleteSubjectCards(@PathVariable(IDS) List<Long> ids, @ApiIgnore @LoggedUser UserInfo userInfo) {
@@ -116,6 +121,7 @@ public class SubjectCardController {
         return subjectCardMapper.mapToRevisionDTOs(subjectCardHistoryPage);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.subject-cards.changeStatus.value}", notes = "${api.subject-cards.changeStatus.notes}")
     @PatchMapping(STATUS + IDS_PATH)
     public ResponseDTO<Boolean> changeStatus(@PathVariable(IDS) Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo) {

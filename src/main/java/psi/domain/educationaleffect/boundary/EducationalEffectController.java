@@ -18,6 +18,7 @@ import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.educationaleffect.control.EducationalEffectService;
 import psi.domain.educationaleffect.entity.EducationalEffect;
 import psi.infrastructure.security.UserInfo;
+import psi.infrastructure.security.annotation.HasCommissionMemberRole;
 import psi.infrastructure.security.annotation.LoggedUser;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -58,6 +59,7 @@ public class EducationalEffectController {
         return educationalEffectMapper.mapToEducationalEffectDetailsDTOs(foundEducationalEffects);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.educational-effects.createEducationalEffects.value}", notes = "${api.educational-effects.createEducationalEffects.notes}")
     @PostMapping
     public List<ResourceDTO> createEducationalEffects(@Valid @RequestBody List<EducationalEffectDTO> educationalEffectDTOs) {
@@ -66,6 +68,7 @@ public class EducationalEffectController {
         return educationalEffectMapper.mapToResourceDTOs(createdEducationalEffects);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.educational-effects.updateEducationalEffects.value}", notes = "${api.educational-effects.updateEducationalEffects.notes}")
     @PutMapping
     public List<ResourceDTO> updateEducationalEffects(@Valid @RequestBody List<EducationalEffectDTO> educationalEffectDTOs, @ApiIgnore @LoggedUser UserInfo userInfo) {
@@ -74,6 +77,7 @@ public class EducationalEffectController {
         return educationalEffectMapper.mapToResourceDTOs(educationalEffectsToUpdate);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.educational-effects.deleteEducationalEffects.value}", notes = "${api.educational-effects.deleteEducationalEffects.notes}")
     @DeleteMapping(IDS_PATH)
     public ResponseDTO<Boolean> deleteEducationalEffects(@PathVariable(IDS) List<Long> ids, @ApiIgnore @LoggedUser UserInfo userInfo) {
@@ -88,6 +92,7 @@ public class EducationalEffectController {
         return educationalEffectMapper.mapToRevisionDTOs(educationalEffectPage);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.educational-effects.changeStatus.values}", notes = "${api.educational-effects.changeStatus.notes}")
     @PatchMapping(STATUS)
     public ResponseDTO<Boolean> changeStatus(@PathVariable(ID)Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo){

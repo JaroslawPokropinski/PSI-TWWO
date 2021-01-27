@@ -13,6 +13,7 @@ import psi.api.common.ResourceDTO;
 import psi.api.fieldofstudy.FieldOfStudyDTO;
 import psi.domain.fieldofstudy.control.FieldOfStudyService;
 import psi.domain.fieldofstudy.entity.FieldOfStudy;
+import psi.infrastructure.security.annotation.HasCommissionMemberRole;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -45,6 +46,7 @@ public class FieldOfStudyController {
         return fieldOfStudyMapper.mapToFiledOfStudyDTOs(foundFiledOfStudies);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.field-of-studies.createFiledOfStudies.value}", notes = "${api.field-of-studies.createFiledOfStudies.notes}")
     @PostMapping
     public List<ResourceDTO> createFiledOfStudies(@Valid @RequestBody List<FieldOfStudyDTO> fieldOfStudyDTOs) {

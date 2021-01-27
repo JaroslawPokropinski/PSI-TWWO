@@ -9,6 +9,7 @@ import psi.api.discipline.DisciplineDTO;
 import psi.api.discipline.DisciplineDetailsDTO;
 import psi.domain.discipline.control.DisciplineService;
 import psi.domain.discipline.entity.Discipline;
+import psi.infrastructure.security.annotation.HasCommissionMemberRole;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -31,6 +32,7 @@ public class DisciplineController {
         return disciplineMapper.mapToDisciplineDTOs(allDisciplines);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.disciplines.createDisciplines.value}", notes = "${api.disciplines.createDisciplines.notes}")
     @PostMapping
     public List<ResourceDTO> createDiscipline(@Valid @RequestBody List<DisciplineDTO> disciplineDTOs){

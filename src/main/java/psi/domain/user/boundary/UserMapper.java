@@ -23,6 +23,7 @@ public class UserMapper {
                 .name(user.getName())
                 .surname(user.getSurname())
                 .phoneNumber(user.getPhoneNumber())
+                .role(user.getRole())
                 .build();
     }
 

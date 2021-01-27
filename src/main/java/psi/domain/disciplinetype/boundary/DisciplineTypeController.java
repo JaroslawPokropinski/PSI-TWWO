@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import psi.api.common.ResourceDTO;
 import psi.domain.disciplinetype.control.DisciplineTypeService;
 import psi.domain.disciplinetype.entity.DisciplineType;
+import psi.infrastructure.security.annotation.HasCommissionMemberRole;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -26,6 +27,7 @@ public class DisciplineTypeController {
     private final DisciplineTypeService disciplineTypeService;
     private final DisciplineTypeMapper disciplineTypeMapper;
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.disciplineTypes.createDisciplineTypes.value}", notes = "${api.disciplineTypes.createDisciplineTypes.notes}")
     @PostMapping
     public List<ResourceDTO> createDisciplineType(@Valid @RequestBody List<DisciplineType> disciplineTypes){

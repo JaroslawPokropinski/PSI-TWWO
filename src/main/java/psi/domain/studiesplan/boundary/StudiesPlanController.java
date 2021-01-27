@@ -17,6 +17,7 @@ import psi.domain.auditedobject.entity.ObjectState;
 import psi.domain.studiesplan.control.StudiesPlanService;
 import psi.domain.studiesplan.entity.StudiesPlan;
 import psi.infrastructure.security.UserInfo;
+import psi.infrastructure.security.annotation.HasCommissionMemberRole;
 import psi.infrastructure.security.annotation.LoggedUser;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -61,6 +62,7 @@ public class StudiesPlanController {
         return studiesPlanMapper.mapToStudiesPlansDTOs(foundStudiesPlans);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.studies-plan.createStudiesPlan.value}", notes = "${api.studies-plan.createStudiesPlan.notes}")
     @PostMapping
     public List<ResourceDTO> createStudiesPlans(@Valid @RequestBody List<StudiesPlanDTO> studiesPlanDTOs){
@@ -69,6 +71,7 @@ public class StudiesPlanController {
         return studiesPlanMapper.mapToResourceDTOs(createdStudiesPlans);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.studies-plan.updateStudiesPlan.value}", notes = "${api.studies-plan.updateStudiesPlan.notes}")
     @PutMapping
     public List<ResourceDTO> updateStudiesPlans(@Valid @RequestBody List<StudiesPlanDTO> studiesPlansDTOs, @ApiIgnore @LoggedUser UserInfo userInfo){
@@ -77,6 +80,7 @@ public class StudiesPlanController {
         return studiesPlanMapper.mapToResourceDTOs(studiesPlans);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.studies-plan.deleteStudiesPlan.value}", notes = "${api.studies-plan.deleteStudiesPlan.notes}")
     @DeleteMapping(IDS_PATH)
     public ResponseDTO<Boolean> deleteStudiesPlan(@PathVariable(IDS) List<Long> ids, @ApiIgnore @LoggedUser UserInfo userInfo){
@@ -91,6 +95,7 @@ public class StudiesPlanController {
         return studiesPlanMapper.mapToRevisionDTOs(studiesPlanHistoryPage);
     }
 
+    @HasCommissionMemberRole
     @ApiOperation(value = "${api.studies-plan.changeStatus.values}", notes = "${api.studies-plan.changeStatus.notes}")
     @PatchMapping(STATUS + IDS_PATH)
     public ResponseDTO<Boolean> changeStatus(@PathVariable(IDS) Collection<Long> ids, @Valid @RequestBody StatusDTO statusDTO, @ApiIgnore UserInfo userInfo){

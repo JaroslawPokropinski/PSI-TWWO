@@ -2,6 +2,7 @@ package psi.api.user;
 
 import lombok.Builder;
 import lombok.Data;
+import psi.domain.user.entity.UserRole;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -24,5 +25,8 @@ public class UserDTO {
 
     @NotBlank
     private String phoneNumber;
+
+    @NotNull
+    private UserRole role;
 
 }
