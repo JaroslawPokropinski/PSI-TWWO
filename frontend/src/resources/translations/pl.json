@@ -1,6 +1,7 @@
 {
   "app.title": "Kreator programów kształcenia PWR",
   "Studies effects": "Efekty kształcenia",
+  "Effects": "Efekty kształcenia",
   "cards": "Karty przedmiotów",
   "programs": "Programy studiów",
   "plans": "Plany studiów",
@@ -32,5 +33,7 @@
   "Field of study2": "Kierunek",
   "Fill field of study!": "Wprowadź kierunek!",
   "Organisational unit": "Jednostka organizacyjna",
-  "Fill organisationel unit!": "Wprowadź jednostke organizacyjną!"
+  "Fill organisationel unit!": "Wprowadź jednostke organizacyjną!",
+  "User": "Nazwa użytkownika",
+  "Password": "Hasło"
 }

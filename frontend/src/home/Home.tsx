@@ -38,7 +38,7 @@ function Home(): JSX.Element {
         size="large"
         onClick={onEffects}
       >
-        <FormattedMessage id="efects" />
+        <FormattedMessage id="Studies effects" />
       </Button>
       <Button
         className="home-button"

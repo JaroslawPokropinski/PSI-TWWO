@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import axios, { setAuthToken } from '../configuration/axios';
 import AuthContext from '../context/AuthContext';
+import { LangContext } from '../context/LangContext';
 
 import './Login.css';
 import Header from '../shared/Header';
@@ -12,6 +13,7 @@ import handleHttpError from '../shared/handleHttpError';
 function Login(): JSX.Element {
   const history = useHistory();
   const authContext = useContext(AuthContext);
+  const lang = useContext(LangContext);
   const [cookies, setCookie] = useCookies(['token']);
   const axiosOpts = useMemo(
     () => ({ headers: { Authorization: cookies.token } }),
@@ -48,7 +50,7 @@ function Login(): JSX.Element {
 
   return (
     <div className="Login">
-      <Header title="Kreator programów kształcenia PWR" />
+      <Header title={lang.messages['app.title']} />
       <Form
         className="login-form"
         name="basic"
@@ -57,7 +59,7 @@ function Login(): JSX.Element {
       >
         <Form.Item
           className="login-form-item"
-          label="Username"
+          label={lang.getMessage('User')}
           name="username"
           rules={[{ required: true, message: 'Please input your username!' }]}
         >
@@ -66,7 +68,7 @@ function Login(): JSX.Element {
 
         <Form.Item
           className="login-form-item"
-          label="Password"
+          label={lang.getMessage('Password')}
           name="password"
           rules={[{ required: true, message: 'Please input your password!' }]}
         >
