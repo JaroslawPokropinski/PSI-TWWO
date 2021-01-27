@@ -111,6 +111,7 @@ public class SubjectCardController {
         return ResponseEntity.ok()
                 .contentType(mediaTypeResolver.getMediaTypeForFile(document.getName()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + document.getName() + "\"")
+                .header("filename", document.getName())
                 .body(document.getResource());
     }
 
