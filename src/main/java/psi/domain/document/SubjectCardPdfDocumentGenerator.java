@@ -65,7 +65,7 @@ public class SubjectCardPdfDocumentGenerator implements DocumentGenerator<Subjec
 
     private static BaseFont createFont() {
         try {
-            return BaseFont.createFont("font/times_unicode.ttf", BaseFont.CP1250, BaseFont.NOT_EMBEDDED);
+            return BaseFont.createFont( BaseFont.HELVETICA, BaseFont.CP1250, BaseFont.EMBEDDED);
         } catch (DocumentException|IOException e) {
             throw new IllegalArgumentAppException("Error during font creation", e);
         }

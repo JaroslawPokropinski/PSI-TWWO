@@ -15,7 +15,7 @@ const CardGoals: React.FunctionComponent<{ modify: boolean }> = ({
         {(fields, { add, remove }) => (
           <>
             {fields.map((field) => (
-              <Space key={field.key}>
+              <div key={field.key}>
                 <Form.Item
                   label={lang.getMessage('Subject objective')}
                   labelAlign="left"
@@ -39,7 +39,7 @@ const CardGoals: React.FunctionComponent<{ modify: boolean }> = ({
                   </Button>
                 ) : null}
                 <Divider />
-              </Space>
+              </div>
             ))}
             {modify ? (
               <Form.Item>
