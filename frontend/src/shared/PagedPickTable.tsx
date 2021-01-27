@@ -1,39 +1,47 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { Table, Input, List } from 'antd';
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+import { Table, List } from 'antd';
 import Search from 'antd/lib/input/Search';
+import { ColumnsType } from 'antd/lib/table';
 
-const columns = [
-  {
-    title: 'Id',
-    dataIndex: 'id',
-  },
-  {
-    title: 'Value',
-    dataIndex: 'value',
-  },
-];
-
-type DataSource = { id: number; value: string };
-
-const PagedPickTable: React.FunctionComponent<{
-  dataSource: DataSource[];
+interface Props<ObjectType> {
+  dataSource: ObjectType[];
   changePage: (page: number, filter: string) => void;
   modify: boolean;
   value?: number[];
   onChange?: (arg: number[]) => void;
-  initVals?: DataSource[];
+  initVals?: ObjectType[];
   onSearch?: (arg: string) => void;
-}> = ({
+  columns?: ColumnsType<ObjectType>;
+  type?: 'checkbox' | 'radio';
+}
+
+const PagedPickTable = <T extends { id: number; value: string }>({
   dataSource = [],
   changePage = () => {},
   modify = false,
-  value = null,
+  value,
   onChange = () => {},
   initVals = [],
-  onSearch = null,
-}) => {
+  onSearch,
+  columns = [
+    {
+      title: 'Id',
+      dataIndex: 'id',
+    },
+    {
+      title: 'Value',
+      dataIndex: 'value',
+    },
+  ],
+  type = 'checkbox',
+}: PropsWithChildren<Props<T>>): React.ReactElement => {
   const [filterText] = useState('');
-  const [selected, setSelected] = useState<DataSource[]>([]);
+  const [selected, setSelected] = useState<T[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   useEffect(() => {
@@ -48,13 +56,13 @@ const PagedPickTable: React.FunctionComponent<{
           const idx = initVals.map((iv) => iv.id).indexOf(v);
           return initVals[idx] ?? { id: v, value: '' };
         })
-        .filter((v) => v != null) as DataSource[]),
+        .filter((v) => v != null) as T[]),
     ]);
     setSelectedRowKeys(value);
   }, [value, initVals]);
 
   const onSelChange = useCallback(
-    (newSelectedRowKeys: React.Key[], selectedRows: DataSource[]) => {
+    (newSelectedRowKeys: React.Key[], selectedRows: T[]) => {
       onChange(selectedRows.map((k) => k.id));
 
       setSelected(selectedRows);
@@ -77,7 +85,7 @@ const PagedPickTable: React.FunctionComponent<{
           <Table
             rowKey={(record) => record.id}
             rowSelection={{
-              type: 'checkbox',
+              type,
               selectedRowKeys,
               onChange: onSelChange,
             }}
@@ -95,9 +103,7 @@ const PagedPickTable: React.FunctionComponent<{
       <List
         bordered
         dataSource={selected}
-        renderItem={(sel: DataSource) => (
-          <List.Item key={sel.id}>{sel.value}</List.Item>
-        )}
+        renderItem={(sel: T) => <List.Item key={sel.id}>{sel.value}</List.Item>}
       />
     </div>
   );

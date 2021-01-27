@@ -20,6 +20,7 @@ import CardsEditor from '../cards/CardsEditor';
 import PlanView from '../plans/PlanView';
 import Plans from '../plans/Plans';
 import LangContainer from './LangContext';
+import PlanEditor from '../plans/PlanEditor';
 
 function App(): JSX.Element {
   return (
@@ -30,6 +31,9 @@ function App(): JSX.Element {
             <AuthContext.Provider value={{ token: null }}>
               <Switch>
                 <Route path="/plans/:state">
+                  <PlanEditor />
+                </Route>
+                <Route path="/plans_old/:state">
                   <PlanView />
                 </Route>
                 <Route path="/plans">

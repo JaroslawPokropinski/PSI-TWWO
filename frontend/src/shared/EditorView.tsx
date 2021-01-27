@@ -151,14 +151,15 @@ const EditorView: React.FunctionComponent<{
             Weryfikuj
           </Button>
         ) : null}
-
-        <Button
-          className="controlls-button"
-          type="primary"
-          onClick={() => showHistory(!isShowingHistory)}
-        >
-          Historia
-        </Button>
+        {!useArchive ? null : (
+          <Button
+            className="controlls-button"
+            type="primary"
+            onClick={() => showHistory(!isShowingHistory)}
+          >
+            Historia
+          </Button>
+        )}
 
         {isShowingHistory ? (
           <>

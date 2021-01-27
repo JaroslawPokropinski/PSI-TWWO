@@ -1,31 +1,46 @@
-import React from 'react';
-import { Button, Divider, Form, Input, Space } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Button, Divider, Form, InputNumber } from 'antd';
+import React, { FunctionComponent, useContext } from 'react';
+import { LangContext } from '../context/LangContext';
+import { Card } from '../dto/Card';
+import { SubjectCardPicker } from './SubjectCardPicker';
 
-const CardRequirements: React.FunctionComponent<{ modify: boolean }> = ({
+type SemesterEditorProps = {
+  modify: boolean;
+  initCards: Card[];
+};
+
+export const SemesterEditor: FunctionComponent<SemesterEditorProps> = ({
   modify = false,
+  initCards = [],
 }) => {
+  const lang = useContext(LangContext);
+
   return (
-    <Form.List name="prerequisites">
+    <Form.List name="semesters">
       {(fields, { add, remove }) => (
         <>
           {fields.map((field) => (
             <div key={field.key}>
               <Form.Item
-                label="Wymaganie wstępne"
+                label={lang.getMessage('Allowed deficit')}
                 labelAlign="left"
-                name={field.name}
-                fieldKey={field.fieldKey}
+                name={[field.name, 'allowedEctsDeficit']}
+                fieldKey={[field.fieldKey, 'allowedEctsDeficit']}
                 rules={[
-                  { required: true, message: 'Podaj wymaganie wstępne!' },
+                  {
+                    required: true,
+                    message: lang.getMessage('Set allowed deficit!'),
+                  },
                 ]}
               >
-                <Input
-                  placeholder="Podaj wymaganie wstępne"
-                  disabled={!modify}
-                />
+                <InputNumber min={0} disabled={!modify} />
               </Form.Item>
-
+              <SubjectCardPicker
+                modify={modify}
+                initCards={initCards}
+                field={field}
+              />
               {modify ? (
                 <Button
                   type="dashed"
@@ -55,5 +70,3 @@ const CardRequirements: React.FunctionComponent<{ modify: boolean }> = ({
     </Form.List>
   );
 };
-
-export default CardRequirements;
