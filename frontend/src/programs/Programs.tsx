@@ -107,13 +107,15 @@ function Programs(): JSX.Element {
         </Button>
       </div>
 
-      <Button
-        type="primary"
-        className="programs-add"
-        onClick={() => onClick(null)}
-      >
-        Dodaj
-      </Button>
+      {!['ROLE_ADMIN', 'ROLE_COMMISSION_MEMBER'].includes(auth.role) ? null : (
+        <Button
+          type="primary"
+          className="programs-add"
+          onClick={() => onClick(null)}
+        >
+          <FormattedMessage id="Add" />
+        </Button>
+      )}
 
       <List
         className="programs-list"

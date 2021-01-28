@@ -66,15 +66,25 @@ const ProgramEffects: React.FunctionComponent<{
           <PagedPickTable
             changePage={changePage}
             dataSource={effects.map((e) => ({
-              id: e.id,
+              ...e,
               value: e.description,
             }))}
             modify={modify}
             initVals={initEffects.map((e) => ({
-              id: e.id,
+              ...e,
               value: e.description,
             }))}
             onSearch={(f) => setValue(f)}
+            columns={[
+              {
+                title: 'Code',
+                dataIndex: 'code',
+              },
+              {
+                title: 'Description',
+                dataIndex: 'description',
+              },
+            ]}
           />
         </Form.Item>
       )}

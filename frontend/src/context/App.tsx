@@ -1,11 +1,12 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Redirect,
   Route,
   Switch,
 } from 'react-router-dom';
 import { CookiesProvider } from 'react-cookie';
+import Cookies from 'universal-cookie';
 import Effects from '../effects/Effects';
 import EffectsEditor from '../effects/EffectsEditor';
 import Home from '../home/Home';
@@ -22,13 +23,20 @@ import Plans from '../plans/Plans';
 import LangContainer from './LangContext';
 import PlanEditor from '../plans/PlanEditor';
 
+const cookies = new Cookies();
+
 function App(): JSX.Element {
   return (
     <div className="App">
       <Router basename={process.env.PUBLIC_URL}>
         <CookiesProvider>
           <LangContainer>
-            <AuthContext.Provider value={{ token: null }}>
+            <AuthContext.Provider
+              value={{
+                token: cookies.get('token') ?? null,
+                role: cookies.get('role') ?? 'ROLE_USER',
+              }}
+            >
               <Switch>
                 <Route path="/plans/:state">
                   <PlanEditor />

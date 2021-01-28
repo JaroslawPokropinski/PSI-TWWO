@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from 'antd';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function EctsDeficitTable(props: { data: any[] }): JSX.Element {
   const { data } = props;
   return (

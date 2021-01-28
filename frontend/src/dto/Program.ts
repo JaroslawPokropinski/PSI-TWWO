@@ -20,6 +20,8 @@ export type Program = {
   studiesProfile: 'PRACTICAL' | 'GENERAL_ACADEMIC';
   totalNumberOfEctsPoints: number;
   totalNumberOfHours: number;
+  educationalEffects: number[];
+  objectState?: 'UNVERIFIED' | 'VERIFIED';
 };
 
 export type Program2 = {

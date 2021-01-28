@@ -1,4 +1,4 @@
-import { Card as AntCard, DatePicker, Form, Input, Select } from 'antd';
+import { Card as AntCard, DatePicker, Form, Input } from 'antd';
 import React, {
   useCallback,
   useContext,
@@ -8,14 +8,13 @@ import React, {
 } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
+import { useForm } from 'antd/lib/form/Form';
 import axios from '../configuration/axios';
 import AuthContext from '../context/AuthContext';
 import { LangContext } from '../context/LangContext';
-import { FieldOfStudy } from '../dto/FieldOfStudy';
 import EditorView from '../shared/EditorView';
 import handleHttpError from '../shared/handleHttpError';
 import useQueryParam from '../shared/useQueryParam';
-import { VersionHistory } from '../shared/versionHistory';
 
 import { Plan } from '../dto/Plan';
 import { SemesterEditor } from './SemesterEditor';
@@ -23,40 +22,27 @@ import { Card } from '../dto/Card';
 import { ProgramPicker } from './ProgramPicker';
 import { Program } from '../dto/Program';
 import { Semester } from '../dto/Semester';
+import VerificationStatus from '../shared/VeryficationStatus';
+import { Effect } from '../dto/Effect';
 
 const ProgramsEditorContent = ({
   isArchive = false,
   initCards = new Array<Card>(),
   initPrograms = new Array<Program>(),
 }) => {
-  const auth = useContext(AuthContext);
   const lang = useContext(LangContext);
-  const history = useHistory();
 
   const { state } = useParams<{ state: string }>();
-  const axiosOpts = useMemo(
-    () => ({ headers: { Authorization: auth.token } }),
-    [auth]
-  );
+
   const modify = useMemo(
     () => (state === 'create' || state === 'edit') && !isArchive,
     [state, isArchive]
   );
 
-  const [fields, setFields] = useState<FieldOfStudy[]>([]);
-
-  useEffect(() => {
-    axios
-      .get<FieldOfStudy[]>(`/api/field-of-study`, axiosOpts)
-      .then((res) => {
-        setFields(res.data);
-      })
-      .catch((err) => handleHttpError(err, history));
-  }, [axiosOpts, history]);
-
   return (
     <>
       <AntCard>
+        <VerificationStatus modify={modify} label={lang.getMessage('State')} />
         <Form.Item
           className="form-item"
           label="Kod"
@@ -105,6 +91,7 @@ function PlanEditor(): JSX.Element {
     () => ({ headers: { Authorization: auth.token } }),
     [auth]
   );
+  const [form] = useForm();
 
   const onFinish = useCallback(
     (d) => {
@@ -128,7 +115,7 @@ function PlanEditor(): JSX.Element {
           setPlan(res.data[0]);
           return axios.post(
             `/api/semester`,
-            d.semesters.map((s: any, n: number) => ({
+            d.semesters.map((s: Record<string, unknown>, n: number) => ({
               ...s,
               number: n + 1,
               studiesPlanId: res.data[0].id,
@@ -137,11 +124,12 @@ function PlanEditor(): JSX.Element {
           );
         })
         .then(() => {
+          form.resetFields();
           history.goBack();
         })
         .catch((err) => handleHttpError(err, history));
     },
-    [axiosOpts, history, plan, isNew]
+    [axiosOpts, history, plan, isNew, form]
   );
 
   useEffect(() => {
@@ -195,9 +183,53 @@ function PlanEditor(): JSX.Element {
     [semesters]
   );
 
+  const onVerify = useCallback(() => {
+    axios
+      .patch(
+        `/api/studies-plan/status/${id}`,
+        { status: 'VERIFIED' },
+        {
+          headers: { Authorization: auth.token },
+        }
+      )
+      .then(() => axios.get<Plan[]>(`/api/studies-plan/${id}`, axiosOpts))
+      .then((res) => {
+        setPlan(res.data[0]);
+        form.resetFields();
+      })
+      .catch((err) => handleHttpError(err));
+  }, [id, auth, form, axiosOpts]);
+
+  const onRemove = useCallback(() => {
+    axios.delete(`/api/studies-program/${id}`, {
+      headers: { Authorization: auth.token },
+    });
+  }, [id, auth]);
+
+  const [cards, setCards] = useState<Card[] | null>(null);
+  useEffect(() => {
+    if (semesters == null) return;
+
+    const cardIds = semesters.flatMap((s) => s.subjectCardIds);
+    if (cardIds.length === 0) {
+      setCards([]);
+      return;
+    }
+
+    axios
+      .get<Card[]>(`/api/subject-card/${cardIds.join(',')}`, axiosOpts)
+      .then((res) => {
+        setCards(res.data);
+      })
+      .catch((err) => handleHttpError(err, history));
+  }, [semesters, history, axiosOpts]);
+
   return (
     <div>
-      {(plan == null || initPrograms == null || semesters == null) &&
+      {(plan == null ||
+        initPrograms == null ||
+        semesters == null ||
+        cards == null) &&
       !isNew ? null : (
         <EditorView
           name="plans"
@@ -206,11 +238,19 @@ function PlanEditor(): JSX.Element {
           onFinish={onFinish}
           queryParams=""
           header="Plany studiów"
-          isVerifiable
-          isVerified={false}
+          isVerifiable={['ROLE_ADMIN', 'ROLE_COMMISSION_MEMBER'].includes(
+            auth.role
+          )}
+          isAllowedToEdit={['ROLE_ADMIN', 'ROLE_COMMISSION_MEMBER'].includes(
+            auth.role
+          )}
+          isVerified={plan?.objectState === 'VERIFIED'}
+          form={form}
+          onVerify={onVerify}
+          onRemove={onRemove}
         >
           <ProgramsEditorContent
-            initCards={[]}
+            initCards={cards ?? []}
             initPrograms={initPrograms ?? []}
           />
         </EditorView>

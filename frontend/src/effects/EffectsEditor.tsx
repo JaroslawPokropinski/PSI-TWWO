@@ -14,11 +14,9 @@ import { LangContext } from '../context/LangContext';
 import { Effect } from '../dto/Effect';
 import EditorView from '../shared/EditorView';
 import handleHttpError from '../shared/handleHttpError';
-import { PagedResult } from '../shared/PagedResult';
 import useQueryParam from '../shared/useQueryParam';
-import { Versioned } from '../shared/Versioned';
 import { VersionHistory } from '../shared/versionHistory';
-import EffectMappings from './EffectMappings';
+import VerificationStatus from '../shared/VeryficationStatus';
 
 import './EffectsEditor.css';
 
@@ -34,6 +32,7 @@ const EffectsEditorContent = ({ isArchive = false }) => {
 
   return (
     <>
+      <VerificationStatus modify={modify} label={lang.getMessage('State')} />
       <Form.Item
         className="effects-form-item"
         label={lang.getMessage('Code')}
@@ -142,7 +141,13 @@ function EffectsEditor(): JSX.Element {
   const [effect, setEffect] = useState<Effect | null>(null);
 
   const onFinish = useCallback(
-    (results) => {
+    (d) => {
+      const results = {
+        ...d,
+        isEngineerEffect: d.isEngineerEffect ?? false,
+        isLingualEffect: d.isLingualEffect ?? false,
+      };
+
       if (isNew) {
         axios
           .post(`/api/educational-effects`, [results], {
@@ -177,21 +182,6 @@ function EffectsEditor(): JSX.Element {
       .delete(`/api/educational-effects/${effect.id}`, {
         headers: { Authorization: auth.token },
       })
-      .then(() => {})
-      .catch((err) => handleHttpError(err, history));
-  }, [effect, history, auth]);
-
-  const onVerify = useCallback(() => {
-    if (effect?.id == null) return;
-
-    axios
-      .put(
-        `/api/educational-effects`,
-        [{ ...effect, objectState: 'Verified' }],
-        {
-          headers: { Authorization: auth.token },
-        }
-      )
       .then(() => {})
       .catch((err) => handleHttpError(err, history));
   }, [effect, history, auth]);
@@ -236,6 +226,10 @@ function EffectsEditor(): JSX.Element {
           header={lang.getMessage('Studies effect')}
           initialVals={effect ?? {}}
           useArchive
+          isVerifiable={false}
+          isAllowedToEdit={['ROLE_ADMIN', 'ROLE_COMMISSION_MEMBER'].includes(
+            auth.role
+          )}
           versionHistory={archiveVals}
           name="effects"
           onFinish={onFinish}

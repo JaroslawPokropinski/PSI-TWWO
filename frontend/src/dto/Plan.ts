@@ -3,6 +3,6 @@ export type Plan = {
   decreeDate: string;
   id: number;
   inEffectSince: string;
-  objectState: 'UNVERIFIED';
+  objectState?: 'UNVERIFIED' | 'VERIFIED';
   studiesProgramId: number;
 };

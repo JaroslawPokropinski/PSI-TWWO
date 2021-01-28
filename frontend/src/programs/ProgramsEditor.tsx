@@ -8,24 +8,28 @@ import React, {
 } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import moment from 'moment';
+import { useForm } from 'antd/lib/form/Form';
 import axios from '../configuration/axios';
 import AuthContext from '../context/AuthContext';
 import { LangContext } from '../context/LangContext';
 import { FieldOfStudy } from '../dto/FieldOfStudy';
-import { OrganisationalUnit } from '../dto/OrganisationalUnit';
 import { Program } from '../dto/Program';
 import EditorView from '../shared/EditorView';
 import handleHttpError from '../shared/handleHttpError';
 import useQueryParam from '../shared/useQueryParam';
 import { VersionHistory } from '../shared/versionHistory';
-import ProgramBlocks from './ProgramBlocks';
 import ProgramDisciplines from './ProgramDisciplines';
 import ProgramEffects from './ProgramEffects';
 import ProgramRequirements from './ProgramRequirements';
 
 import './ProgramsEditor.css';
+import { Effect } from '../dto/Effect';
+import VerificationStatus from '../shared/VeryficationStatus';
 
-const ProgramsEditorContent = ({ isArchive = false }) => {
+const ProgramsEditorContent = ({
+  isArchive = false,
+  initEffects = new Array<Effect>(),
+}) => {
   const auth = useContext(AuthContext);
   const lang = useContext(LangContext);
   const history = useHistory();
@@ -56,6 +60,7 @@ const ProgramsEditorContent = ({ isArchive = false }) => {
   return (
     <>
       <AntCard>
+        <VerificationStatus modify={modify} label={lang.getMessage('State')} />
         <Form.Item
           className="form-item"
           label="Kod"
@@ -274,7 +279,7 @@ const ProgramsEditorContent = ({ isArchive = false }) => {
       {/* <ProgramBlocks modify={modify} /> */}
       {/* Programowe Efekty Kształcenia */}
       <AntCard title={lang.getMessage('Effects')}>
-        <ProgramEffects modify={modify} />
+        <ProgramEffects modify={modify} initEffects={initEffects} />
       </AntCard>
       {/* Dyscypliny */}
       <AntCard title={lang.getMessage('Disciplines')}>
@@ -304,7 +309,6 @@ const ProgramsEditorContent = ({ isArchive = false }) => {
 
 function ProgramsEditor(): JSX.Element {
   const auth = useContext(AuthContext);
-  const lang = useContext(LangContext);
   const history = useHistory();
 
   const [id] = useQueryParam('id');
@@ -314,6 +318,7 @@ function ProgramsEditor(): JSX.Element {
     () => ({ headers: { Authorization: auth.token } }),
     [auth]
   );
+  const [form] = useForm();
 
   const onFinish = useCallback(
     (d) => {
@@ -334,11 +339,12 @@ function ProgramsEditor(): JSX.Element {
         )
         .then((res) => {
           setProgram(res.data[0]);
+          form.resetFields();
           history.goBack();
         })
         .catch((err) => handleHttpError(err, history));
     },
-    [axiosOpts, history, program, isNew]
+    [axiosOpts, history, program, isNew, form]
   );
 
   useEffect(() => {
@@ -371,19 +377,73 @@ function ProgramsEditor(): JSX.Element {
       .catch((e) => handleHttpError(e, history));
   }, [isNew, id, auth, history]);
 
+  const [effects, setEffects] = useState<Effect[] | null>(null);
+  useEffect(() => {
+    if (program == null) return;
+    if (program.educationalEffects.length === 0) {
+      setEffects([]);
+      return;
+    }
+
+    axios
+      .get<Effect[]>(
+        `/api/educational-effects/${program.educationalEffects.join(',')}`,
+        {
+          headers: { Authorization: auth.token },
+        }
+      )
+      .then((res) => {
+        setEffects(res.data);
+      })
+      .catch((e) => handleHttpError(e, history));
+  }, [program, auth, history]);
+
+  const onVerify = useCallback(() => {
+    axios
+      .patch(
+        `/api/studies-program/status/${id}`,
+        { status: 'VERIFIED' },
+        {
+          headers: { Authorization: auth.token },
+        }
+      )
+      .then(() => axios.get<Program[]>(`/api/studies-program/${id}`, axiosOpts))
+      .then((res) => {
+        setProgram(res.data[0]);
+        form.resetFields();
+      })
+      .catch((err) => handleHttpError(err));
+  }, [id, auth, form, axiosOpts]);
+
+  const onRemove = useCallback(() => {
+    axios.delete(`/api/studies-program/${id}`, {
+      headers: { Authorization: auth.token },
+    });
+  }, [id, auth]);
+
   return (
     <div>
-      {program == null && !isNew ? null : (
+      {(program == null || effects == null) && !isNew ? null : (
         <EditorView
+          form={form}
           name="programs"
           initialVals={program ?? {}}
           onFinish={onFinish}
           queryParams=""
           header="Programy studiów"
           useArchive
+          isVerifiable={['ROLE_ADMIN', 'ROLE_COMMISSION_MEMBER'].includes(
+            auth.role
+          )}
+          isAllowedToEdit={['ROLE_ADMIN', 'ROLE_COMMISSION_MEMBER'].includes(
+            auth.role
+          )}
+          isVerified={program?.objectState === 'VERIFIED'}
           versionHistory={archiveVals}
+          onVerify={onVerify}
+          onRemove={onRemove}
         >
-          <ProgramsEditorContent />
+          <ProgramsEditorContent initEffects={effects ?? []} />
           <ProgramsEditorContent isArchive />
         </EditorView>
       )}

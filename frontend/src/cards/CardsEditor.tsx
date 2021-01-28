@@ -10,6 +10,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import fileDownload from 'js-file-download';
 
 import './CardsEditor.css';
+import { useForm } from 'antd/lib/form/Form';
 import useQueryParam from '../shared/useQueryParam';
 import EditorView from '../shared/EditorView';
 import CardGoals from './CardGoals';
@@ -26,6 +27,7 @@ import axios from '../configuration/axios';
 import handleHttpError from '../shared/handleHttpError';
 import { Effect } from '../dto/Effect';
 import { VersionHistory } from '../shared/versionHistory';
+import VerificationStatus from '../shared/VeryficationStatus';
 
 type FieldOfStudy = { id: number; name: string; faculty: number };
 type OrganisationalUnit = { id: number; name: string; type: string };
@@ -76,6 +78,10 @@ const CardsEditorContent = ({
       {fields == null || units == null ? null : (
         <>
           <AntCard>
+            <VerificationStatus
+              modify={modify}
+              label={lang.getMessage('State')}
+            />
             <Form.Item
               className="cards-form-item"
               label={lang.getMessage('Subject code')}
@@ -280,10 +286,22 @@ function CardsEditor(): JSX.Element {
     () => ({ headers: { Authorization: auth.token } }),
     [auth]
   );
+  const [form] = useForm();
 
   const onFinish = useCallback(
     (d) => {
-      const newCard = { code: d.subjectCode, ...d };
+      const newCard = {
+        code: d.subjectCode,
+        ...d,
+        isGroupOfCourses: d.isGroupOfCourses ?? false,
+        educationalEffects: d.educationalEffects ?? [],
+        prerequisites: d.prerequisites ?? [],
+        primaryLiterature: d.primaryLiterature ?? [],
+        secondaryLiterature: d.secondaryLiterature ?? [],
+        subjectClasses: d.subjectClasses ?? [],
+        subjectObjectives: d.subjectObjectives ?? [],
+        usedTeachingTools: d.usedTeachingTools ?? [],
+      };
       axios
         .get('/api/user/current', axiosOpts)
         .then((res) => {
@@ -301,39 +319,34 @@ function CardsEditor(): JSX.Element {
         )
         .then((res) => {
           setCard(res.data[0]);
+          form.resetFields();
           history.goBack();
         })
         .catch((err) => handleHttpError(err, history));
     },
-    [axiosOpts, history, card, isNew]
+    [axiosOpts, history, card, isNew, form]
   );
 
   const onDownload = useCallback(() => {
     if (id == null) return;
 
     axios
-      .get(`/api/subject-card/download/${id}`, {
+      .get(`/api/subject-card/download/${id}?lang=${lang.locale}`, {
         ...axiosOpts,
         responseType: 'blob',
       })
 
       .then((res) => {
-        const headerLine: string | undefined =
-          res.data.headers?.['content-disposition'];
-        let filename = `${id}.pdf`;
+        const filename: string =
+          res.headers?.filename ??
+          (card != null
+            ? `${card.subjectCode} - ${card.subjectName}.pdf`
+            : `${id}.pdf`);
 
-        if (headerLine != null) {
-          const startFileNameIndex = headerLine.indexOf('"') + 1;
-          const endFileNameIndex = headerLine.lastIndexOf('"');
-          filename = headerLine?.substring(
-            startFileNameIndex,
-            endFileNameIndex
-          );
-        }
         fileDownload(res.data, filename);
       })
       .catch((e) => handleHttpError(e));
-  }, [id, axiosOpts]);
+  }, [id, axiosOpts, lang, card]);
 
   const onDownloadOpt = useMemo(() => (id == null ? undefined : onDownload), [
     id,
@@ -383,6 +396,30 @@ function CardsEditor(): JSX.Element {
     }
   }, []);
 
+  const onVerify = useCallback(() => {
+    if (isNew) return;
+    axios
+      .patch(
+        `/api/subject-card/status/${id}`,
+        { status: 'VERIFIED' },
+        {
+          headers: { Authorization: auth.token },
+        }
+      )
+      .then(() => axios.get<Card[]>(`/api/subject-card/${id}`, axiosOpts))
+      .then((res) => {
+        setCard(res.data[0]);
+        form.resetFields();
+      })
+      .catch((err) => handleHttpError(err));
+  }, [id, auth, form, axiosOpts, isNew]);
+
+  const onRemove = useCallback(() => {
+    axios.delete(`/api/subject-card/${id}`, {
+      headers: { Authorization: auth.token },
+    });
+  }, [id, auth]);
+
   return (
     <div className="cards-editor">
       {card == null && !isNew ? null : (
@@ -393,14 +430,29 @@ function CardsEditor(): JSX.Element {
           onFinish={onFinish}
           queryParams=""
           header={lang.getMessage('Subject card')}
-          isVerifiable
-          isVerified={false}
+          isVerifiable={['ROLE_ADMIN', 'ROLE_COMMISSION_MEMBER'].includes(
+            auth.role
+          )}
+          isVerified={card?.objectState === 'VERIFIED'}
           useArchive
+          isAllowedToEdit={[
+            'ROLE_ADMIN',
+            'ROLE_COMMISSION_MEMBER',
+            'ROLE_SUBJECT_SUPERVISOR',
+          ].includes(auth.role)}
           versionHistory={archiveVals}
           onDownload={onDownloadOpt}
+          form={form}
+          onVerify={onVerify}
+          onRemove={onRemove}
         >
           <CardsEditorContent effects={card?.educationalEffects} />
-          <CardsEditorContent isArchive />
+          <CardsEditorContent
+            isArchive
+            effects={archiveVals?.page?.results?.flatMap(
+              (r) => r.entity.educationalEffects
+            )}
+          />
         </EditorView>
       )}
     </div>

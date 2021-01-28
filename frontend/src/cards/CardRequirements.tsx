@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Divider, Form, Input, Space } from 'antd';
+import { Button, Divider, Form, Input } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 const CardRequirements: React.FunctionComponent<{ modify: boolean }> = ({

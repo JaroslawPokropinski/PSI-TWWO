@@ -19,7 +19,7 @@ export default function AppDrawer({
   const langContext = useContext(LangContext);
   const auth = useContext(AuthContext);
   const history = useHistory();
-  const [, setCookie] = useCookies(['token']);
+  const [, setCookie, removeCookie] = useCookies(['token']);
 
   const onEffects = useCallback(() => {
     history.push('/effects');
@@ -39,9 +39,10 @@ export default function AppDrawer({
 
   const onLogout = useCallback(() => {
     auth.token = null;
-    setCookie('token', null, { path: '/' });
+    removeCookie('token');
+    removeCookie('role');
     history.push('/login');
-  }, [auth, history, setCookie]);
+  }, [auth, history, removeCookie]);
 
   return (
     <Drawer

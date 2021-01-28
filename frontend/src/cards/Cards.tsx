@@ -98,14 +98,19 @@ function Cards(): JSX.Element {
           <FormattedMessage id="Filter" />
         </Button>
       </div>
-
-      <Button
-        type="primary"
-        className="cards-add"
-        onClick={() => onClick(null)}
-      >
-        <FormattedMessage id="Add" />
-      </Button>
+      {![
+        'ROLE_ADMIN',
+        'ROLE_COMMISSION_MEMBER',
+        'ROLE_SUBJECT_SUPERVISOR',
+      ].includes(auth.role) ? null : (
+        <Button
+          type="primary"
+          className="cards-add"
+          onClick={() => onClick(null)}
+        >
+          <FormattedMessage id="Add" />
+        </Button>
+      )}
 
       <List
         className="cards-list"

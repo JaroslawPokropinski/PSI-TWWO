@@ -103,13 +103,15 @@ function Effects(): JSX.Element {
         </Button>
       </div>
 
-      <Button
-        type="primary"
-        className="effects-add"
-        onClick={() => onClick(null)}
-      >
-        <FormattedMessage id="Add" />
-      </Button>
+      {!['ROLE_ADMIN', 'ROLE_COMMISSION_MEMBER'].includes(auth.role) ? null : (
+        <Button
+          type="primary"
+          className="effects-add"
+          onClick={() => onClick(null)}
+        >
+          <FormattedMessage id="Add" />
+        </Button>
+      )}
 
       <List
         className="effects-list"

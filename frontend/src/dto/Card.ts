@@ -69,4 +69,5 @@ export type Card = {
     surname: string;
   };
   usedTeachingTools: string[];
+  objectState?: 'UNVERIFIED' | 'VERIFIED';
 };
