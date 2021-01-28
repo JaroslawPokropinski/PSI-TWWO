@@ -19,7 +19,7 @@ export default function AppDrawer({
   const langContext = useContext(LangContext);
   const auth = useContext(AuthContext);
   const history = useHistory();
-  const [, setCookie, removeCookie] = useCookies(['token']);
+  const [, , removeCookie] = useCookies(['token']);
 
   const onEffects = useCallback(() => {
     history.push('/effects');

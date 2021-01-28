@@ -298,9 +298,14 @@ function CardsEditor(): JSX.Element {
         prerequisites: d.prerequisites ?? [],
         primaryLiterature: d.primaryLiterature ?? [],
         secondaryLiterature: d.secondaryLiterature ?? [],
-        subjectClasses: d.subjectClasses ?? [],
         subjectObjectives: d.subjectObjectives ?? [],
         usedTeachingTools: d.usedTeachingTools ?? [],
+        subjectClasses:
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (d.subjectClasses as any[])?.map((c) => ({
+            ...c,
+            isFinalCourse: c.isFinalCourse ?? false,
+          })) ?? [],
       };
       axios
         .get('/api/user/current', axiosOpts)

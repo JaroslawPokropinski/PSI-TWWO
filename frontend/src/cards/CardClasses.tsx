@@ -59,7 +59,7 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
                 hasFeedback
                 rules={[{ required: true, message: 'Wybierz punkty ECTS!' }]}
               >
-                <InputNumber min={1} max={30} disabled={!modify} />
+                <InputNumber min={0} disabled={!modify} />
               </Form.Item>
               <Form.Item
                 className="form-item"
@@ -70,7 +70,7 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
                 hasFeedback
                 rules={[{ required: true, message: 'Wybierz godziny ZZU!' }]}
               >
-                <InputNumber min={1} max={900} disabled={!modify} />
+                <InputNumber min={0} disabled={!modify} />
               </Form.Item>
 
               <Form.Item
@@ -82,7 +82,7 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
                 hasFeedback
                 rules={[{ required: true, message: 'Wybierz godziny CNPS!' }]}
               >
-                <InputNumber min={1} max={900} disabled={!modify} />
+                <InputNumber min={0} disabled={!modify} />
               </Form.Item>
 
               <Form.Item
@@ -90,6 +90,7 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
                 name={[field.name, 'isFinalCourse']}
                 fieldKey={[field.fieldKey, 'isFinalCourse']}
                 valuePropName="checked"
+                required
               >
                 <Checkbox disabled={!modify}>
                   Czy końcowy dla grupy kursów
@@ -110,7 +111,7 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
                   },
                 ]}
               >
-                <InputNumber min={1} max={900} disabled={!modify} />
+                <InputNumber min={0} disabled={!modify} />
               </Form.Item>
 
               <Form.Item
@@ -128,7 +129,7 @@ const CardClasses: React.FunctionComponent<{ modify: boolean }> = ({
                   },
                 ]}
               >
-                <InputNumber min={1} max={900} disabled={!modify} />
+                <InputNumber min={0} disabled={!modify} />
               </Form.Item>
               <ProgramContent
                 modify={modify}

@@ -23,7 +23,6 @@ import { ProgramPicker } from './ProgramPicker';
 import { Program } from '../dto/Program';
 import { Semester } from '../dto/Semester';
 import VerificationStatus from '../shared/VeryficationStatus';
-import { Effect } from '../dto/Effect';
 
 const ProgramsEditorContent = ({
   isArchive = false,
