@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { AutoComplete, Button, Form, List } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import { Form } from 'antd';
 import { useHistory } from 'react-router-dom';
 import axios from '../configuration/axios';
 import { PAGE_SIZE } from '../configuration/constants';

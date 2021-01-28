@@ -1,6 +1,7 @@
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Divider, Form, InputNumber } from 'antd';
 import React, { FunctionComponent, useContext } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { LangContext } from '../context/LangContext';
 import { Card } from '../dto/Card';
 import { SubjectCardPicker } from './SubjectCardPicker';
@@ -47,7 +48,7 @@ export const SemesterEditor: FunctionComponent<SemesterEditorProps> = ({
                   onClick={() => remove(field.name)}
                   icon={<MinusCircleOutlined />}
                 >
-                  Usuń wymaganie
+                  <FormattedMessage id="Remove semester" />
                 </Button>
               ) : null}
               <Divider />
@@ -61,7 +62,7 @@ export const SemesterEditor: FunctionComponent<SemesterEditorProps> = ({
                 block
                 icon={<PlusOutlined />}
               >
-                Dodaj wymaganie wstępne
+                <FormattedMessage id="Add semester" />
               </Button>
             </Form.Item>
           ) : null}

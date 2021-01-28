@@ -3,6 +3,8 @@ import { useHistory, useParams } from 'react-router-dom';
 import { Button, Form } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
+import { FormattedMessage } from 'react-intl';
+import { FormInstance } from 'antd/lib/form';
 import RemoveModal from '../context/RemoveModal';
 import Header from './Header';
 
@@ -24,7 +26,10 @@ const EditorView: React.FunctionComponent<{
   onRemove?: () => void;
   onVerify?: () => void;
   onDownload?: () => void | null;
+  form?: FormInstance<unknown>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   mapper?: (store: any) => Store;
+  isAllowedToEdit?: boolean;
 }> = ({
   name = '',
   queryParams = '',
@@ -40,6 +45,8 @@ const EditorView: React.FunctionComponent<{
   onVerify = () => {},
   onDownload = null,
   mapper = (a) => a,
+  form = undefined,
+  isAllowedToEdit = false,
 }) => {
   const history = useHistory();
   const { state } = useParams<{ state: string }>();
@@ -118,7 +125,7 @@ const EditorView: React.FunctionComponent<{
             type="primary"
             onClick={() => history.goBack()}
           >
-            Wstecz
+            <FormattedMessage id="Go back" />
           </Button>
         ) : null}
         {state === 'edit' ? (
@@ -127,17 +134,17 @@ const EditorView: React.FunctionComponent<{
             type="primary"
             onClick={() => history.goBack()}
           >
-            Anuluj
+            <FormattedMessage id="Cancel" />
           </Button>
         ) : null}
-        {state === 'view' ? (
+        {state === 'view' && isAllowedToEdit ? (
           <Button
             className="controlls-button"
             type="primary"
             onClick={onEdit}
             disabled={modify}
           >
-            Edytuj
+            <FormattedMessage id="Edit" />
           </Button>
         ) : null}
 
@@ -148,7 +155,7 @@ const EditorView: React.FunctionComponent<{
             onClick={onVerifyAction}
             disabled={isVerified}
           >
-            Weryfikuj
+            <FormattedMessage id="Verify" />
           </Button>
         ) : null}
         {!useArchive ? null : (
@@ -157,7 +164,7 @@ const EditorView: React.FunctionComponent<{
             type="primary"
             onClick={() => showHistory(!isShowingHistory)}
           >
-            Historia
+            <FormattedMessage id="History" />
           </Button>
         )}
 
@@ -202,18 +209,19 @@ const EditorView: React.FunctionComponent<{
             type="primary"
             onClick={() => onDownload()}
           >
-            Pobierz
+            <FormattedMessage id="Download" />
           </Button>
         )}
 
-        {state === 'view' ? (
+        {state === 'view' && isAllowedToEdit ? (
           <Button className="remove-button" onClick={onRemoveAction}>
-            Usuń
+            <FormattedMessage id="Remove" />
           </Button>
         ) : null}
       </div>
       <div className="form-container">
         <Form
+          form={form}
           className="form"
           name="basic"
           initialValues={mappedVals}
@@ -227,7 +235,7 @@ const EditorView: React.FunctionComponent<{
           <Form.Item className="form-item">
             {modify ? (
               <Button type="primary" htmlType="submit">
-                Zatwierdź
+                <FormattedMessage id="Save" />
               </Button>
             ) : null}
           </Form.Item>

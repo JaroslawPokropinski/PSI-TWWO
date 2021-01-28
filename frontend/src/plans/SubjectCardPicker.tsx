@@ -1,10 +1,8 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Form } from 'antd';
 import { useHistory } from 'react-router-dom';
-import { InternalNamePath } from 'antd/lib/form/interface';
 import { FormListFieldData } from 'antd/lib/form/FormList';
 import AuthContext from '../context/AuthContext';
-import { Effect } from '../dto/Effect';
 import { PagedResult } from '../shared/PagedResult';
 import { PAGE_SIZE } from '../configuration/constants';
 import axios from '../configuration/axios';

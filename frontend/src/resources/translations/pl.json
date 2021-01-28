@@ -35,5 +35,7 @@
   "Organisational unit": "Jednostka organizacyjna",
   "Fill organisationel unit!": "Wprowadź jednostke organizacyjną!",
   "User": "Nazwa użytkownika",
-  "Password": "Hasło"
+  "Password": "Hasło",
+  "Download": "Pobierz",
+  "logout": "Wyloguj"
 }

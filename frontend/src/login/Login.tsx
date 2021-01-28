@@ -1,8 +1,8 @@
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import axios, { setAuthToken } from '../configuration/axios';
+import axios from '../configuration/axios';
 import AuthContext from '../context/AuthContext';
 import { LangContext } from '../context/LangContext';
 
@@ -21,15 +21,21 @@ function Login(): JSX.Element {
   );
   const onFinish = useCallback(
     (results) => {
+      let token: string | null = null;
       axios
         .post<{ accessToken: string }>('/api/user/signin', {
           username: results.username,
           password: results.password,
         })
         .then((res) => {
-          // authContext.token = `Bearer ${res.data.accessToken}`;
-          // history.replace('/home');
-          setCookie('token', `Bearer ${res.data.accessToken}`, { path: '/' });
+          token = `Bearer ${res.data.accessToken}`;
+          return axios.get('/api/user/current', {
+            headers: { authorization: `Bearer ${res.data.accessToken}` },
+          });
+        })
+        .then((res) => {
+          setCookie('role', res.data.role, { path: '/' });
+          setCookie('token', token, { path: '/' });
         })
         .catch((err) => handleHttpError(err));
     },
@@ -37,16 +43,18 @@ function Login(): JSX.Element {
   );
 
   useEffect(() => {
-    if (cookies.token == null) return;
+    if (cookies.token == null || cookies.role == null) return;
 
     axios
       .get('/api/user/current', axiosOpts)
       .then(() => {
         authContext.token = cookies.token;
+        authContext.role = cookies.role;
+
         history.replace('/home');
       })
       .catch(() => setCookie('token', null, { path: '/' }));
-  }, [cookies, setCookie, authContext, history, axiosOpts]);
+  }, [cookies.token, cookies.role, setCookie, authContext, history, axiosOpts]);
 
   return (
     <div className="Login">
@@ -75,13 +83,13 @@ function Login(): JSX.Element {
           <Input.Password />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           className="login-form-item"
           name="remember"
           valuePropName="checked"
         >
           <Checkbox>Remember me</Checkbox>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item className="login-form-item">
           <Button type="primary" htmlType="submit">

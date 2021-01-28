@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import { Card, Collapse, Input, Form } from 'antd';
 import EditorView from '../shared/EditorView';
 import useQueryParam from '../shared/useQueryParam';
@@ -19,10 +19,10 @@ import {
 } from './mocks';
 
 function PlanView(): JSX.Element {
-  const history = useHistory();
+  // const history = useHistory();
   const [code] = useQueryParam('code');
   const { state } = useParams<{ state: string }>();
-  const modify = useMemo(() => state === 'create' || state === 'edit', [state]);
+  // const modify = useMemo(() => state === 'create' || state === 'edit', [state]);
   const onFinish = useCallback(
     (/* results */) => {
       // history.goBack();

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Divider, Form, Input, Space } from 'antd';
+import { Button, Divider, Form, Input } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 
 const ProgramRequirements: React.FunctionComponent<{ modify: boolean }> = ({
@@ -10,7 +10,7 @@ const ProgramRequirements: React.FunctionComponent<{ modify: boolean }> = ({
       {(fields, { add, remove }) => (
         <>
           {fields.map((field) => (
-            <Space key={field.key}>
+            <div key={field.key}>
               <Form.Item
                 label="Wymaganie wstępne"
                 labelAlign="left"
@@ -36,7 +36,7 @@ const ProgramRequirements: React.FunctionComponent<{ modify: boolean }> = ({
                 </Button>
               ) : null}
               <Divider />
-            </Space>
+            </div>
           ))}
           {modify ? (
             <Form.Item>

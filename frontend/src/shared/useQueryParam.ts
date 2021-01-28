@@ -4,6 +4,10 @@ import { useState } from 'react';
 
 const getQuery = () => {
   if (typeof window !== 'undefined') {
+    if (window.location.hash !== '') {
+      const search = window.location.hash.split('?')[1] ?? '';
+      return new URLSearchParams(search);
+    }
     return new URLSearchParams(window.location.search);
   }
   return new URLSearchParams();
