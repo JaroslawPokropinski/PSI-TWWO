@@ -77,7 +77,7 @@ public class StudiesPlanService {
 
     private void validateStudiesPlanCodeUniqueness(Collection<StudiesPlan> studiesPlans){
         validateIfThereAreNoStudiesPlansCodeDuplicatesAmongSubmittedStudiesPrograms(studiesPlans);
-        validateIfThereAreNoStudiesPlansCodeDuplicatesAmongExistingStudiesPrograms(studiesPlans);
+        validateIfThereAreNoStudiesPlansCodeDuplicatesAmongExistingStudiesPlan(studiesPlans);
     }
 
     private void validateIfThereAreNoStudiesPlansCodeDuplicatesAmongSubmittedStudiesPrograms(Collection<StudiesPlan> studiesPlans){
@@ -93,10 +93,10 @@ public class StudiesPlanService {
                 .collect(Collectors.toList());
     }
 
-    private void validateIfThereAreNoStudiesPlansCodeDuplicatesAmongExistingStudiesPrograms(Collection<StudiesPlan> studiesPlans){
+    private void validateIfThereAreNoStudiesPlansCodeDuplicatesAmongExistingStudiesPlan(Collection<StudiesPlan> studiesPlans){
         List<StudiesPlan> foundDuplicates = findDuplicatedCodes(studiesPlans);
         if(!foundDuplicates.isEmpty()){
-            throw new IllegalArgumentAppException(MessageFormat.format("There are existing subject cards with given subject codes {0}", getCodes(foundDuplicates)));
+            throw new IllegalArgumentAppException(MessageFormat.format("There are existing studies plan with given studies plan {0}", getCodes(foundDuplicates)));
         }
     }
 
