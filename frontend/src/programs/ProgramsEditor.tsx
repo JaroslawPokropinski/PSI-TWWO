@@ -75,7 +75,7 @@ const ProgramsEditorContent = ({
         {/* JednostkaOrganizacyjna */}
         <Form.Item
           className="cards-form-item"
-          label="Jednostka organizacyjna"
+          label={lang.getMessage('Field of study2')}
           labelAlign="left"
           name="fieldOfStudyId"
           rules={[
