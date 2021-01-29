@@ -15,13 +15,6 @@ pipeline {
                 sh './gradlew test'
             }
         }
-        stage('Test frontend') {
-            steps {
-                dir('PSI-TWWO/frontend') {
-                // sh 'npm run test'
-                }
-            }
-        }
         stage('Build image') {
             steps {
                 script {
@@ -43,7 +36,9 @@ pipeline {
         stage('Deploy to kubernetes') {
             steps {
                 script {
-                    sh 'kubectl rollout restart deployment.apps/twwo'
+                    withKubeConfig([credentialsId: 'kubeconfig']) {
+                        sh 'kubectl rollout restart deployment.apps/twwo'
+                    }
                 }
             }
         }
